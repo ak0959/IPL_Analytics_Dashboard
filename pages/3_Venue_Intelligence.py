@@ -6,7 +6,7 @@ import plotly.express as px
 st.set_page_config(page_title="Venue Intelligence | IPL Strategy Dashboard", layout="wide")
 
 # ✅ KPI Root
-PROJECT_ROOT = r"E:\Google Drive\Portfolio Projects\IPL_Strategy_Dashboard"
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KPI_ROOT = os.path.join(PROJECT_ROOT, "data", "KPIs")
 
 
@@ -136,11 +136,13 @@ def load_tab3_files(region_choice: str):
     }
     key = region_key_map.get(region_choice, "all")
 
-    base_path = r"E:\Google Drive\Portfolio Projects\IPL_Strategy_Dashboard\data\KPIs\master_kpis\venue"
+    base_path = os.path.join(KPI_ROOT, "master_kpis", "venue")
 
-    df_summary = pd.read_csv(fr"{base_path}\tab3_venue_summary_{key}.csv")
-    df_cd = pd.read_csv(fr"{base_path}\tab3_venue_chase_defend_{key}.csv")
-    df_toss = pd.read_csv(fr"{base_path}\tab3_venue_toss_advantage_{key}.csv")
+
+    df_summary = pd.read_csv(os.path.join(base_path, f"tab3_venue_summary_{key}.csv"))
+    df_cd      = pd.read_csv(os.path.join(base_path, f"tab3_venue_chase_defend_{key}.csv"))
+    df_toss    = pd.read_csv(os.path.join(base_path, f"tab3_venue_toss_advantage_{key}.csv"))
+
 
     for d in [df_summary, df_cd, df_toss]:
         d["season"] = d["season"].astype(str)
@@ -161,7 +163,8 @@ def season_sort_key(x):
 # -----------------------------
 @st.cache_data(show_spinner=False)
 def load_ball_master_for_innings():
-    path = r"E:\Google Drive\Portfolio Projects\IPL_Strategy_Dashboard\data\processed\phase1_master_clean_validated_all_venues_v3.csv"
+    path = os.path.join(PROJECT_ROOT, "data", "processed", "phase1_master_clean_validated_all_venues_v3.csv")
+
     df = pd.read_csv(
         path,
         usecols=["match_id", "innings", "venue_region", "season_id_x", "total_runs"]
