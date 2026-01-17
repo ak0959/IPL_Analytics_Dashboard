@@ -184,7 +184,7 @@ if show_advanced:
         st.plotly_chart(fig1, use_container_width=True)
 
         info_box(
-            "<b>So what?</b> This trend highlights high-scoring eras and seasons where run output spikes. "
+            "<b>Key Insight</b> This trend highlights high-scoring eras and seasons where run output spikes. "
             "It helps compare seasons without going match-by-match."
         )
 
@@ -253,7 +253,7 @@ if show_advanced:
             st.plotly_chart(fig2, use_container_width=True)
 
         info_box(
-            "<b>So what?</b> The phase split shows where most runs come from. "
+            "<b>Key Insight</b> The phase split shows where most runs come from. "
             "Teams can plan resources for Powerplay aggression, middle-overs control, or death-over finishing."
         )
     else:

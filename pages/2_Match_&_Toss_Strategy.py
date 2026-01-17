@@ -263,7 +263,7 @@ else:
         st.empty()
 
     info_box(
-        "<b>So what?</b> This section helps decide whether the toss matters and which toss decision tends to work better. "
+        "<b>Key Insight:</b> This section helps decide whether the toss matters and which toss decision tends to work better. "
         "When chase advantage is strong, choosing to field first has historically been more successful for toss winners."
     )
 
@@ -363,7 +363,7 @@ else:
         metric_tile(f"{adv_b:.2f}%", "Chase advantage (B)", value_color=COLOR_CHASE if adv_b >= 0 else COLOR_DEFEND)
 
     info_box(
-        "<b>So what?</b> Use this to compare conditions: India vs Overseas, or different seasons. "
+        "<b>Key Insight:</b> Use this to compare conditions: India vs Overseas, or different seasons. "
         "If one selection shows much higher chase advantage, choosing to field first has historically worked better there."
     )
 
@@ -416,5 +416,5 @@ else:
         st.plotly_chart(fig1, use_container_width=True)
 
         info_box(
-            "<b>So what?</b> The bars make it easier to visually compare the two selections without reading every number."
+            "<b>Key Insight:</b> The bars make it easier to visually compare the two selections without reading every number."
         )

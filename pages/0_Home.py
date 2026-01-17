@@ -88,7 +88,7 @@ section_card(
 
 section_card(
     title="Match & Toss Strategy",
-    page_path="pages/2_Match_Toss_Strategy.py",
+    page_path="pages/2_Match_&_Toss_Strategy.py",
     description_html="""
     This page turns match outcomes into a decision framework:
     <b>does winning the toss matter, and what call tends to work better?</b>

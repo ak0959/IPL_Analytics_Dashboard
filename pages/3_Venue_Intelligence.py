@@ -328,7 +328,7 @@ if len(top_venues) > 0:
     )
     st.plotly_chart(fig_top, use_container_width=True)
 
-    html_note("So what? Venues with more matches give more reliable strategy signals.", color="#555")
+    html_note("Key Insight: Venues with more matches give more reliable strategy signals.", color="#555")
 else:
     st.info("No venue data available for the selected filters.")
 
@@ -395,7 +395,7 @@ if len(cd_chart) > 0:
     )
 
     html_note(
-        "So what? This helps a captain decide the safer toss call. "
+        "Key Insight: This helps a captain decide the safer toss call. "
         "If bias is strong and sample size is stable, follow the recommended strategy.",
         color="#555"
     )
@@ -472,7 +472,7 @@ else:
     st.plotly_chart(fig_impact, use_container_width=True)
 
     html_note(
-        "So what? On high-impact venues, toss strategy (and playing conditions) matter more. "
+        "Key Insight: On high-impact venues, toss strategy (and playing conditions) matter more. "
         "On low-impact venues, outcomes depend more on skill and execution than the toss.",
         color="#555"
     )
@@ -524,7 +524,7 @@ else:
     st.plotly_chart(fig_pref, use_container_width=True)
 
     html_note(
-        "So what? This shows how captains behave at each venue. "
+        "Key Insight: This shows how captains behave at each venue. "
         "A strong preference often reflects dew, pitch deterioration, or par-score pressure.",
         color="#555"
     )
