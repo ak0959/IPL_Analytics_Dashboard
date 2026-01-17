@@ -6,8 +6,14 @@ import plotly.express as px
 st.set_page_config(page_title="Match & Toss Strategy | IPL Strategy Dashboard", layout="wide")
 
 # ✅ KPI Root
-PROJECT_ROOT = r"E:\Google Drive\Portfolio Projects\IPL_Strategy_Dashboard"
+# ✅ KPI Root (works locally + Streamlit Cloud)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # pages/
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))  # project root
 KPI_ROOT = os.path.join(PROJECT_ROOT, "data", "KPIs")
+
+# st.write("PROJECT_ROOT:", PROJECT_ROOT)
+# st.write("KPI_ROOT:", KPI_ROOT)
+
 
 
 # ============================================================
