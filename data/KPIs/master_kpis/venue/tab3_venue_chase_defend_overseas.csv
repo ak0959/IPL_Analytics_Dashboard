@@ -1,0 +1,30 @@
+venue_region,season,venue,matches,chasing_matches,defending_matches,other_matches,chasing_win_pct,defending_win_pct,other_result_pct,chase_defend_delta_pct
+Overseas,2009,Kingsmead,15,6,9,0,40.0,60.0,0.0,-20.0
+Overseas,2009,SuperSport Park,12,8,4,0,66.7,33.3,0.0,33.3
+Overseas,2009,New Wanderers Stadium,8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,2009,Newlands,7,2,4,1,28.6,57.1,14.3,-28.6
+Overseas,2009,St George's Park,7,4,3,0,57.1,42.9,0.0,14.3
+Overseas,2009,Buffalo Park,3,1,2,0,33.3,66.7,0.0,-33.3
+Overseas,2009,De Beers Diamond Oval,3,2,1,0,66.7,33.3,0.0,33.3
+Overseas,2009,OUTsurance Oval,2,1,1,0,50.0,50.0,0.0,0.0
+Overseas,2014,Dubai International Cricket Stadium,7,4,3,0,57.1,42.9,0.0,14.3
+Overseas,2014,Sheikh Zayed Stadium,7,3,3,1,42.9,42.9,14.3,0.0
+Overseas,2014,Sharjah Cricket Stadium,6,4,2,0,66.7,33.3,0.0,33.3
+Overseas,2020,Dubai International Cricket Stadium,26,9,14,3,34.6,53.8,11.5,-19.2
+Overseas,2020,Sheikh Zayed Stadium,22,13,8,1,59.1,36.4,4.5,22.7
+Overseas,2020,Sharjah Cricket Stadium,12,7,5,0,58.3,41.7,0.0,16.7
+Overseas,2021,Dubai International Cricket Stadium,13,9,4,0,69.2,30.8,0.0,38.5
+Overseas,2021,Sharjah Cricket Stadium,10,7,3,0,70.0,30.0,0.0,40.0
+Overseas,2021,"Zayed Cricket Stadium, Abu Dhabi",8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,All Time,Dubai International Cricket Stadium,46,22,21,3,47.8,45.7,6.5,2.1
+Overseas,All Time,Sheikh Zayed Stadium,29,16,11,2,55.2,37.9,6.9,17.3
+Overseas,All Time,Sharjah Cricket Stadium,28,18,10,0,64.3,35.7,0.0,28.6
+Overseas,All Time,Kingsmead,15,6,9,0,40.0,60.0,0.0,-20.0
+Overseas,All Time,SuperSport Park,12,8,4,0,66.7,33.3,0.0,33.4
+Overseas,All Time,New Wanderers Stadium,8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,All Time,"Zayed Cricket Stadium, Abu Dhabi",8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,All Time,Newlands,7,2,4,1,28.6,57.1,14.3,-28.5
+Overseas,All Time,St George's Park,7,4,3,0,57.1,42.9,0.0,14.2
+Overseas,All Time,Buffalo Park,3,1,2,0,33.3,66.7,0.0,-33.4
+Overseas,All Time,De Beers Diamond Oval,3,2,1,0,66.7,33.3,0.0,33.4
+Overseas,All Time,OUTsurance Oval,2,1,1,0,50.0,50.0,0.0,0.0

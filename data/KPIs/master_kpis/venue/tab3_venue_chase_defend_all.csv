@@ -1,0 +1,249 @@
+venue_region,season,venue,matches,chasing_matches,defending_matches,other_matches,chasing_win_pct,defending_win_pct,other_result_pct,chase_defend_delta_pct
+India,2008,Eden Gardens,7,4,3,0,57.1,42.9,0.0,14.3
+India,2008,M Chinnaswamy Stadium,7,4,3,0,57.1,42.9,0.0,14.3
+India,2008,"MA Chidambaram Stadium, Chepauk",7,3,4,0,42.9,57.1,0.0,-14.3
+India,2008,"Punjab Cricket Association Stadium, Mohali",7,3,4,0,42.9,57.1,0.0,-14.3
+India,2008,"Rajiv Gandhi International Stadium, Uppal",7,5,2,0,71.4,28.6,0.0,42.9
+India,2008,Sawai Mansingh Stadium,7,5,2,0,71.4,28.6,0.0,42.9
+India,2008,Feroz Shah Kotla,6,3,3,0,50.0,50.0,0.0,0.0
+India,2008,Wankhede Stadium,6,4,2,0,66.7,33.3,0.0,33.3
+India,2008,Dr DY Patil Sports Academy,4,3,1,0,75.0,25.0,0.0,50.0
+India,2010,Eden Gardens,7,4,3,0,57.1,42.9,0.0,14.3
+India,2010,Feroz Shah Kotla,7,2,5,0,28.6,71.4,0.0,-42.9
+India,2010,M Chinnaswamy Stadium,7,4,3,0,57.1,42.9,0.0,14.3
+India,2010,"MA Chidambaram Stadium, Chepauk",7,3,3,1,42.9,42.9,14.3,0.0
+India,2010,Brabourne Stadium,6,3,3,0,50.0,50.0,0.0,0.0
+India,2010,Dr DY Patil Sports Academy,6,1,5,0,16.7,83.3,0.0,-66.7
+India,2010,"Punjab Cricket Association Stadium, Mohali",5,3,2,0,60.0,40.0,0.0,20.0
+India,2010,"Sardar Patel Stadium, Motera",4,2,2,0,50.0,50.0,0.0,0.0
+India,2010,Sawai Mansingh Stadium,3,2,1,0,66.7,33.3,0.0,33.3
+India,2010,"Vidarbha Cricket Association Stadium, Jamtha",3,1,2,0,33.3,66.7,0.0,-33.3
+India,2010,Barabati Stadium,2,0,2,0,0.0,100.0,0.0,-100.0
+India,2010,Himachal Pradesh Cricket Association Stadium,2,2,0,0,100.0,0.0,0.0,100.0
+India,2010,"Brabourne Stadium, Mumbai",1,1,0,0,100.0,0.0,0.0,100.0
+India,2011,"MA Chidambaram Stadium, Chepauk",9,1,8,0,11.1,88.9,0.0,-77.8
+India,2011,Wankhede Stadium,9,5,4,0,55.6,44.4,0.0,11.1
+India,2011,Dr DY Patil Sports Academy,7,6,1,0,85.7,14.3,0.0,71.4
+India,2011,Eden Gardens,7,4,3,0,57.1,42.9,0.0,14.3
+India,2011,Feroz Shah Kotla,7,3,3,1,42.9,42.9,14.3,0.0
+India,2011,"Rajiv Gandhi International Stadium, Uppal",7,4,3,0,57.1,42.9,0.0,14.3
+India,2011,Sawai Mansingh Stadium,7,6,1,0,85.7,14.3,0.0,71.4
+India,2011,M Chinnaswamy Stadium,6,4,2,0,66.7,33.3,0.0,33.3
+India,2011,Nehru Stadium,5,2,3,0,40.0,60.0,0.0,-20.0
+India,2011,"Punjab Cricket Association Stadium, Mohali",4,2,2,0,50.0,50.0,0.0,0.0
+India,2011,Himachal Pradesh Cricket Association Stadium,3,0,3,0,0.0,100.0,0.0,-100.0
+India,2011,Holkar Cricket Stadium,2,2,0,0,100.0,0.0,0.0,100.0
+India,2012,"MA Chidambaram Stadium, Chepauk",10,6,4,0,60.0,40.0,0.0,20.0
+India,2012,Subrata Roy Sahara Stadium,9,3,6,0,33.3,66.7,0.0,-33.3
+India,2012,Feroz Shah Kotla,8,4,4,0,50.0,50.0,0.0,0.0
+India,2012,M Chinnaswamy Stadium,8,4,4,0,50.0,50.0,0.0,0.0
+India,2012,Sawai Mansingh Stadium,8,4,4,0,50.0,50.0,0.0,0.0
+India,2012,Wankhede Stadium,8,5,3,0,62.5,37.5,0.0,25.0
+India,2012,Eden Gardens,7,3,4,0,42.9,57.1,0.0,-14.3
+India,2012,"Punjab Cricket Association Stadium, Mohali",6,5,1,0,83.3,16.7,0.0,66.7
+India,2012,"Rajiv Gandhi International Stadium, Uppal",4,2,2,0,50.0,50.0,0.0,0.0
+India,2012,Barabati Stadium,2,1,1,0,50.0,50.0,0.0,0.0
+India,2012,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2,1,1,0,50.0,50.0,0.0,0.0
+India,2012,Himachal Pradesh Cricket Association Stadium,2,2,0,0,100.0,0.0,0.0,100.0
+India,2013,Eden Gardens,8,6,2,0,75.0,25.0,0.0,50.0
+India,2013,Feroz Shah Kotla,8,4,4,0,50.0,50.0,0.0,0.0
+India,2013,M Chinnaswamy Stadium,8,4,3,1,50.0,37.5,12.5,12.5
+India,2013,"MA Chidambaram Stadium, Chepauk",8,3,5,0,37.5,62.5,0.0,-25.0
+India,2013,"Rajiv Gandhi International Stadium, Uppal",8,4,3,1,50.0,37.5,12.5,12.5
+India,2013,Sawai Mansingh Stadium,8,6,2,0,75.0,25.0,0.0,50.0
+India,2013,Wankhede Stadium,8,1,7,0,12.5,87.5,0.0,-75.0
+India,2013,Subrata Roy Sahara Stadium,7,3,4,0,42.9,57.1,0.0,-14.3
+India,2013,"Punjab Cricket Association Stadium, Mohali",6,4,2,0,66.7,33.3,0.0,33.3
+India,2013,Himachal Pradesh Cricket Association Stadium,2,0,2,0,0.0,100.0,0.0,-100.0
+India,2013,JSCA International Stadium Complex,2,1,1,0,50.0,50.0,0.0,0.0
+India,2013,Shaheed Veer Narayan Singh International Stadium,2,1,1,0,50.0,50.0,0.0,0.0
+India,2013,Maharashtra Cricket Association Stadium,1,0,1,0,0.0,100.0,0.0,-100.0
+India,2014,M Chinnaswamy Stadium,6,4,2,0,66.7,33.3,0.0,33.3
+India,2014,Wankhede Stadium,6,3,3,0,50.0,50.0,0.0,0.0
+India,2014,Feroz Shah Kotla,5,5,0,0,100.0,0.0,0.0,100.0
+India,2014,Eden Gardens,4,2,2,0,50.0,50.0,0.0,0.0
+India,2014,JSCA International Stadium Complex,4,3,1,0,75.0,25.0,0.0,50.0
+India,2014,"Rajiv Gandhi International Stadium, Uppal",4,4,0,0,100.0,0.0,0.0,100.0
+India,2014,"Sardar Patel Stadium, Motera",4,0,4,0,0.0,100.0,0.0,-100.0
+India,2014,Barabati Stadium,3,2,1,0,66.7,33.3,0.0,33.3
+India,2014,"Punjab Cricket Association Stadium, Mohali",3,2,1,0,66.7,33.3,0.0,33.3
+India,2014,Brabourne Stadium,1,1,0,0,100.0,0.0,0.0,100.0
+India,2015,Wankhede Stadium,8,2,6,0,25.0,75.0,0.0,-50.0
+India,2015,Eden Gardens,7,4,3,0,57.1,42.9,0.0,14.3
+India,2015,M Chinnaswamy Stadium,7,2,3,2,28.6,42.9,28.6,-14.3
+India,2015,"MA Chidambaram Stadium, Chepauk",7,1,6,0,14.3,85.7,0.0,-71.4
+India,2015,Feroz Shah Kotla,5,4,1,0,80.0,20.0,0.0,60.0
+India,2015,Maharashtra Cricket Association Stadium,4,2,2,0,50.0,50.0,0.0,0.0
+India,2015,"Punjab Cricket Association Stadium, Mohali",4,1,3,0,25.0,75.0,0.0,-50.0
+India,2015,"Rajiv Gandhi International Stadium, Uppal",4,2,2,0,50.0,50.0,0.0,0.0
+India,2015,"Sardar Patel Stadium, Motera",4,3,0,1,75.0,0.0,25.0,75.0
+India,2015,Brabourne Stadium,3,0,3,0,0.0,100.0,0.0,-100.0
+India,2015,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,3,1,2,0,33.3,66.7,0.0,-33.3
+India,2015,Shaheed Veer Narayan Singh International Stadium,2,1,1,0,50.0,50.0,0.0,0.0
+India,2015,JSCA International Stadium Complex,1,1,0,0,100.0,0.0,0.0,100.0
+India,2016,M Chinnaswamy Stadium,9,5,4,0,55.6,44.4,0.0,11.1
+India,2016,Eden Gardens,7,5,2,0,71.4,28.6,0.0,42.9
+India,2016,Feroz Shah Kotla,7,3,4,0,42.9,57.1,0.0,-14.3
+India,2016,"Punjab Cricket Association IS Bindra Stadium, Mohali",7,4,3,0,57.1,42.9,0.0,14.3
+India,2016,"Rajiv Gandhi International Stadium, Uppal",7,5,2,0,71.4,28.6,0.0,42.9
+India,2016,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,6,2,4,0,33.3,66.7,0.0,-33.3
+India,2016,Saurashtra Cricket Association Stadium,5,4,1,0,80.0,20.0,0.0,60.0
+India,2016,Maharashtra Cricket Association Stadium,4,3,1,0,75.0,25.0,0.0,50.0
+India,2016,Wankhede Stadium,4,4,0,0,100.0,0.0,0.0,100.0
+India,2016,Green Park,2,2,0,0,100.0,0.0,0.0,100.0
+India,2016,Shaheed Veer Narayan Singh International Stadium,2,2,0,0,100.0,0.0,0.0,100.0
+India,2017,"Rajiv Gandhi International Stadium, Uppal",8,2,6,0,25.0,75.0,0.0,-50.0
+India,2017,Wankhede Stadium,8,4,4,0,50.0,50.0,0.0,0.0
+India,2017,Eden Gardens,7,4,3,0,57.1,42.9,0.0,14.3
+India,2017,Feroz Shah Kotla,7,3,4,0,42.9,57.1,0.0,-14.3
+India,2017,M Chinnaswamy Stadium,7,5,2,0,71.4,28.6,0.0,42.9
+India,2017,Maharashtra Cricket Association Stadium,7,5,2,0,71.4,28.6,0.0,42.9
+India,2017,Saurashtra Cricket Association Stadium,5,2,2,1,40.0,40.0,20.0,0.0
+India,2017,"Punjab Cricket Association IS Bindra Stadium, Mohali",4,2,2,0,50.0,50.0,0.0,0.0
+India,2017,Holkar Cricket Stadium,3,3,0,0,100.0,0.0,0.0,100.0
+India,2017,Green Park,2,2,0,0,100.0,0.0,0.0,100.0
+India,2017,M.Chinnaswamy Stadium,1,0,1,0,0.0,100.0,0.0,-100.0
+India,2018,Eden Gardens,9,5,4,0,55.6,44.4,0.0,11.1
+India,2018,Wankhede Stadium,9,5,4,0,55.6,44.4,0.0,11.1
+India,2018,Arun Jaitley Stadium,7,2,5,0,28.6,71.4,0.0,-42.9
+India,2018,M.Chinnaswamy Stadium,7,4,3,0,57.1,42.9,0.0,14.3
+India,2018,Rajiv Gandhi International Stadium,7,4,3,0,57.1,42.9,0.0,14.3
+India,2018,Sawai Mansingh Stadium,7,3,4,0,42.9,57.1,0.0,-14.3
+India,2018,Maharashtra Cricket Association Stadium,6,4,2,0,66.7,33.3,0.0,33.3
+India,2018,Holkar Cricket Stadium,4,3,1,0,75.0,25.0,0.0,50.0
+India,2018,Punjab Cricket Association IS Bindra Stadium,3,1,2,0,33.3,66.7,0.0,-33.3
+India,2018,MA Chidambaram Stadium,1,1,0,0,100.0,0.0,0.0,100.0
+India,2019,MA Chidambaram Stadium,8,4,4,0,50.0,50.0,0.0,0.0
+India,2019,Rajiv Gandhi International Stadium,8,3,5,0,37.5,62.5,0.0,-25.0
+India,2019,Arun Jaitley Stadium,7,4,2,1,57.1,28.6,14.3,28.6
+India,2019,Eden Gardens,7,4,3,0,57.1,42.9,0.0,14.3
+India,2019,M.Chinnaswamy Stadium,7,3,3,1,42.9,42.9,14.3,0.0
+India,2019,Punjab Cricket Association IS Bindra Stadium,7,5,2,0,71.4,28.6,0.0,42.9
+India,2019,Sawai Mansingh Stadium,7,6,1,0,85.7,14.3,0.0,71.4
+India,2019,Wankhede Stadium,7,4,2,1,57.1,28.6,14.3,28.6
+India,2019,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,2,2,0,0,100.0,0.0,0.0,100.0
+India,2021,"MA Chidambaram Stadium, Chepauk, Chennai",10,4,5,1,40.0,50.0,10.0,-10.0
+India,2021,"Wankhede Stadium, Mumbai",10,6,4,0,60.0,40.0,0.0,20.0
+India,2021,"Narendra Modi Stadium, Ahmedabad",5,3,2,0,60.0,40.0,0.0,20.0
+India,2021,"Arun Jaitley Stadium, Delhi",4,3,1,0,75.0,25.0,0.0,50.0
+India,2022,"Wankhede Stadium, Mumbai",21,13,8,0,61.9,38.1,0.0,23.8
+India,2022,"Dr DY Patil Sports Academy, Mumbai",20,10,10,0,50.0,50.0,0.0,0.0
+India,2022,"Brabourne Stadium, Mumbai",16,8,8,0,50.0,50.0,0.0,0.0
+India,2022,"Maharashtra Cricket Association Stadium, Pune",13,3,10,0,23.1,76.9,0.0,-53.8
+India,2022,"Eden Gardens, Kolkata",2,1,1,0,50.0,50.0,0.0,0.0
+India,2022,"Narendra Modi Stadium, Ahmedabad",2,2,0,0,100.0,0.0,0.0,100.0
+India,2023,"MA Chidambaram Stadium, Chepauk, Chennai",9,4,5,0,44.4,55.6,0.0,-11.1
+India,2023,"Narendra Modi Stadium, Ahmedabad",9,4,5,0,44.4,55.6,0.0,-11.1
+India,2023,"Arun Jaitley Stadium, Delhi",7,4,3,0,57.1,42.9,0.0,14.3
+India,2023,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",7,2,4,1,28.6,57.1,14.3,-28.6
+India,2023,"Eden Gardens, Kolkata",7,3,4,0,42.9,57.1,0.0,-14.3
+India,2023,"M Chinnaswamy Stadium, Bengaluru",7,3,4,0,42.9,57.1,0.0,-14.3
+India,2023,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",7,3,4,0,42.9,57.1,0.0,-14.3
+India,2023,"Wankhede Stadium, Mumbai",7,5,2,0,71.4,28.6,0.0,42.9
+India,2023,"Punjab Cricket Association IS Bindra Stadium, Mohali, Chandigarh",5,2,3,0,40.0,60.0,0.0,-20.0
+India,2023,"Sawai Mansingh Stadium, Jaipur",5,2,3,0,40.0,60.0,0.0,-20.0
+India,2023,"Barsapara Cricket Stadium, Guwahati",2,0,2,0,0.0,100.0,0.0,-100.0
+India,2023,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2,1,1,0,50.0,50.0,0.0,0.0
+India,2024,"MA Chidambaram Stadium, Chepauk, Chennai",9,6,3,0,66.7,33.3,0.0,33.3
+India,2024,"Narendra Modi Stadium, Ahmedabad",8,6,2,0,75.0,25.0,0.0,50.0
+India,2024,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",7,4,3,0,57.1,42.9,0.0,14.3
+India,2024,"Eden Gardens, Kolkata",7,4,3,0,57.1,42.9,0.0,14.3
+India,2024,"M Chinnaswamy Stadium, Bengaluru",7,3,4,0,42.9,57.1,0.0,-14.3
+India,2024,"Wankhede Stadium, Mumbai",7,3,4,0,42.9,57.1,0.0,-14.3
+India,2024,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",6,3,3,0,50.0,50.0,0.0,0.0
+India,2024,"Arun Jaitley Stadium, Delhi",5,0,5,0,0.0,100.0,0.0,-100.0
+India,2024,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur",5,3,2,0,60.0,40.0,0.0,20.0
+India,2024,"Sawai Mansingh Stadium, Jaipur",5,3,2,0,60.0,40.0,0.0,20.0
+India,2024,"Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam",2,0,2,0,0.0,100.0,0.0,-100.0
+India,2024,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2,0,2,0,0.0,100.0,0.0,-100.0
+India,2024,"Barsapara Cricket Stadium, Guwahati",1,1,0,0,100.0,0.0,0.0,100.0
+India,2025,"Narendra Modi Stadium, Ahmedabad",9,2,7,0,22.2,77.8,0.0,-55.6
+India,2025,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",8,6,2,0,75.0,25.0,0.0,50.0
+India,2025,"Arun Jaitley Stadium, Delhi",7,3,3,1,42.9,42.9,14.3,0.0
+India,2025,"Eden Gardens, Kolkata",7,2,4,1,28.6,57.1,14.3,-28.6
+India,2025,"Sawai Mansingh Stadium, Jaipur",7,4,3,0,57.1,42.9,0.0,14.3
+India,2025,"Wankhede Stadium, Mumbai",7,4,3,0,57.1,42.9,0.0,14.3
+India,2025,"MA Chidambaram Stadium, Chepauk, Chennai",6,4,2,0,66.7,33.3,0.0,33.3
+India,2025,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",6,4,1,1,66.7,16.7,16.7,50.0
+India,2025,"M Chinnaswamy Stadium, Bengaluru",5,3,2,0,60.0,40.0,0.0,20.0
+India,2025,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur",5,2,3,0,40.0,60.0,0.0,-20.0
+India,2025,"Barsapara Cricket Stadium, Guwahati",2,1,1,0,50.0,50.0,0.0,0.0
+India,2025,"Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam",2,2,0,0,100.0,0.0,0.0,100.0
+India,2025,"Himachal Pradesh Cricket Association Stadium, Dharamsala",2,0,1,1,0.0,50.0,50.0,-50.0
+India,2025,"Maharaja Yadavindra Singh International Cricket Stadium, New Chandigarh",1,0,1,0,0.0,100.0,0.0,-100.0
+India,All Time,Eden Gardens,77,45,32,0,58.4,41.6,0.0,16.8
+India,All Time,Wankhede Stadium,73,37,35,1,50.7,47.9,1.4,2.8
+India,All Time,M Chinnaswamy Stadium,65,36,26,3,55.4,40.0,4.6,15.4
+India,All Time,Feroz Shah Kotla,60,31,28,1,51.7,46.7,1.7,5.0
+India,All Time,"Wankhede Stadium, Mumbai",52,31,21,0,59.6,40.4,0.0,19.2
+India,All Time,"Rajiv Gandhi International Stadium, Uppal",49,28,20,1,57.1,40.8,2.0,16.3
+India,All Time,"MA Chidambaram Stadium, Chepauk",48,17,30,1,35.4,62.5,2.1,-27.1
+India,All Time,Sawai Mansingh Stadium,47,32,15,0,68.1,31.9,0.0,36.2
+India,All Time,"Punjab Cricket Association Stadium, Mohali",35,20,15,0,57.1,42.9,0.0,14.2
+India,All Time,"MA Chidambaram Stadium, Chepauk, Chennai",34,18,15,1,52.9,44.1,2.9,8.8
+India,All Time,"Narendra Modi Stadium, Ahmedabad",33,17,16,0,51.5,48.5,0.0,3.0
+India,All Time,"Arun Jaitley Stadium, Delhi",23,10,12,1,43.5,52.2,4.3,-8.7
+India,All Time,"Eden Gardens, Kolkata",23,10,12,1,43.5,52.2,4.3,-8.7
+India,All Time,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",22,12,9,1,54.5,40.9,4.5,13.6
+India,All Time,Maharashtra Cricket Association Stadium,22,14,8,0,63.6,36.4,0.0,27.2
+India,All Time,"Dr DY Patil Sports Academy, Mumbai",20,10,10,0,50.0,50.0,0.0,0.0
+India,All Time,"M Chinnaswamy Stadium, Bengaluru",19,9,10,0,47.4,52.6,0.0,-5.2
+India,All Time,"Rajiv Gandhi International Stadium, Uppal, Hyderabad",19,10,8,1,52.6,42.1,5.3,10.5
+India,All Time,"Brabourne Stadium, Mumbai",17,9,8,0,52.9,47.1,0.0,5.8
+India,All Time,Dr DY Patil Sports Academy,17,10,7,0,58.8,41.2,0.0,17.6
+India,All Time,"Sawai Mansingh Stadium, Jaipur",17,9,8,0,52.9,47.1,0.0,5.8
+India,All Time,Subrata Roy Sahara Stadium,16,6,10,0,37.5,62.5,0.0,-25.0
+India,All Time,M.Chinnaswamy Stadium,15,7,7,1,46.7,46.7,6.7,0.0
+India,All Time,Rajiv Gandhi International Stadium,15,7,8,0,46.7,53.3,0.0,-6.6
+India,All Time,Arun Jaitley Stadium,14,6,7,1,42.9,50.0,7.1,-7.1
+India,All Time,Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,13,6,7,0,46.2,53.8,0.0,-7.6
+India,All Time,"Maharashtra Cricket Association Stadium, Pune",13,3,10,0,23.1,76.9,0.0,-53.8
+India,All Time,"Sardar Patel Stadium, Motera",12,5,6,1,41.7,50.0,8.3,-8.3
+India,All Time,"Punjab Cricket Association IS Bindra Stadium, Mohali",11,6,5,0,54.5,45.5,0.0,9.0
+India,All Time,Brabourne Stadium,10,4,6,0,40.0,60.0,0.0,-20.0
+India,All Time,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur",10,5,5,0,50.0,50.0,0.0,0.0
+India,All Time,Punjab Cricket Association IS Bindra Stadium,10,6,4,0,60.0,40.0,0.0,20.0
+India,All Time,Saurashtra Cricket Association Stadium,10,6,3,1,60.0,30.0,10.0,30.0
+India,All Time,Himachal Pradesh Cricket Association Stadium,9,4,5,0,44.4,55.6,0.0,-11.2
+India,All Time,Holkar Cricket Stadium,9,8,1,0,88.9,11.1,0.0,77.8
+India,All Time,MA Chidambaram Stadium,9,5,4,0,55.6,44.4,0.0,11.2
+India,All Time,Barabati Stadium,7,3,4,0,42.9,57.1,0.0,-14.2
+India,All Time,JSCA International Stadium Complex,7,5,2,0,71.4,28.6,0.0,42.8
+India,All Time,"Himachal Pradesh Cricket Association Stadium, Dharamsala",6,1,4,1,16.7,66.7,16.7,-50.0
+India,All Time,Shaheed Veer Narayan Singh International Stadium,6,4,2,0,66.7,33.3,0.0,33.4
+India,All Time,"Barsapara Cricket Stadium, Guwahati",5,2,3,0,40.0,60.0,0.0,-20.0
+India,All Time,Nehru Stadium,5,2,3,0,40.0,60.0,0.0,-20.0
+India,All Time,"Punjab Cricket Association IS Bindra Stadium, Mohali, Chandigarh",5,2,3,0,40.0,60.0,0.0,-20.0
+India,All Time,"Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam",4,2,2,0,50.0,50.0,0.0,0.0
+India,All Time,Green Park,4,4,0,0,100.0,0.0,0.0,100.0
+India,All Time,"Vidarbha Cricket Association Stadium, Jamtha",3,1,2,0,33.3,66.7,0.0,-33.4
+India,All Time,"Maharaja Yadavindra Singh International Cricket Stadium, New Chandigarh",1,0,1,0,0.0,100.0,0.0,-100.0
+Overseas,2009,Kingsmead,15,6,9,0,40.0,60.0,0.0,-20.0
+Overseas,2009,SuperSport Park,12,8,4,0,66.7,33.3,0.0,33.3
+Overseas,2009,New Wanderers Stadium,8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,2009,Newlands,7,2,4,1,28.6,57.1,14.3,-28.6
+Overseas,2009,St George's Park,7,4,3,0,57.1,42.9,0.0,14.3
+Overseas,2009,Buffalo Park,3,1,2,0,33.3,66.7,0.0,-33.3
+Overseas,2009,De Beers Diamond Oval,3,2,1,0,66.7,33.3,0.0,33.3
+Overseas,2009,OUTsurance Oval,2,1,1,0,50.0,50.0,0.0,0.0
+Overseas,2014,Dubai International Cricket Stadium,7,4,3,0,57.1,42.9,0.0,14.3
+Overseas,2014,Sheikh Zayed Stadium,7,3,3,1,42.9,42.9,14.3,0.0
+Overseas,2014,Sharjah Cricket Stadium,6,4,2,0,66.7,33.3,0.0,33.3
+Overseas,2020,Dubai International Cricket Stadium,26,9,14,3,34.6,53.8,11.5,-19.2
+Overseas,2020,Sheikh Zayed Stadium,22,13,8,1,59.1,36.4,4.5,22.7
+Overseas,2020,Sharjah Cricket Stadium,12,7,5,0,58.3,41.7,0.0,16.7
+Overseas,2021,Dubai International Cricket Stadium,13,9,4,0,69.2,30.8,0.0,38.5
+Overseas,2021,Sharjah Cricket Stadium,10,7,3,0,70.0,30.0,0.0,40.0
+Overseas,2021,"Zayed Cricket Stadium, Abu Dhabi",8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,All Time,Dubai International Cricket Stadium,46,22,21,3,47.8,45.7,6.5,2.1
+Overseas,All Time,Sheikh Zayed Stadium,29,16,11,2,55.2,37.9,6.9,17.3
+Overseas,All Time,Sharjah Cricket Stadium,28,18,10,0,64.3,35.7,0.0,28.6
+Overseas,All Time,Kingsmead,15,6,9,0,40.0,60.0,0.0,-20.0
+Overseas,All Time,SuperSport Park,12,8,4,0,66.7,33.3,0.0,33.4
+Overseas,All Time,New Wanderers Stadium,8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,All Time,"Zayed Cricket Stadium, Abu Dhabi",8,5,3,0,62.5,37.5,0.0,25.0
+Overseas,All Time,Newlands,7,2,4,1,28.6,57.1,14.3,-28.5
+Overseas,All Time,St George's Park,7,4,3,0,57.1,42.9,0.0,14.2
+Overseas,All Time,Buffalo Park,3,1,2,0,33.3,66.7,0.0,-33.4
+Overseas,All Time,De Beers Diamond Oval,3,2,1,0,66.7,33.3,0.0,33.4
+Overseas,All Time,OUTsurance Oval,2,1,1,0,50.0,50.0,0.0,0.0

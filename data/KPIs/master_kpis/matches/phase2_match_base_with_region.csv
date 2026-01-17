@@ -1,0 +1,998 @@
+match_id,season_id_x,team_batting,team_bowling,match_winner,result,win_by_runs,win_by_wickets,toss_winner,toss_decision,venue,city,venue_region
+335982,2008,6,1,6.0,win,140.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082591,2017,2,1,2.0,win,35.0,,1.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1082593,2017,5,6,6.0,win,,10.0,6.0,field,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+1082592,2017,3,4,4.0,win,,7.0,4.0,field,"MCA Stadium, Pune",Pune,India
+1082594,2017,4,494,494.0,win,,6.0,494.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+1082601,2017,494,6,6.0,win,,8.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1082595,2017,1,252,1.0,win,15.0,,1.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1082596,2017,5,2,2.0,win,,9.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1082597,2017,6,3,3.0,win,,4.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1082598,2017,1,494,494.0,win,,8.0,1.0,bat,"Holkar Cricket Stadium, Indore",Indore,India
+1082599,2017,252,4,252.0,win,97.0,,4.0,field,"MCA Stadium, Pune",Pune,India
+1082600,2017,2,3,3.0,win,,4.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1082602,2017,1,3,3.0,win,,4.0,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082603,2017,4,5,5.0,win,,7.0,5.0,field,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+1082604,2017,6,2,6.0,win,17.0,,2.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1082605,2017,252,494,252.0,win,51.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1082608,2017,252,6,6.0,win,,4.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1082606,2017,5,3,3.0,win,,6.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1082607,2017,4,1,4.0,win,27.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082609,2017,2,494,2.0,win,5.0,,494.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1082610,2017,1,5,1.0,win,21.0,,5.0,field,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+1082612,2017,494,3,3.0,win,,8.0,3.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+1082611,2017,2,252,2.0,win,15.0,,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1082613,2017,5,6,5.0,win,,4.0,5.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1082614,2017,252,3,3.0,win,14.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1082615,2017,2,4,4.0,win,,6.0,4.0,field,"MCA Stadium, Pune",Pune,India
+1082616,2017,494,5,494.0,win,26.0,,5.0,field,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+1082617,2017,6,1,6.0,win,82.0,,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1082618,2017,4,3,4.0,win,3.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1082620,2017,4,6,6.0,win,,7.0,6.0,field,"MCA Stadium, Pune",Pune,India
+1082621,2017,1,5,5.0,win,,7.0,5.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082622,2017,252,6,6.0,win,,7.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1082623,2017,2,494,2.0,win,26.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1082624,2017,4,1,4.0,win,61.0,,1.0,field,"MCA Stadium, Pune",Pune,India
+1082625,2017,3,5,3.0,tie,,,5.0,bat,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+1082626,2017,252,494,494.0,win,,10.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1082627,2017,2,6,2.0,win,48.0,,6.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1082628,2017,1,3,3.0,win,,5.0,1.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1082629,2017,5,4,4.0,win,,5.0,4.0,field,"MCA Stadium, Pune",Pune,India
+1082630,2017,2,252,252.0,win,,6.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1082631,2017,6,4,4.0,win,,4.0,4.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1082632,2017,5,252,252.0,win,,7.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1082633,2017,494,1,494.0,win,19.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082639,2017,6,494,494.0,win,14.0,,6.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1082634,2017,4,2,4.0,win,12.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1082635,2017,3,252,3.0,win,146.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1082636,2017,1,6,6.0,win,,6.0,6.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082637,2017,494,5,5.0,win,,6.0,5.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1082638,2017,3,2,2.0,win,,7.0,3.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1082642,2017,4,252,252.0,win,7.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1082641,2017,494,3,494.0,win,7.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1082644,2017,3,6,3.0,win,9.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1082645,2017,494,4,4.0,win,,9.0,4.0,field,"MCA Stadium, Pune",Pune,India
+1082646,2017,1,252,1.0,win,10.0,,1.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1082649,2017,3,6,3.0,win,,6.0,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082647,2017,4,3,4.0,win,20.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1082648,2017,2,6,6.0,win,,7.0,6.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1082650,2017,3,4,3.0,win,1.0,,3.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136561,2018,129,3,129.0,win,,1.0,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136562,2018,252,494,494.0,win,,6.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1136563,2018,1,6,6.0,win,,4.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136564,2018,134,2,2.0,win,,9.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136565,2018,6,129,129.0,win,,5.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1136566,2018,134,252,134.0,win,10.0,,252.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1136567,2018,3,2,2.0,win,,1.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136568,2018,494,1,1.0,win,,4.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1136569,2018,3,252,252.0,win,,7.0,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136570,2018,2,6,2.0,win,,5.0,2.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136571,2018,1,134,134.0,win,19.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1136573,2018,252,6,6.0,win,71.0,,252.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136572,2018,494,129,494.0,win,4.0,,129.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1136574,2018,3,1,3.0,win,46.0,,1.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136575,2018,134,6,6.0,win,,7.0,6.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1136576,2018,494,2,494.0,win,15.0,,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+1136577,2018,129,134,129.0,win,64.0,,134.0,field,"MCA Stadium, Pune",Pune,India
+1136578,2018,6,494,494.0,win,,9.0,494.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136579,2018,252,1,1.0,win,,6.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1136580,2018,129,2,129.0,win,4.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136581,2018,3,134,134.0,win,,3.0,3.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1136582,2018,494,252,494.0,win,4.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1136584,2018,129,1,129.0,win,,5.0,129.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1136583,2018,2,3,2.0,win,31.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136585,2018,2,494,2.0,win,13.0,,494.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136586,2018,252,6,252.0,win,55.0,,6.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1136587,2018,129,3,3.0,win,,8.0,3.0,field,"MCA Stadium, Pune",Pune,India
+1136588,2018,2,134,2.0,win,11.0,,2.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1136589,2018,1,6,6.0,win,,6.0,6.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1136590,2018,129,252,129.0,win,13.0,,252.0,field,"MCA Stadium, Pune",Pune,India
+1136591,2018,1,3,1.0,win,14.0,,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1136592,2018,252,134,252.0,win,4.0,,134.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1136593,2018,129,6,6.0,win,,6.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136594,2018,494,3,3.0,win,,6.0,3.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+1136595,2018,1,129,129.0,win,,6.0,129.0,field,"MCA Stadium, Pune",Pune,India
+1136596,2018,252,2,2.0,win,,7.0,252.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136597,2018,3,6,3.0,win,13.0,,6.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136598,2018,134,494,494.0,win,,6.0,494.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+1136599,2018,2,1,2.0,win,5.0,,1.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136600,2018,134,494,134.0,win,15.0,,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1136601,2018,3,6,3.0,win,102.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136602,2018,252,2,2.0,win,,9.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1136603,2018,129,134,134.0,win,,4.0,129.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1136604,2018,6,494,6.0,win,31.0,,494.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+1136605,2018,252,1,1.0,win,,5.0,1.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1136606,2018,2,129,129.0,win,,8.0,129.0,field,"MCA Stadium, Pune",Pune,India
+1136608,2018,494,1,1.0,win,,10.0,1.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+1136607,2018,3,134,134.0,win,,7.0,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136609,2018,134,6,6.0,win,,6.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136610,2018,3,494,3.0,win,3.0,,494.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136611,2018,1,2,1.0,win,14.0,,2.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1136612,2018,252,129,252.0,win,34.0,,129.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1136613,2018,134,1,134.0,win,30.0,,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1136614,2018,2,6,6.0,win,,5.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1136615,2018,252,3,252.0,win,11.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1136616,2018,494,129,129.0,win,,5.0,129.0,field,"MCA Stadium, Pune",Pune,India
+1175357,2019,2,6,6.0,win,,6.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136617,2018,2,129,129.0,win,,2.0,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1136618,2018,6,134,6.0,win,25.0,,134.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136619,2018,2,6,2.0,win,14.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1136620,2018,2,129,129.0,win,,8.0,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1175356,2019,1,129,129.0,win,,7.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1175358,2019,252,3,252.0,win,37.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1175360,2019,129,252,129.0,win,,6.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1175359,2019,494,134,494.0,win,14.0,,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1175361,2019,6,494,6.0,win,28.0,,494.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1175362,2019,3,1,3.0,win,6.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1175363,2019,134,2,2.0,win,,5.0,134.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1175364,2019,3,494,494.0,win,,8.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1175365,2019,6,252,252.0,tie,,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1175366,2019,2,1,2.0,win,118.0,,1.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1175367,2019,129,134,129.0,win,8.0,,134.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1175368,2019,494,252,494.0,win,14.0,,252.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1175369,2019,1,134,134.0,win,,7.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1175370,2019,3,129,3.0,win,37.0,,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1175371,2019,252,2,2.0,win,,5.0,2.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1175372,2019,1,6,6.0,win,,5.0,6.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1178395,2019,252,1,252.0,win,,4.0,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1178393,2019,129,494,129.0,win,22.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1178394,2019,3,2,3.0,win,40.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1178396,2019,134,6,6.0,win,,8.0,6.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1178397,2019,2,494,494.0,win,,6.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1178398,2019,6,129,129.0,win,,7.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1178399,2019,494,3,3.0,win,,3.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1178400,2019,134,129,129.0,win,,4.0,129.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1178401,2019,6,252,252.0,win,,7.0,252.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1178402,2019,3,134,134.0,win,,4.0,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1178403,2019,494,1,1.0,win,,8.0,1.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1178404,2019,6,129,129.0,win,,5.0,129.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1178407,2019,494,134,494.0,win,12.0,,134.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1178405,2019,252,2,252.0,win,39.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1178406,2019,1,3,3.0,win,,5.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1178408,2019,129,2,2.0,win,,6.0,129.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1178409,2019,3,252,3.0,win,40.0,,3.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1178410,2019,1,6,1.0,win,10.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1178411,2019,134,3,134.0,win,,5.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1178414,2019,1,129,1.0,win,1.0,,129.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1178412,2019,494,252,252.0,win,,5.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1178413,2019,6,2,2.0,win,,9.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1178415,2019,134,252,252.0,win,,6.0,252.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1178416,2019,2,129,129.0,win,,6.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1178418,2019,6,134,134.0,win,,3.0,134.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1178417,2019,1,494,1.0,win,17.0,,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1178419,2019,3,129,3.0,win,46.0,,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1178420,2019,2,134,134.0,win,,7.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1178421,2019,252,1,252.0,win,16.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1178422,2019,6,3,6.0,win,34.0,,3.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1178423,2019,2,494,2.0,win,45.0,,494.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1178427,2019,494,6,6.0,win,,7.0,6.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1178424,2019,1,134,134.0,no result,,,134.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1178425,2019,129,252,129.0,win,80.0,,252.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1178428,2019,252,134,252.0,win,,5.0,134.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1178426,2019,3,2,2.0,tie,,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1178429,2019,2,1,1.0,win,,4.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1178430,2019,129,494,494.0,win,,6.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1178431,2019,6,3,3.0,win,,9.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1181764,2019,129,3,3.0,win,,6.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1181766,2019,2,252,252.0,win,,2.0,252.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+1181767,2019,252,129,129.0,win,,6.0,129.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+1181768,2019,3,129,3.0,win,1.0,,3.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1254061,2021,494,134,494.0,win,4.0,,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254058,2021,3,1,1.0,win,,2.0,1.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254059,2021,129,252,252.0,win,,7.0,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254060,2021,6,2,6.0,win,10.0,,2.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254062,2021,3,6,3.0,win,10.0,,6.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254068,2021,494,252,252.0,win,,6.0,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254063,2021,1,2,1.0,win,6.0,,2.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254064,2021,252,134,134.0,win,,3.0,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254065,2021,494,129,129.0,win,,6.0,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254066,2021,3,2,3.0,win,13.0,,3.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254067,2021,1,6,1.0,win,38.0,,1.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254069,2021,129,134,129.0,win,45.0,,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254070,2021,3,252,252.0,win,,6.0,3.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254073,2021,134,1,1.0,win,,10.0,1.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254071,2021,494,2,2.0,win,,9.0,494.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254072,2021,129,6,129.0,win,18.0,,6.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254074,2021,3,494,494.0,win,,9.0,494.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254075,2021,6,134,134.0,win,,6.0,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1254076,2021,129,1,129.0,win,69.0,,129.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1254077,2021,252,2,2.0,tie,,,252.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1254078,2021,494,6,6.0,win,,5.0,6.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1254079,2021,1,252,1.0,win,1.0,,252.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1254080,2021,2,129,129.0,win,,7.0,2.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1254081,2021,3,134,3.0,win,,7.0,3.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1254082,2021,6,252,252.0,win,,7.0,252.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1254083,2021,494,1,494.0,win,34.0,,1.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1254084,2021,129,3,3.0,win,,4.0,3.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1254085,2021,134,2,134.0,win,55.0,,2.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1254086,2021,494,252,252.0,win,,7.0,252.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1304047,2022,6,129,6.0,win,,6.0,6.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304048,2022,3,252,252.0,win,,4.0,252.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304049,2022,1,494,494.0,win,,5.0,494.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304060,2022,6,3,6.0,win,,5.0,6.0,field,"MCA Stadium, Pune",Pune,India
+1304050,2022,614,615,615.0,win,,5.0,615.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304065,2022,252,6,252.0,win,44.0,,6.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304051,2022,134,2,134.0,win,61.0,,2.0,field,"MCA Stadium, Pune",Pune,India
+1304052,2022,6,1,1.0,win,,3.0,1.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304053,2022,129,614,614.0,win,,6.0,614.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304054,2022,494,6,6.0,win,,6.0,6.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304055,2022,134,3,134.0,win,23.0,,3.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304056,2022,615,252,615.0,win,14.0,,252.0,field,"MCA Stadium, Pune",Pune,India
+1304057,2022,494,129,494.0,win,54.0,,129.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304058,2022,614,2,614.0,win,12.0,,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304059,2022,134,1,1.0,win,,4.0,1.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304061,2022,252,614,614.0,win,,6.0,614.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304062,2022,494,615,615.0,win,,6.0,615.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304063,2022,129,2,2.0,win,,8.0,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304064,2022,3,1,1.0,win,,7.0,1.0,field,"MCA Stadium, Pune",Pune,India
+1304066,2022,134,614,134.0,win,3.0,,614.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304072,2022,614,3,614.0,win,18.0,,3.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304067,2022,615,2,2.0,win,,8.0,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304068,2022,129,1,129.0,win,23.0,,1.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304069,2022,494,3,494.0,win,12.0,,3.0,field,"MCA Stadium, Pune",Pune,India
+1304070,2022,615,134,615.0,win,37.0,,134.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304081,2022,615,6,615.0,win,8.0,,615.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304071,2022,6,2,2.0,win,,7.0,2.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304083,2022,614,3,614.0,win,36.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304073,2022,1,252,1.0,win,16.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304074,2022,494,2,2.0,win,,7.0,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304075,2022,129,615,615.0,win,,3.0,615.0,field,"MCA Stadium, Pune",Pune,India
+1304076,2022,134,6,134.0,win,7.0,,6.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304077,2022,1,614,1.0,win,18.0,,614.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+1304078,2022,494,252,252.0,win,,9.0,252.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304079,2022,3,129,129.0,win,,3.0,129.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304080,2022,134,252,134.0,win,15.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304087,2022,252,6,252.0,win,,4.0,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304090,2022,3,134,3.0,win,,5.0,3.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304082,2022,1,2,2.0,win,,9.0,2.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304084,2022,494,129,494.0,win,11.0,,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304085,2022,134,1,134.0,win,29.0,,1.0,field,"MCA Stadium, Pune",Pune,India
+1304086,2022,2,615,615.0,win,,5.0,615.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304088,2022,614,494,614.0,win,20.0,,494.0,field,"MCA Stadium, Pune",Pune,India
+1304089,2022,1,615,615.0,win,,6.0,1.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+1304091,2022,614,252,614.0,win,6.0,,614.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1304092,2022,129,2,129.0,win,13.0,,2.0,field,"MCA Stadium, Pune",Pune,India
+1304093,2022,134,6,6.0,win,,7.0,6.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304095,2022,129,1,1.0,win,13.0,,129.0,field,"MCA Stadium, Pune",Pune,India
+1304094,2022,615,494,494.0,win,,8.0,615.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304096,2022,252,2,252.0,win,21.0,,2.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304097,2022,3,615,3.0,win,5.0,,615.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304104,2022,134,252,252.0,win,,8.0,252.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304098,2022,494,134,134.0,win,,6.0,494.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1304102,2022,6,3,6.0,win,52.0,,3.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304099,2022,614,6,614.0,win,75.0,,6.0,field,"MCA Stadium, Pune",Pune,India
+1304100,2022,1,2,1.0,win,67.0,,1.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1304101,2022,129,252,129.0,win,91.0,,252.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304103,2022,615,614,615.0,win,62.0,,615.0,bat,"MCA Stadium, Pune",Pune,India
+1304105,2022,129,3,3.0,win,,5.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304106,2022,494,1,494.0,win,54.0,,1.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+1304107,2022,6,2,6.0,win,54.0,,6.0,bat,"MCA Stadium, Pune",Pune,India
+1304108,2022,615,129,615.0,win,,7.0,129.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1304109,2022,134,614,134.0,win,24.0,,134.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+1304111,2022,2,3,2.0,win,3.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304110,2022,252,494,252.0,win,17.0,,494.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304112,2022,614,6,614.0,win,2.0,,614.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Navi Mumbai,India
+1304113,2022,615,1,1.0,win,,8.0,615.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1304114,2022,129,134,134.0,win,,5.0,129.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+1304115,2022,252,3,3.0,win,,5.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1304116,2022,2,494,494.0,win,,5.0,2.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1312198,2022,614,1,1.0,win,14.0,,614.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1312197,2022,134,615,615.0,win,,7.0,615.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1312199,2022,1,134,134.0,win,,7.0,134.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1312200,2022,134,615,615.0,win,,7.0,134.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359475,2023,129,615,615.0,win,,5.0,615.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359476,2023,494,6,494.0,win,7.0,,6.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1359477,2023,614,252,614.0,win,50.0,,252.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1359478,2023,134,2,134.0,win,72.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1359479,2023,3,1,1.0,win,,8.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1359480,2023,129,614,129.0,win,12.0,,614.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359481,2023,252,615,615.0,win,,6.0,615.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1359482,2023,494,134,494.0,win,5.0,,134.0,field,"Barsapara Cricket Stadium, Guwahati",Guwahati,India
+1359483,2023,6,1,6.0,win,81.0,,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1359484,2023,2,614,614.0,win,,5.0,2.0,bat,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1359485,2023,134,252,134.0,win,57.0,,252.0,field,"Barsapara Cricket Stadium, Guwahati",Guwahati,India
+1359486,2023,3,129,129.0,win,,7.0,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1359487,2023,615,6,6.0,win,,3.0,615.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359490,2023,252,3,3.0,win,,6.0,3.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1359488,2023,494,2,2.0,win,,8.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1359489,2023,1,614,614.0,win,,1.0,614.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1359493,2023,2,6,2.0,win,23.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1359491,2023,134,129,134.0,win,3.0,,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359492,2023,494,615,615.0,win,,6.0,615.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1359494,2023,1,252,1.0,win,23.0,,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1359495,2023,614,494,494.0,win,,2.0,494.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1359496,2023,6,3,3.0,win,,5.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1359497,2023,615,134,134.0,win,,3.0,134.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359498,2023,129,1,129.0,win,8.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1359499,2023,2,3,3.0,win,14.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1359500,2023,614,134,614.0,win,10.0,,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1359501,2023,1,494,1.0,win,24.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1359502,2023,6,252,252.0,win,,4.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1359503,2023,129,2,129.0,win,,7.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359504,2023,615,614,615.0,win,7.0,,615.0,bat,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1359507,2023,129,6,129.0,win,49.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1359505,2023,494,3,494.0,win,13.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1359506,2023,1,134,1.0,win,7.0,,134.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1359508,2023,252,2,252.0,win,7.0,,252.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1359509,2023,615,3,615.0,win,55.0,,3.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359511,2023,129,134,134.0,win,32.0,,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1359510,2023,6,1,6.0,win,21.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1359512,2023,614,494,614.0,win,56.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1359514,2023,252,2,2.0,win,9.0,,2.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1359513,2023,6,615,615.0,win,,7.0,615.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1359521,2023,6,2,6.0,win,5.0,,6.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1359515,2023,129,494,494.0,win,,4.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359516,2023,134,3,3.0,win,,6.0,134.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+1359517,2023,1,614,1.0,win,18.0,,1.0,bat,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1359518,2023,252,615,252.0,win,5.0,,252.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359519,2023,614,129,129.0,no result,,,129.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1359520,2023,494,3,3.0,win,,6.0,3.0,field,"PCA Stadium, Mohali",Chandigarh,India
+1359523,2023,129,3,129.0,win,,6.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359522,2023,134,615,615.0,win,,9.0,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1359524,2023,1,252,252.0,win,,7.0,1.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1359525,2023,615,614,615.0,win,56.0,,614.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359526,2023,134,2,2.0,win,,4.0,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1359530,2023,6,134,134.0,win,,9.0,134.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1359527,2023,494,6,6.0,win,,5.0,494.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+1359528,2023,1,3,3.0,win,,6.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1359529,2023,129,252,129.0,win,27.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359531,2023,3,615,3.0,win,27.0,,615.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1359535,2023,129,6,6.0,win,,6.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359532,2023,2,614,614.0,win,,7.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1359533,2023,494,252,494.0,win,31.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1359534,2023,1,134,1.0,win,112.0,,1.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1359536,2023,615,2,615.0,win,34.0,,2.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1359537,2023,614,3,614.0,win,5.0,,3.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1359538,2023,252,494,252.0,win,15.0,,494.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+1359539,2023,2,1,1.0,win,,8.0,1.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1359540,2023,494,134,134.0,win,,4.0,134.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+1359541,2023,129,252,129.0,win,77.0,,129.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1422119,2024,129,1,129.0,win,,6.0,1.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1359542,2023,614,6,614.0,win,1.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1359543,2023,2,3,3.0,win,,8.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1359544,2023,1,615,615.0,win,,6.0,615.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1370350,2023,129,615,129.0,win,15.0,,615.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1370351,2023,3,614,3.0,win,81.0,,3.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1370352,2023,615,3,615.0,win,62.0,,3.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1422121,2024,6,2,6.0,win,4.0,,2.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1370353,2023,615,129,129.0,win,,5.0,129.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1422120,2024,252,494,494.0,win,,4.0,494.0,field,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1422122,2024,134,614,134.0,win,20.0,,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1422123,2024,615,3,615.0,win,6.0,,3.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1422124,2024,494,1,1.0,win,,4.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1422125,2024,129,615,129.0,win,63.0,,615.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1422126,2024,2,3,2.0,win,31.0,,3.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1422127,2024,134,252,134.0,win,12.0,,252.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1422128,2024,1,6,6.0,win,,7.0,6.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1422129,2024,614,494,614.0,win,21.0,,614.0,bat,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1422130,2024,2,615,615.0,win,,7.0,2.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1422131,2024,252,129,252.0,win,20.0,,252.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+1422132,2024,3,134,134.0,win,,6.0,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1422133,2024,614,1,614.0,win,28.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1422134,2024,6,252,6.0,win,106.0,,6.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+1422135,2024,615,494,494.0,win,,3.0,494.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1422136,2024,129,2,2.0,win,,6.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1422137,2024,1,134,134.0,win,,6.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1422138,2024,3,252,3.0,win,29.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1422139,2024,614,615,614.0,win,33.0,,614.0,bat,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1426263,2024,1,3,3.0,win,,7.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1426260,2024,6,129,129.0,win,,7.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1426261,2024,2,494,2.0,win,2.0,,494.0,field,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1426262,2024,134,615,615.0,win,,3.0,615.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1426264,2024,614,252,252.0,win,,6.0,614.0,bat,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1426265,2024,494,134,134.0,win,,3.0,134.0,field,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1426266,2024,614,6,6.0,win,,8.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1426269,2024,6,134,134.0,win,,2.0,134.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1426267,2024,129,3,129.0,win,20.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1426268,2024,2,1,2.0,win,25.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1426281,2024,252,3,252.0,win,10.0,,3.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1426270,2024,615,252,252.0,win,,6.0,252.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1426271,2024,3,494,3.0,win,9.0,,494.0,field,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1426272,2024,129,614,614.0,win,,8.0,614.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1426273,2024,2,252,2.0,win,67.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1426274,2024,6,1,6.0,win,1.0,,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1426275,2024,494,615,615.0,win,,3.0,494.0,bat,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1426276,2024,3,134,134.0,win,,9.0,3.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1426277,2024,129,614,614.0,win,,6.0,614.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1426278,2024,252,615,252.0,win,4.0,,615.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1426279,2024,1,2,1.0,win,35.0,,1.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1426280,2024,6,494,494.0,win,,8.0,494.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1426282,2024,614,134,134.0,win,,7.0,134.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1426283,2024,615,1,1.0,win,,9.0,1.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1426284,2024,129,2,129.0,win,78.0,,2.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1426291,2024,129,494,129.0,win,28.0,,494.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+1426285,2024,252,6,6.0,win,,7.0,252.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+1426286,2024,3,614,614.0,win,,4.0,614.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1426287,2024,129,494,494.0,win,,7.0,494.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1426288,2024,2,134,2.0,win,1.0,,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1426289,2024,6,3,6.0,win,24.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1426290,2024,615,1,1.0,win,,4.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1426295,2024,614,2,2.0,win,,10.0,614.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1426292,2024,6,614,6.0,win,98.0,,614.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1426293,2024,2,3,3.0,win,,7.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1426294,2024,252,134,252.0,win,20.0,,134.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1426296,2024,1,494,1.0,win,60.0,,494.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+1426297,2024,129,615,615.0,win,35.0,,129.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1426298,2024,6,3,6.0,win,18.0,,3.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1426299,2024,134,129,129.0,win,,5.0,134.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1426300,2024,1,252,1.0,win,47.0,,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1426302,2024,252,614,252.0,win,19.0,,614.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473438,2025,1,6,1.0,win,,7.0,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1426303,2024,134,494,494.0,win,,5.0,134.0,bat,"Barsapara Cricket Stadium, Guwahati",Guwahati,India
+1426305,2024,614,3,614.0,win,18.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1473439,2025,134,2,2.0,win,44.0,,134.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1426306,2024,1,129,1.0,win,27.0,,129.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1426307,2024,494,2,2.0,win,,4.0,494.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1426309,2024,2,6,6.0,win,,8.0,2.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1426310,2024,1,134,134.0,win,,4.0,134.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1426311,2024,2,134,2.0,win,36.0,,134.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1426312,2024,2,6,6.0,win,,8.0,2.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1473441,2025,252,614,252.0,win,,1.0,252.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+1473440,2025,3,129,129.0,win,,4.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1473442,2025,494,615,494.0,win,11.0,,615.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473443,2025,134,6,6.0,win,,8.0,6.0,field,"Barsapara Cricket Stadium, Guwahati",Guwahati,India
+1473444,2025,2,614,614.0,win,,5.0,614.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1473445,2025,1,129,1.0,win,50.0,,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+335983,2008,129,494,129.0,win,33.0,,129.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+1473446,2025,615,3,615.0,win,36.0,,3.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473447,2025,2,252,252.0,win,,7.0,2.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+1473448,2025,134,129,134.0,win,6.0,,129.0,field,"Barsapara Cricket Stadium, Guwahati",Guwahati,India
+1473449,2025,6,3,3.0,win,,8.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+335987,2008,134,494,134.0,win,,6.0,494.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1473450,2025,614,494,494.0,win,,8.0,494.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1473451,2025,1,615,615.0,win,,8.0,615.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1473452,2025,6,2,6.0,win,80.0,,2.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1473453,2025,614,3,614.0,win,12.0,,3.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+335984,2008,134,252,252.0,win,,9.0,134.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+335985,2008,3,1,1.0,win,,5.0,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+335986,2008,2,6,6.0,win,,5.0,2.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+335988,2008,2,252,252.0,win,,9.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+335989,2008,129,3,129.0,win,6.0,,3.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+335991,2008,3,494,494.0,win,66.0,,3.0,field,"PCA Stadium, Mohali",Chandigarh,India
+335990,2008,2,134,134.0,win,,3.0,134.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+335992,2008,1,134,134.0,win,,7.0,134.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+335993,2008,6,129,129.0,win,,9.0,6.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+335996,2008,129,1,129.0,win,13.0,,129.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+335994,2008,3,2,2.0,win,,10.0,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+335995,2008,252,494,494.0,win,,4.0,252.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+335998,2008,252,1,252.0,win,10.0,,1.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+335997,2008,6,3,3.0,win,,7.0,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+336001,2008,252,129,252.0,win,,8.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+335999,2008,2,494,494.0,win,,7.0,494.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+336000,2008,134,6,134.0,win,45.0,,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+336002,2008,2,1,1.0,win,,5.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+336006,2008,1,494,494.0,win,,6.0,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+336003,2008,494,6,494.0,win,9.0,,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+336004,2008,3,252,3.0,win,29.0,,252.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+336005,2008,129,134,134.0,win,,8.0,129.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+336007,2008,129,2,2.0,win,,7.0,2.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+336008,2008,134,3,3.0,win,,7.0,3.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+336009,2008,252,129,129.0,win,,4.0,129.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+336010,2008,6,1,6.0,win,5.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+336013,2008,129,494,129.0,win,18.0,,494.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+336011,2008,2,134,134.0,win,,8.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+336012,2008,1,3,3.0,win,,9.0,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+336017,2008,6,252,6.0,win,23.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+336014,2008,6,2,6.0,win,23.0,,6.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+336015,2008,252,134,134.0,win,,3.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+336016,2008,1,494,494.0,win,,9.0,1.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+336018,2008,129,3,3.0,win,,9.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+336019,2008,134,494,494.0,win,41.0,,134.0,field,"PCA Stadium, Mohali",Chandigarh,India
+336020,2008,252,2,252.0,win,12.0,,2.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+336026,2008,252,1,252.0,win,,5.0,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+336021,2008,6,3,3.0,win,,8.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+336022,2008,252,494,494.0,win,6.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+336023,2008,134,1,134.0,win,65.0,,1.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+336024,2008,3,2,3.0,win,25.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+336025,2008,6,129,129.0,win,3.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+336031,2008,2,494,494.0,win,,6.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+336027,2008,6,134,134.0,win,,6.0,134.0,field,"Eden Gardens, Kolkata",Kolkata,India
+336028,2008,494,3,494.0,win,1.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+336029,2008,1,129,1.0,win,14.0,,1.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+336032,2008,3,252,252.0,win,,5.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+336033,2008,134,129,134.0,win,10.0,,134.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+336039,2008,129,494,129.0,win,,9.0,494.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+336034,2008,1,2,1.0,win,3.0,,2.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+336035,2008,494,6,6.0,win,,3.0,494.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+336036,2008,3,134,134.0,win,,5.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+336037,2008,2,129,129.0,win,,7.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+336038,2008,134,252,134.0,win,105.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+336040,2008,129,134,134.0,win,,3.0,134.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+419109,2010,6,1,6.0,win,,7.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+419106,2010,6,2,6.0,win,11.0,,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+419107,2010,3,134,3.0,win,4.0,,3.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+419108,2010,494,252,252.0,win,,5.0,252.0,field,"PCA Stadium, Mohali",Chandigarh,India
+419110,2010,2,129,2.0,win,31.0,,2.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+419111,2010,134,252,252.0,win,,6.0,252.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+419112,2010,494,1,1.0,win,,8.0,494.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+419113,2010,129,6,129.0,win,55.0,,129.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+419114,2010,3,252,3.0,win,98.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+419115,2010,134,1,1.0,win,,10.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+419116,2010,252,129,129.0,win,,5.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+419117,2010,2,494,2.0,win,6.0,,494.0,field,"Barabati Stadium, Cuttack",Cuttack,India
+419118,2010,134,6,134.0,win,34.0,,134.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+419119,2010,3,1,1.0,win,,7.0,3.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+419126,2010,2,134,134.0,win,,8.0,2.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+419120,2010,2,252,2.0,win,10.0,,2.0,bat,"Barabati Stadium, Cuttack",Cuttack,India
+419121,2010,494,129,494.0,tie,,,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+419122,2010,6,3,3.0,win,,7.0,6.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+419123,2010,1,129,1.0,win,36.0,,129.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+419124,2010,134,494,134.0,win,31.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+419125,2010,129,3,3.0,win,,5.0,3.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+419127,2010,6,494,6.0,win,39.0,,6.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+419128,2010,252,1,252.0,win,17.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+419129,2010,134,129,134.0,win,17.0,,134.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+419130,2010,3,2,3.0,win,41.0,,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+419131,2010,252,6,252.0,win,40.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+419132,2010,494,3,3.0,win,,4.0,3.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+419133,2010,1,129,129.0,win,,5.0,1.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+419134,2010,134,252,252.0,win,67.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+419135,2010,6,2,6.0,win,24.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+419136,2010,494,1,1.0,win,,6.0,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+419137,2010,129,134,129.0,win,23.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+419138,2010,3,2,3.0,win,63.0,,3.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+419141,2010,2,134,134.0,win,2.0,,134.0,bat,"Vidarbha Cricket Association Stadium, Jamtha",Nagpur,India
+419139,2010,6,494,494.0,win,,8.0,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+419140,2010,252,1,252.0,win,37.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+419142,2010,129,3,129.0,win,24.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+419143,2010,494,134,134.0,win,,9.0,494.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+419144,2010,6,252,6.0,win,14.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+419145,2010,1,2,2.0,win,,7.0,2.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+419146,2010,3,494,494.0,win,,6.0,3.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+419152,2010,3,252,3.0,win,39.0,,3.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+419147,2010,129,2,2.0,win,,6.0,129.0,bat,"Vidarbha Cricket Association Stadium, Jamtha",Nagpur,India
+419148,2010,6,1,1.0,win,,7.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+419149,2010,252,494,494.0,win,,7.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+419150,2010,3,134,3.0,win,37.0,,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+419151,2010,2,1,2.0,win,13.0,,1.0,field,"Vidarbha Cricket Association Stadium, Jamtha",Nagpur,India
+419154,2010,134,1,1.0,win,,5.0,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+419153,2010,6,129,129.0,win,,9.0,6.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+419155,2010,129,252,252.0,win,,6.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+419156,2010,494,2,2.0,win,,5.0,2.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+419157,2010,3,1,3.0,win,57.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+419158,2010,134,6,6.0,win,,8.0,134.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+419160,2010,2,252,2.0,win,11.0,,2.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+419159,2010,494,129,129.0,win,,6.0,129.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+419161,2010,3,6,6.0,win,,9.0,3.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+419162,2010,3,1,3.0,win,35.0,,3.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+419163,2010,129,2,129.0,win,38.0,,129.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+419164,2010,2,1,1.0,win,,9.0,2.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+419165,2010,129,3,129.0,win,22.0,,129.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501198,2011,129,6,129.0,win,2.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+501199,2011,134,2,134.0,win,,8.0,134.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+501200,2011,1414,1,1.0,win,,6.0,1414.0,bat,"Nehru Stadium, Goa",Kochi,India
+501201,2011,252,3,3.0,win,,8.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+501204,2011,134,252,134.0,win,,6.0,252.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+501202,2011,494,1419,1419.0,win,,7.0,494.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501203,2011,6,2,6.0,win,9.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+501205,2011,1,3,3.0,win,,9.0,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+501212,2011,2,494,494.0,win,,8.0,494.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+501206,2011,129,494,494.0,win,,6.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+501207,2011,1414,1419,1419.0,win,,4.0,1414.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501208,2011,2,1,2.0,win,33.0,,1.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+501209,2011,134,6,6.0,win,,9.0,6.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+501210,2011,3,1414,1414.0,win,,8.0,1414.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+501211,2011,129,1,129.0,win,21.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+501213,2011,1419,252,252.0,win,,3.0,252.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501214,2011,134,6,6.0,win,,8.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+501215,2011,129,1414,1414.0,win,,7.0,1414.0,field,"Nehru Stadium, Goa",Kochi,India
+501216,2011,2,252,2.0,win,16.0,,2.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+501218,2011,1419,3,3.0,win,,7.0,1419.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+501220,2011,134,494,494.0,win,48.0,,134.0,field,"PCA Stadium, Mohali",Chandigarh,India
+501219,2011,1414,6,1414.0,win,6.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+501224,2011,3,2,3.0,win,37.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+501221,2011,3,129,3.0,win,8.0,,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+501222,2011,6,1,1.0,win,,9.0,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+501223,2011,252,494,252.0,win,29.0,,494.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+501225,2011,1414,134,134.0,win,,8.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+501226,2011,129,1419,129.0,win,25.0,,1419.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+501229,2011,1414,2,2.0,win,55.0,,1414.0,field,"Nehru Stadium, Goa",Kochi,India
+501232,2011,1,1419,1.0,win,26.0,,1419.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+501237,2011,3,494,3.0,win,23.0,,494.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+501227,2011,252,1,1.0,win,,3.0,1.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+501228,2011,1419,129,129.0,win,,8.0,1419.0,bat,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501230,2011,6,252,6.0,win,17.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+501231,2011,3,134,134.0,win,,7.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+501233,2011,252,1414,252.0,win,38.0,,252.0,bat,"Nehru Stadium, Goa",Kochi,India
+501234,2011,494,6,6.0,win,,8.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+501235,2011,1419,134,134.0,win,,6.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+501236,2011,129,2,129.0,win,19.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+501238,2011,252,1414,1414.0,win,,7.0,1414.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+501239,2011,6,2,6.0,win,20.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+501240,2011,134,129,129.0,win,,8.0,134.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+501241,2011,3,1419,3.0,win,21.0,,1419.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501242,2011,1414,6,1414.0,win,17.0,,6.0,field,"Nehru Stadium, Goa",Kochi,India
+501243,2011,252,2,252.0,win,,4.0,252.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+501244,2011,1,494,1.0,win,85.0,,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+501246,2011,252,3,3.0,win,32.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+501245,2011,129,6,6.0,win,10.0,,129.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+501247,2011,1414,1,1.0,win,,9.0,1414.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+501252,2011,1,134,1.0,win,,9.0,1.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+501248,2011,494,1419,1419.0,win,,5.0,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+501249,2011,129,134,129.0,win,63.0,,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+501257,2011,252,494,494.0,win,29.0,,252.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+501250,2011,2,1419,1419.0,win,,6.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+501251,2011,494,3,494.0,win,76.0,,3.0,field,"PCA Stadium, Mohali",Chandigarh,India
+501253,2011,129,252,129.0,win,18.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+501254,2011,1414,494,494.0,win,,6.0,494.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+501255,2011,6,1,1.0,win,,4.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+501256,2011,2,3,2.0,win,10.0,,2.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+501258,2011,134,1414,1414.0,win,,8.0,1414.0,field,"Holkar Cricket Stadium, Indore",Indore,India
+501262,2011,1419,6,6.0,win,,7.0,6.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501259,2011,1419,2,2.0,win,,6.0,2.0,field,"Dr DY Patil Sports Academy, Navi Mumbai",Mumbai,India
+501260,2011,494,1,494.0,win,111.0,,494.0,bat,"HPCA Stadium, Dharamshala",Dharamsala,India
+501261,2011,129,1414,129.0,win,11.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+501263,2011,3,134,134.0,win,,10.0,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+501264,2011,2,494,2.0,win,82.0,,494.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+501265,2011,252,1419,1419.0,no result,,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+501266,2011,129,1,1.0,win,,8.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+501267,2011,6,3,3.0,win,,5.0,3.0,field,"Eden Gardens, Kolkata",Kolkata,India
+501268,2011,1,129,129.0,win,,6.0,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+501269,2011,6,3,3.0,win,,4.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+501270,2011,1,3,1.0,win,43.0,,3.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+548307,2012,6,252,252.0,win,,8.0,252.0,field,"Eden Gardens, Kolkata",Kolkata,India
+501271,2011,129,1,129.0,win,58.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+548306,2012,129,3,3.0,win,,8.0,3.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+548308,2012,1419,3,1419.0,win,28.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+548309,2012,134,494,134.0,win,31.0,,494.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548310,2012,1,252,1.0,win,20.0,,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548311,2012,129,2,129.0,win,74.0,,2.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+548312,2012,134,6,134.0,win,22.0,,6.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548313,2012,1419,494,1419.0,win,22.0,,1419.0,bat,"MCA Stadium, Pune",Pune,India
+548314,2012,2,3,3.0,win,,5.0,2.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+548315,2012,6,1,6.0,win,42.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548316,2012,129,252,252.0,win,,8.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548317,2012,3,134,3.0,win,27.0,,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+548319,2012,1419,494,494.0,win,,7.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+548318,2012,1,129,129.0,win,,5.0,1.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+548320,2012,134,6,6.0,win,,5.0,134.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+548325,2012,3,252,252.0,win,,7.0,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+548321,2012,2,252,252.0,win,,5.0,2.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548326,2012,134,2,134.0,win,,5.0,2.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548322,2012,129,1419,1419.0,win,,7.0,129.0,bat,"MCA Stadium, Pune",Pune,India
+548323,2012,494,6,494.0,win,2.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+548324,2012,134,1,134.0,win,59.0,,134.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548327,2012,1419,1,1.0,win,,6.0,1419.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548328,2012,494,6,6.0,win,,8.0,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+548329,2012,2,252,252.0,win,,9.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+548335,2012,6,2,6.0,win,,5.0,6.0,field,"Barabati Stadium, Cuttack",Cuttack,India
+548349,2012,134,252,252.0,win,,6.0,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548330,2012,129,1419,129.0,win,13.0,,1419.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+548331,2012,494,1,1.0,win,,5.0,1.0,field,"PCA Stadium, Mohali",Chandigarh,India
+548332,2012,134,129,129.0,win,,7.0,134.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+548333,2012,1419,252,1419.0,win,20.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548334,2012,3,494,494.0,win,,6.0,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+548336,2012,1,134,1.0,win,46.0,,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548337,2012,1419,252,252.0,win,,8.0,1419.0,bat,"MCA Stadium, Pune",Pune,India
+548339,2012,494,3,3.0,win,,4.0,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+548341,2012,2,1419,2.0,win,18.0,,2.0,bat,"MCA Stadium, Pune",Pune,India
+548342,2012,252,3,252.0,win,37.0,,3.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548343,2012,494,129,494.0,win,7.0,,494.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+548344,2012,6,1,6.0,win,47.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+548345,2012,252,134,252.0,win,1.0,,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548346,2012,2,3,3.0,win,,5.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+548347,2012,129,6,6.0,win,,5.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+548348,2012,2,1419,2.0,win,13.0,,2.0,bat,"Barabati Stadium, Cuttack",Cuttack,India
+548350,2012,1,494,494.0,win,,4.0,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548351,2012,3,1419,3.0,win,1.0,,3.0,bat,"MCA Stadium, Pune",Pune,India
+548352,2012,129,2,129.0,win,10.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+548354,2012,134,494,134.0,win,43.0,,134.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+548353,2012,6,1419,6.0,win,7.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+548355,2012,129,3,3.0,win,,2.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+548356,2012,2,1,1.0,win,,5.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548357,2012,252,6,6.0,win,,6.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548358,2012,1419,134,134.0,win,,7.0,1419.0,bat,"MCA Stadium, Pune",Pune,India
+548364,2012,129,252,129.0,win,,9.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+548359,2012,494,2,494.0,win,25.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+548360,2012,3,1,1.0,win,,9.0,1.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+548361,2012,134,129,129.0,win,,4.0,129.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548362,2012,1,1419,1.0,win,35.0,,1419.0,field,"MCA Stadium, Pune",Pune,India
+548363,2012,3,6,3.0,win,27.0,,3.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+548365,2012,134,1419,134.0,win,45.0,,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548372,2012,1,252,1.0,win,21.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548366,2012,2,494,494.0,win,,4.0,2.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+548367,2012,1,3,3.0,win,,5.0,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548368,2012,6,129,129.0,win,,5.0,129.0,field,"Eden Gardens, Kolkata",Kolkata,India
+548369,2012,494,252,252.0,win,,5.0,494.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+548370,2012,6,3,6.0,win,32.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+548371,2012,129,494,494.0,win,,6.0,494.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+548373,2012,134,2,2.0,win,,5.0,134.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+548374,2012,494,252,252.0,win,,6.0,252.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+548380,2012,129,252,129.0,win,86.0,,252.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+548375,2012,6,1419,6.0,win,34.0,,6.0,bat,"MCA Stadium, Pune",Pune,India
+548376,2012,2,1,2.0,win,9.0,,1.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+548377,2012,134,3,3.0,win,,10.0,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+548378,2012,6,252,6.0,win,18.0,,6.0,bat,"MCA Stadium, Pune",Pune,India
+548379,2012,129,3,129.0,win,38.0,,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+548381,2012,129,6,6.0,win,,5.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+598004,2013,1,2,1.0,tie,,,1.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+597998,2013,252,6,6.0,win,,6.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+597999,2013,1,3,1.0,win,2.0,,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598000,2013,2,1419,2.0,win,22.0,,1419.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+598001,2013,134,252,134.0,win,5.0,,134.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598002,2013,3,129,3.0,win,9.0,,3.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+598003,2013,1419,494,494.0,win,,8.0,1419.0,bat,"MCA Stadium, Pune",Pune,India
+598005,2013,134,6,134.0,win,19.0,,6.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598006,2013,3,252,3.0,win,44.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+598007,2013,494,129,129.0,win,,10.0,129.0,field,"PCA Stadium, Mohali",Chandigarh,India
+598008,2013,6,1,1.0,win,,8.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598009,2013,134,1419,1419.0,win,,7.0,134.0,bat,"MCA Stadium, Pune",Pune,India
+598010,2013,252,2,2.0,win,,3.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598011,2013,3,1419,3.0,win,41.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+598012,2013,1,129,129.0,win,,4.0,129.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+598013,2013,6,2,6.0,win,48.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+598014,2013,494,134,134.0,win,,6.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598017,2013,1,252,252.0,tie,,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598015,2013,1419,129,1419.0,win,24.0,,1419.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+598016,2013,494,6,494.0,win,4.0,,6.0,field,"PCA Stadium, Mohali",Chandigarh,India
+598025,2013,1419,494,494.0,win,,7.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+598018,2013,2,1419,2.0,win,11.0,,1419.0,field,"MCA Stadium, Pune",Pune,India
+598019,2013,134,3,134.0,win,87.0,,134.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598020,2013,129,252,129.0,win,86.0,,129.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598028,2013,494,252,494.0,win,7.0,,252.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+598021,2013,494,2,2.0,win,,5.0,494.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+598030,2013,129,2,129.0,win,,5.0,2.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+598022,2013,6,129,129.0,win,,4.0,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+598023,2013,134,1,1.0,win,,7.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598024,2013,3,252,252.0,win,,9.0,3.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598026,2013,134,129,129.0,win,,5.0,134.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+598027,2013,1,1419,1.0,win,130.0,,1419.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598029,2013,6,3,3.0,win,,5.0,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+598031,2013,494,6,6.0,win,,6.0,494.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+598032,2013,2,134,134.0,win,,8.0,2.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598033,2013,3,1,3.0,win,58.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+598038,2013,129,1419,129.0,win,37.0,,129.0,bat,"MCA Stadium, Pune",Pune,India
+598034,2013,129,6,129.0,win,14.0,,6.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+598035,2013,252,1419,252.0,win,15.0,,1419.0,field,"Shaheed Veer Narayan Singh International Stadium, New Raipur",Raipur,India
+598036,2013,1,134,134.0,win,,4.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598037,2013,3,494,3.0,win,4.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+598040,2013,6,252,252.0,win,,7.0,6.0,bat,"Shaheed Veer Narayan Singh International Stadium, New Raipur",Raipur,India
+598039,2013,3,2,2.0,win,,7.0,3.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+598041,2013,129,494,129.0,win,15.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+598044,2013,252,2,2.0,win,,6.0,252.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+598042,2013,1,1419,1.0,win,17.0,,1.0,bat,"MCA Stadium, Pune",Pune,India
+598043,2013,134,6,6.0,win,,8.0,134.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+598045,2013,1,494,494.0,win,,7.0,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598046,2013,3,129,3.0,win,60.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+598047,2013,1419,134,134.0,win,,5.0,1419.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598048,2013,2,1,1.0,win,,7.0,2.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598049,2013,252,134,134.0,win,,9.0,252.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598056,2013,2,494,2.0,win,30.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+598050,2013,3,6,3.0,win,65.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+598051,2013,129,2,129.0,win,77.0,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+598052,2013,494,134,134.0,win,,8.0,134.0,field,"PCA Stadium, Mohali",Chandigarh,India
+598053,2013,6,1419,6.0,win,46.0,,6.0,bat,"MCA Stadium, Pune",Pune,India
+598054,2013,1,252,1.0,win,4.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598055,2013,1419,3,3.0,win,,5.0,1419.0,bat,"MCA Stadium, Pune",Pune,India
+598063,2013,3,134,3.0,win,14.0,,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+598057,2013,1,6,6.0,win,,5.0,6.0,field,"JSCA International Stadium Complex, Ranchi",Ranchi,India
+598058,2013,129,134,134.0,win,,5.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+598059,2013,252,494,494.0,win,,5.0,494.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598060,2013,2,3,3.0,win,,7.0,2.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+598061,2013,1419,6,1419.0,win,7.0,,6.0,field,"JSCA International Stadium Complex, Ranchi",Ranchi,India
+598062,2013,129,252,129.0,win,33.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+598064,2013,1,494,494.0,win,,6.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+598065,2013,134,2,2.0,win,23.0,,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+598066,2013,494,3,494.0,win,50.0,,3.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+598071,2013,134,2,134.0,win,,4.0,2.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598067,2013,1419,252,1419.0,win,38.0,,1419.0,bat,"MCA Stadium, Pune",Pune,India
+598068,2013,1,129,1.0,win,24.0,,129.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+598069,2013,6,2,2.0,win,,5.0,6.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+598070,2013,129,3,129.0,win,48.0,,129.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+598072,2013,134,3,3.0,win,,4.0,134.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+598073,2013,129,3,3.0,win,23.0,,3.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+733971,2014,129,6,129.0,win,34.0,,129.0,bat,"JSCA International Stadium Complex, Ranchi",Ranchi,India
+733973,2014,494,3,3.0,win,,5.0,494.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+733975,2014,252,134,134.0,win,,7.0,134.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+733977,2014,2,1,1.0,win,,4.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+733979,2014,134,6,134.0,win,10.0,,6.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+733981,2014,252,129,129.0,win,,8.0,129.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+733983,2014,3,1,3.0,win,19.0,,1.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+733985,2014,252,6,6.0,win,,8.0,252.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+733987,2014,494,129,494.0,win,44.0,,129.0,field,"Barabati Stadium, Cuttack",Cuttack,India
+733989,2014,2,134,2.0,win,32.0,,134.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+733991,2014,494,1,494.0,win,32.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+733993,2014,252,2,2.0,win,,8.0,2.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+733995,2014,3,129,129.0,win,,4.0,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+733997,2014,494,6,6.0,win,,9.0,6.0,field,"Barabati Stadium, Cuttack",Cuttack,India
+733999,2014,1,134,134.0,win,,5.0,1.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+734001,2014,2,3,3.0,win,,7.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+734003,2014,134,129,129.0,win,,5.0,134.0,bat,"JSCA International Stadium Complex, Ranchi",Ranchi,India
+734005,2014,1,252,1.0,win,16.0,,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+734007,2014,2,494,494.0,win,,6.0,494.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+734013,2014,1,129,1.0,win,,5.0,129.0,bat,"JSCA International Stadium Complex, Ranchi",Ranchi,India
+734009,2014,3,6,6.0,win,,6.0,6.0,field,"Barabati Stadium, Cuttack",Cuttack,India
+734021,2014,1,2,2.0,win,,7.0,1.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+734011,2014,134,252,134.0,win,62.0,,252.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+734015,2014,2,6,6.0,win,,7.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+734017,2014,3,134,3.0,win,25.0,,3.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+734019,2014,252,494,494.0,win,,4.0,494.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+734033,2014,494,134,494.0,win,16.0,,134.0,field,"PCA Stadium, Mohali",Chandigarh,India
+734023,2014,129,6,6.0,win,,8.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+734025,2014,494,3,3.0,win,,7.0,3.0,field,"PCA Stadium, Mohali",Chandigarh,India
+734027,2014,6,1,6.0,win,30.0,,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+734029,2014,129,2,2.0,win,,6.0,2.0,field,"JSCA International Stadium Complex, Ranchi",Ranchi,India
+734031,2014,3,252,3.0,win,15.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+734035,2014,1,129,129.0,win,,8.0,129.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+734037,2014,2,6,6.0,win,,4.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+734039,2014,252,494,494.0,win,,7.0,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+734041,2014,134,3,3.0,win,,5.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+734043,2014,6,494,6.0,win,28.0,,494.0,field,"Eden Gardens, Kolkata",Kolkata,India
+734045,2014,3,129,129.0,win,,7.0,129.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+734049,2014,494,6,6.0,win,,3.0,6.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+734047,2014,494,129,494.0,win,24.0,,129.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+829705,2015,3,6,6.0,win,,7.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+829707,2015,129,252,129.0,win,1.0,,252.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+829709,2015,494,134,134.0,win,26.0,,494.0,field,"MCA Stadium, Pune",Pune,India
+829711,2015,129,2,129.0,win,45.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+829713,2015,6,1,1.0,win,,3.0,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+829715,2015,252,134,134.0,win,,3.0,134.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+829717,2015,494,3,494.0,win,18.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+829719,2015,1,2,2.0,win,,8.0,2.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+829721,2015,3,134,134.0,win,,7.0,3.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+829723,2015,129,6,6.0,win,,7.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+829725,2015,494,252,252.0,win,,5.0,494.0,bat,"MCA Stadium, Pune",Pune,India
+829727,2015,2,134,134.0,win,,6.0,134.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+829729,2015,3,129,129.0,win,,6.0,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+829731,2015,252,2,252.0,win,4.0,,252.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+829733,2015,494,6,6.0,win,,4.0,6.0,field,"MCA Stadium, Pune",Pune,India
+829735,2015,129,134,134.0,win,,8.0,129.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+829737,2015,3,1,3.0,win,18.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+829739,2015,252,6,6.0,win,,6.0,6.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+829741,2015,134,494,494.0,tie,,,494.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+829743,2015,2,6,2.0,win,16.0,,6.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+829745,2015,129,1,129.0,win,27.0,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+829747,2015,252,3,252.0,win,37.0,,3.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+829757,2015,1,252,1.0,win,,10.0,1.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+829749,2015,134,1,1.0,win,,9.0,1.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+829751,2015,3,2,3.0,win,20.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+829753,2015,129,494,129.0,win,97.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+829759,2015,2,494,2.0,win,20.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+829761,2015,6,252,6.0,win,13.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+829763,2015,1,134,134.0,no result,,,134.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+829765,2015,129,6,129.0,win,2.0,,6.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+829767,2015,494,252,252.0,win,,9.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+829769,2015,3,134,3.0,win,8.0,,134.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+829771,2015,6,1,1.0,win,,7.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+829773,2015,2,129,2.0,win,22.0,,129.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+829781,2015,6,2,6.0,win,35.0,,2.0,field,"Eden Gardens, Kolkata",Kolkata,India
+829775,2015,3,494,3.0,win,23.0,,3.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+829777,2015,134,252,134.0,win,14.0,,252.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+829779,2015,129,1,129.0,win,24.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+829783,2015,252,3,3.0,win,,5.0,252.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+829785,2015,1,494,1.0,win,138.0,,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+829787,2015,2,134,2.0,win,7.0,,134.0,field,"Brabourne Stadium, Mumbai",Mumbai,India
+829789,2015,129,3,3.0,win,,6.0,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+829791,2015,494,6,6.0,win,,1.0,494.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+829793,2015,2,252,2.0,win,6.0,,2.0,bat,"Shaheed Veer Narayan Singh International Stadium, New Raipur",Raipur,India
+829795,2015,1,3,1.0,win,39.0,,1.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+829797,2015,129,134,129.0,win,12.0,,129.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+829799,2015,2,494,2.0,win,5.0,,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+829801,2015,129,252,252.0,win,,6.0,129.0,bat,"Shaheed Veer Narayan Singh International Stadium, New Raipur",Raipur,India
+829803,2015,494,1,494.0,win,22.0,,1.0,field,"PCA Stadium, Mohali",Chandigarh,India
+829805,2015,3,6,3.0,win,5.0,,6.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+829807,2015,2,1,1.0,win,,6.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+829809,2015,494,129,129.0,win,,7.0,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+829811,2015,134,6,134.0,win,9.0,,134.0,bat,"Brabourne Stadium, Mumbai",Mumbai,India
+829813,2015,252,1,252.0,no result,,,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+829815,2015,2,3,3.0,win,,9.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+829817,2015,3,129,3.0,win,25.0,,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+829819,2015,1,134,1.0,win,71.0,,1.0,bat,"MCA Stadium, Pune",Pune,India
+980901,2016,4,3,4.0,win,,9.0,3.0,bat,"Wankhede Stadium, Mumbai",Mumbai,India
+829821,2015,1,129,129.0,win,,3.0,129.0,field,"JSCA International Stadium Complex, Ranchi",Ranchi,India
+829823,2015,3,129,3.0,win,41.0,,129.0,field,"Eden Gardens, Kolkata",Kolkata,India
+980903,2016,252,6,6.0,win,,9.0,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+980905,2016,494,5,5.0,win,,5.0,5.0,field,"PCA Stadium, Mohali",Chandigarh,India
+980907,2016,1,2,1.0,win,45.0,,2.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+980909,2016,6,3,3.0,win,,6.0,3.0,field,"Eden Gardens, Kolkata",Kolkata,India
+980913,2016,494,252,252.0,win,,8.0,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+980911,2016,4,5,5.0,win,,7.0,4.0,bat,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+980915,2016,2,6,6.0,win,,8.0,2.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+980917,2016,3,5,5.0,win,,3.0,5.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+980925,2016,494,6,6.0,win,,6.0,6.0,field,"PCA Stadium, Mohali",Chandigarh,India
+980919,2016,4,494,494.0,win,,6.0,4.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+980921,2016,1,252,252.0,win,,7.0,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+980923,2016,3,2,2.0,win,,7.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+980927,2016,1,3,3.0,win,,6.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+980929,2016,5,2,2.0,win,,10.0,2.0,field,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+980931,2016,1,4,1.0,win,13.0,,4.0,field,"MCA Stadium, Pune",Pune,India
+980933,2016,252,3,252.0,win,10.0,,3.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+980935,2016,494,2,2.0,win,,5.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+980939,2016,4,6,6.0,win,,2.0,6.0,field,"MCA Stadium, Pune",Pune,India
+980937,2016,1,5,5.0,win,,6.0,1.0,bat,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+980941,2016,3,494,3.0,win,25.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+980943,2016,2,4,4.0,win,34.0,,4.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+980945,2016,5,252,5.0,win,1.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+980947,2016,6,3,3.0,win,,6.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+980949,2016,4,5,5.0,win,,3.0,5.0,field,"MCA Stadium, Pune",Pune,India
+980951,2016,6,252,252.0,win,27.0,,6.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+980953,2016,2,1,2.0,win,15.0,,1.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+980955,2016,494,5,494.0,win,23.0,,5.0,field,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+980957,2016,4,3,3.0,win,,8.0,3.0,field,"MCA Stadium, Pune",Pune,India
+980959,2016,1,6,6.0,win,,5.0,6.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+980961,2016,5,252,252.0,win,,8.0,252.0,field,"Saurashtra Cricket Association Stadium, Rajkot",Rajkot,India
+980963,2016,6,494,6.0,win,7.0,,494.0,field,"Eden Gardens, Kolkata",Kolkata,India
+980971,2016,494,252,494.0,win,9.0,,252.0,field,"PCA Stadium, Mohali",Chandigarh,India
+980965,2016,252,4,4.0,win,,7.0,4.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+980967,2016,5,2,2.0,win,,5.0,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+980969,2016,4,1,1.0,win,,7.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+980973,2016,2,3,2.0,win,85.0,,3.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+980975,2016,5,6,5.0,win,,5.0,5.0,field,"Eden Gardens, Kolkata",Kolkata,India
+980977,2016,1,494,1.0,win,1.0,,494.0,field,"PCA Stadium, Mohali",Chandigarh,India
+980979,2016,2,4,2.0,win,4.0,,2.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+980989,2016,4,6,6.0,win,,8.0,4.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+980981,2016,1,3,3.0,win,,6.0,3.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+980983,2016,2,252,252.0,win,,7.0,252.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+980985,2016,3,494,494.0,win,,7.0,3.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+980987,2016,1,5,1.0,win,144.0,,5.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+980991,2016,494,2,2.0,win,,7.0,494.0,bat,"PCA Stadium, Mohali",Chandigarh,India
+980993,2016,3,252,3.0,win,80.0,,252.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+981003,2016,252,2,252.0,win,,6.0,252.0,field,"Shaheed Veer Narayan Singh International Stadium, New Raipur",Raipur,India
+980995,2016,6,1,1.0,win,,9.0,1.0,field,"Eden Gardens, Kolkata",Kolkata,India
+980997,2016,252,4,4.0,win,19.0,,4.0,field,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+980999,2016,1,494,1.0,win,82.0,,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+981005,2016,494,4,4.0,win,,4.0,494.0,bat,ACA-VDCA Cricket Stadium - Vizag,Visakhapatnam,India
+981009,2016,6,2,6.0,win,22.0,,2.0,field,"Eden Gardens, Kolkata",Kolkata,India
+981011,2016,252,1,1.0,win,,6.0,1.0,field,"Shaheed Veer Narayan Singh International Stadium, New Raipur",Raipur,India
+981013,2016,5,1,1.0,win,,4.0,1.0,field,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+981015,2016,2,6,2.0,win,22.0,,6.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+981017,2016,5,2,2.0,win,,4.0,2.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473456,2025,6,614,614.0,win,4.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+981019,2016,2,1,2.0,win,8.0,,2.0,bat,"M Chinnaswamy Stadium, Bengaluru",Bangalore,India
+1473454,2025,252,129,252.0,win,25.0,,252.0,bat,"MA Chidambaram Stadium, Chennai",Chennai,India
+1473455,2025,134,494,134.0,win,50.0,,494.0,field,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1473457,2025,2,615,615.0,win,,7.0,615.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1473458,2025,1,3,1.0,win,12.0,,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1473461,2025,1,252,252.0,win,,6.0,252.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1473459,2025,494,129,494.0,win,18.0,,494.0,bat,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1473460,2025,615,134,615.0,win,58.0,,134.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473462,2025,129,6,6.0,win,,8.0,6.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1473463,2025,615,614,614.0,win,,6.0,614.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1473465,2025,1,134,1.0,win,,9.0,1.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1473464,2025,494,2,2.0,win,,8.0,494.0,bat,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1473466,2025,3,252,3.0,win,12.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473467,2025,614,129,129.0,win,,5.0,129.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1473468,2025,494,6,494.0,win,16.0,,494.0,bat,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1473469,2025,252,134,134.0,tie,,,134.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473470,2025,2,3,3.0,win,,4.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1473473,2025,134,614,614.0,win,2.0,,614.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1473477,2025,252,614,252.0,win,,8.0,252.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1473471,2025,1,494,494.0,win,,5.0,494.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1473472,2025,252,615,615.0,win,,7.0,615.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473474,2025,494,1,1.0,win,,7.0,1.0,field,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",Mohali,India
+1473475,2025,129,3,3.0,win,,9.0,3.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1473476,2025,615,6,615.0,win,39.0,,6.0,field,"Eden Gardens, Kolkata",Kolkata,India
+1473478,2025,2,3,3.0,win,,7.0,3.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1473479,2025,1,134,1.0,win,11.0,,134.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1473480,2025,129,2,2.0,win,,5.0,2.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1473481,2025,494,6,6.0,no result,,,494.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+1473483,2025,1,252,1.0,win,,6.0,1.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473482,2025,3,614,3.0,win,54.0,,614.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1473484,2025,615,134,134.0,win,,8.0,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1473490,2025,134,6,6.0,win,1.0,,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+1473485,2025,6,252,6.0,win,14.0,,252.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473486,2025,129,494,494.0,win,,4.0,494.0,field,"MA Chidambaram Stadium, Chennai",Chennai,India
+1473487,2025,3,134,3.0,win,100.0,,134.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1473491,2025,614,494,494.0,win,37.0,,614.0,field,"HPCA Stadium, Dharamshala",Dharamsala,India
+1473488,2025,615,2,615.0,win,38.0,,2.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473489,2025,1,129,1.0,win,2.0,,129.0,field,"M Chinnaswamy Stadium, Bengaluru",Bengaluru,India
+1473492,2025,252,2,2.0,no result,,,2.0,field,"Rajiv Gandhi International Stadium, Uppal",Hyderabad,India
+1473493,2025,3,615,615.0,win,,3.0,615.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1473494,2025,129,6,129.0,win,,2.0,6.0,bat,"Eden Gardens, Kolkata",Kolkata,India
+1473495,2025,494,252,252.0,no result,,,494.0,bat,"HPCA Stadium, Dharamshala",Dharamsala,India
+1473497,2025,494,134,494.0,win,10.0,,494.0,bat,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1473500,2025,129,134,134.0,win,,6.0,134.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473498,2025,252,615,615.0,win,,10.0,615.0,field,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473499,2025,614,2,2.0,win,,6.0,2.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1473502,2025,614,615,614.0,win,33.0,,615.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473501,2025,3,252,3.0,win,59.0,,252.0,field,"Wankhede Stadium, Mumbai",Mumbai,India
+1473503,2025,2,1,2.0,win,42.0,,1.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1473504,2025,129,615,129.0,win,83.0,,129.0,bat,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473507,2025,1,614,1.0,win,,6.0,1.0,field,"Ekana Cricket Stadium, Lucknow",Lucknow,India
+1473505,2025,2,6,2.0,win,110.0,,2.0,bat,"Arun Jaitley Stadium, New, Delhi",Delhi,India
+1473506,2025,3,494,494.0,win,,7.0,494.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
+1473508,2025,494,1,1.0,win,,8.0,1.0,field,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",New Chandigarh,India
+1473509,2025,3,615,3.0,win,20.0,,3.0,bat,"Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur, New Chandigarh",New Chandigarh,India
+1473510,2025,3,494,494.0,win,,5.0,494.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1473511,2025,1,494,1.0,win,6.0,,494.0,field,"Narendra Modi Stadium, Ahmedabad",Ahmedabad,India
+1485779,2025,494,252,252.0,win,,6.0,252.0,field,"Sawai Mansingh Stadium, Jaipur",Jaipur,India
