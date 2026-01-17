@@ -25,3 +25,5 @@ data/processed/
 # --- Optional: ignore notebooks if you want them local-only ---
 notebooks/
 
+# Allow only this processed file for Streamlit Cloud
+!data/processed/phase1_master_clean_validated_all_venues_v3.csv
