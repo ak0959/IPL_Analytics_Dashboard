@@ -67,3 +67,11 @@ def load_kpi_team_batting_season():
 
 def load_kpi_team_bowling_season():
     return load_csv("kpi_team_bowling_season.csv")
+
+def load_match_toss_base():
+    """
+    Match-level enriched table used for Tab 2 (Match & Toss Strategy).
+    Source is outside processed_new, so we load via relative parts.
+    """
+    return load_csv("..", "KPIs", "master_kpis", "matches", "phase2_match_base_all_venues.csv")
+
