@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-from src.data_loader import load_match_toss_base, load_master_balls, load_csv
+import src.data_loader as dl
 
 
 # =========================================================
@@ -92,8 +92,8 @@ st.markdown(
 # =========================================================
 # Load Data
 # =========================================================
-df = load_match_toss_base()
-teams = load_csv("master3_teams.csv")
+df = dl.load_match_toss_base()
+teams = dl.load_csv("master3_teams.csv")
 
 team_map = dict(zip(teams["team_id"], teams["team_name"]))
 
@@ -153,7 +153,7 @@ no_result_count = (f["result"] == "no result").sum()
 tie_count = (f["result"] == "tie").sum()
 
 # Super over count: compute from master2 (match_id-level only)
-balls = load_master_balls()
+balls = dl.load_master_balls()
 balls_scope = balls[balls["match_id"].isin(f["match_id"].unique())]
 super_over_match_ids = balls_scope.loc[balls_scope["is_super_over"] == True, "match_id"].unique()
 super_over_count = len(super_over_match_ids)
