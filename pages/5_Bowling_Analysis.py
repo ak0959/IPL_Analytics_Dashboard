@@ -10,7 +10,7 @@ from src.ui import (
     html_badge,
     metric_tile,
 )
-from src.data_loader import load_kpi_csv
+from src.data_loader import load_processed_csv
 
 
 st.set_page_config(page_title="Bowling Analysis | IPL Strategy Dashboard", layout="wide")
@@ -99,25 +99,17 @@ st.markdown("")
 # -----------------------------
 # Load KPI file (DO NOT change loader utility)
 # -----------------------------
-KPI_GROUP = "sub_kpis"
-KPI_DOMAIN = "bowling"
-KPI_FILE = "bowling_master_final_1801.csv"
+KPI_FILE = "kpi_player_bowling_alltime.csv"
 
 try:
-    bowl = load_kpi_csv(KPI_GROUP, KPI_DOMAIN, KPI_FILE)
+    bowl = load_processed_csv(KPI_FILE)
 except FileNotFoundError:
     html_section("Bowling KPI File Not Found")
-    html_explain(
-        "This tab depends on a precomputed KPI CSV which is not available in the expected folder yet."
-    )
+    html_explain("This tab depends on a precomputed KPI CSV in data/processed_new.")
 
-    st.error(f"Missing file: data/KPIs/{KPI_GROUP}/{KPI_DOMAIN}/{KPI_FILE}")
-
-    st.info(
-        "Next action: generate the bowling master KPI file using your KPI notebook, "
-        "commit it into GitHub, then rerun this tab."
-    )
+    st.error(f"Missing file: data/processed_new/{KPI_FILE}")
     st.stop()
+
 
 
 # -----------------------------
