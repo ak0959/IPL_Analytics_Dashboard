@@ -1,0 +1,3 @@
+toggle_name,metric_area,scope,rule,value
+strict_batting_average,batting,all_time,min_outs,20
+strict_bowling,bowling,all_time,min_matches,25

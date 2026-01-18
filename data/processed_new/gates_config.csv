@@ -1,0 +1,8 @@
+metric_area,scope,rule,value
+global,default,innings <= 2,exclude super overs
+bowling,all_time,min_balls,450
+bowling,all_time,min_wickets,25
+bowling,season,min_balls,200
+bowling,season,min_wickets,10
+batting,all_time,min_balls,250
+batting,season,min_balls,150

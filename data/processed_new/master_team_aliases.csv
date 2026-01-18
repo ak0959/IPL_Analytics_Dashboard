@@ -1,0 +1,47 @@
+alias_id,team_id,alias_name,canonical_team_name,team_status
+1,1,RCB,Royal Challengers Bangalore,active_official
+2,1,Royal Challengers Bengaluru,Royal Challengers Bangalore,active_official
+3,252,Delhi Daredevils,Delhi Capitals,active_official
+4,494,Kings XI Punjab,Punjab Kings,active_official
+5,1,Royal Challengers Bangalore,Royal Challengers Bangalore,active_official
+6,1,Banglore,Royal Challengers Bangalore,active_official
+7,1,Bengaluru,Royal Challengers Bangalore,active_official
+8,252,Delhi Capitals,Delhi Capitals,active_official
+9,252,DC,Delhi Capitals,active_official
+10,252,DD,Delhi Capitals,active_official
+11,252,Delhi,Delhi Capitals,active_official
+12,494,Punjab Kings,Punjab Kings,active_official
+13,494,KXIP,Punjab Kings,active_official
+14,494,Punjab,Punjab Kings,active_official
+15,2,Sunrisers Hyderabad,Sunrisers Hyderabad,active_official
+16,2,SRH,Sunrisers Hyderabad,active_official
+17,2,Hyderabad,Sunrisers Hyderabad,active_official
+18,2,Deccan Chargers,Sunrisers Hyderabad,active_official
+19,3,Mumbai Indians,Mumbai Indians,active_official
+20,3,MI,Mumbai Indians,active_official
+21,3,Mumbai,Mumbai Indians,active_official
+22,4,Rising Pune Supergiant,Rising Pune Supergiant,legacy_or_renamed
+23,4,Rising Pune Supergiants,Rising Pune Supergiant,legacy_or_renamed
+24,4,RPS,Rising Pune Supergiant,legacy_or_renamed
+25,4,Pune,Rising Pune Supergiant,legacy_or_renamed
+26,5,Gujarat Lions,Gujarat Lions,legacy_or_renamed
+27,5,GL,Gujarat Lions,legacy_or_renamed
+28,6,Kolkata Knight Riders,Kolkata Knight Riders,active_official
+29,6,KKR,Kolkata Knight Riders,active_official
+30,6,Kolkatta,Kolkata Knight Riders,active_official
+31,129,Chennai Super Kings,Chennai Super Kings,active_official
+32,129,CSK,Chennai Super Kings,active_official
+33,129,Chennai,Chennai Super Kings,active_official
+34,134,Rajasthan Royals,Rajasthan Royals,active_official
+35,134,Rajasthan,Rajasthan Royals,active_official
+36,134,RR,Rajasthan Royals,active_official
+37,614,Lucknow Super Giants,Lucknow Super Giants,active_official
+38,614,LSG,Lucknow Super Giants,active_official
+39,614,Lucknow,Lucknow Super Giants,active_official
+40,615,Gujarat Titans,Gujarat Titans,active_official
+41,615,GT,Gujarat Titans,active_official
+42,1414,Kochi Tuskers Kerala,Kochi Tuskers Kerala,legacy_or_renamed
+43,1414,KTK,Kochi Tuskers Kerala,legacy_or_renamed
+44,1414,Kerala,Kochi Tuskers Kerala,legacy_or_renamed
+45,1419,Pune Warriors,Pune Warriors,legacy_or_renamed
+46,1419,PWI,Pune Warriors,legacy_or_renamed
