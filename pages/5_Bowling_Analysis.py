@@ -68,7 +68,8 @@ st.markdown("")
 # -----------------------------
 KPI_GROUP = "sub_kpis"
 KPI_DOMAIN = "bowling"
-KPI_FILE = "kpi_bowler_advanced.csv"
+KPI_FILE = "bowling_master_final_1801.csv"
+
 
 try:
     bowl = load_kpi_csv(KPI_GROUP, KPI_DOMAIN, KPI_FILE)
