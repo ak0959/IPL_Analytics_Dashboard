@@ -66,9 +66,6 @@ st.markdown("")
 # -----------------------------
 # Load KPI file (DO NOT change loader utility)
 # -----------------------------
-# -----------------------------
-# Load KPI file (DO NOT change loader utility)
-# -----------------------------
 KPI_GROUP = "sub_kpis"
 KPI_DOMAIN = "bowling"
 KPI_FILE = "kpi_bowler_advanced.csv"
