@@ -62,6 +62,48 @@ html_subtitle(
 )
 st.markdown("")
 
+# -----------------------------
+# Theme selector (keep same feel as Tab 4)
+# -----------------------------
+theme_choice = st.selectbox(
+    "Theme",
+    ["Light", "Classic (Bold)", "Greyscale"],
+    index=0,
+    key="tab5_theme",
+)
+
+THEMES = {
+    "Light": {
+        "blue": "#4f93c7",
+        "green": "#5bb85b",
+        "orange": "#ff9a45",
+        "red": "#e05a5b",
+        "purple": "#ad8ad0",
+        "teal": "#55b3a8",
+        "slate": "#87919a",
+    },
+    "Classic (Bold)": {
+        "blue": "#1f77b4",
+        "green": "#2ca02c",
+        "orange": "#ff7f0e",
+        "red": "#d62728",
+        "purple": "#9467bd",
+        "teal": "#2a9d8f",
+        "slate": "#6c757d",
+    },
+    "Greyscale": {
+        "blue": "#6c757d",
+        "green": "#adb5bd",
+        "orange": "#87919a",
+        "red": "#57666d",
+        "purple": "#a3adb6",
+        "teal": "#c1c7cd",
+        "slate": "#2f3e46",
+    },
+}
+
+TAB5_COLORS = THEMES[theme_choice]
+
 
 # -----------------------------
 # Load KPI file (DO NOT change loader utility)
@@ -69,7 +111,6 @@ st.markdown("")
 KPI_GROUP = "sub_kpis"
 KPI_DOMAIN = "bowling"
 KPI_FILE = "bowling_master_final_1801.csv"
-
 
 try:
     bowl = load_kpi_csv(KPI_GROUP, KPI_DOMAIN, KPI_FILE)
@@ -80,16 +121,38 @@ except FileNotFoundError:
     st.error(f"Missing file: data/KPIs/{KPI_GROUP}/{KPI_DOMAIN}/{KPI_FILE}")
 
     st.info(
-        "Next action: generate this KPI file (tab5_bowling_master.csv) using your KPI build notebook, "
+        "Next action: generate the bowling KPI master file, commit it to GitHub, "
         "then rerun this tab."
     )
     st.stop()
 
+# Basic cleanup
+bowl["venue_region"] = bowl["venue_region"].astype(str).str.strip()
+bowl["season"] = bowl["season"].astype(str).str.strip()
+bowl["bowler"] = bowl["bowler"].astype(str).str.strip()
 
 
 # -----------------------------
+# Coverage disclaimer (important)
+# -----------------------------
+st.caption(
+    "Note: All metrics are computed only from matches available in this dataset. "
+    "‘All Time’ refers to all seasons present in the source data, and may not match official IPL records."
+)
+
+# Show dataset season range (excluding All Time)
+season_numeric = pd.to_numeric(bowl[bowl["season"] != "All Time"]["season"], errors="coerce")
+if season_numeric.notna().any():
+    st.caption(
+        f"Dataset coverage: seasons {int(season_numeric.min())} → {int(season_numeric.max())} (plus All Time rollups)."
+    )
+
+st.markdown("")
+
+
+# ============================================================
 # Filters (simple only)
-# -----------------------------
+# ============================================================
 html_section("Filters")
 html_explain("Adjust scope and stability controls to keep bowling insights fair and comparable.")
 
@@ -140,7 +203,7 @@ with c4:
 
 
 # -----------------------------
-# Apply filters (Step 1 = scope + stability only)
+# Apply filters
 # -----------------------------
 bowl_scope = bowl.copy()
 
@@ -148,10 +211,7 @@ if region_choice != "All Venues":
     bowl_scope = bowl_scope[bowl_scope["venue_region"] == region_choice].copy()
 
 bowl_scope = bowl_scope[bowl_scope["season"] == season_choice].copy()
-
-# Stability control placeholder (we confirm the right column in Step 2)
-if "balls" in bowl_scope.columns:
-    bowl_scope = bowl_scope[bowl_scope["balls"] >= int(min_balls)].copy()
+bowl_scope = bowl_scope[bowl_scope["balls"] >= int(min_balls)].copy()
 
 html_badge(
     f"Showing: <b>{region_choice}</b> • <b>{season_choice}</b> • Min balls: <b>{min_balls}</b>"
@@ -163,34 +223,150 @@ if len(bowl_scope) == 0:
 
 
 # -----------------------------
-# Summary tiles (sanity check only)
+# Summary tiles (sanity check)
 # -----------------------------
-html_section("Bowling Summary (Sanity Check)")
-html_explain("This confirms KPI loading + filters work before we build charts and leaderboards.")
+html_section("Bowling Summary")
+html_explain("Quick summary of bowlers and volume in the selected scope.")
 
 a, b, c, d = st.columns(4)
 
 with a:
-    metric_tile(f"{bowl_scope['bowler'].nunique():,}", "Bowlers in scope after filters.")
+    metric_tile(
+        f"{bowl_scope['bowler'].nunique():,}",
+        "Bowlers in scope after filters.",
+        value_color=TAB5_COLORS["blue"],
+    )
 
 with b:
-    metric_tile(f"{len(bowl_scope):,}", "Rows (KPI records) in scope.")
+    metric_tile(
+        f"{int(bowl_scope['wickets'].sum()):,}",
+        "Total wickets taken by this bowler group.",
+        value_color=TAB5_COLORS["purple"],
+    )
 
 with c:
-    if "balls" in bowl_scope.columns:
-        metric_tile(f"{int(bowl_scope['balls'].sum()):,}", "Total balls in scope.")
-    else:
-        metric_tile("—", "Total balls in scope.")
+    metric_tile(
+        f"{float(bowl_scope['economy'].mean()):.2f}",
+        "Average economy across bowlers in scope.",
+        value_color=TAB5_COLORS["green"],
+    )
 
 with d:
-    metric_tile(f"{top_n}", "Top N control (used in charts next steps).")
+    metric_tile(
+        f"{min_balls}",
+        "Minimum balls filter (stability control).",
+        value_color=TAB5_COLORS["orange"],
+    )
 
 st.divider()
 
 
-# -----------------------------
-# Data preview (sanity)
-# -----------------------------
+# ============================================================
+# SECTION 1: Impact Leaders (Wickets)
+# ============================================================
+
+html_section("Impact Leaders (Wickets)")
+html_explain("Who are the highest wicket-taking bowlers in the selected scope (after stability filters)?")
+
+impact = (
+    bowl_scope.sort_values("wickets", ascending=False)
+    .head(int(top_n))
+    .copy()
+)
+
+order_list = impact["bowler"].tolist()
+
+# Dynamic chart height (same logic as Batting)
+BASE_H = 180
+ROW_H = 36
+chart_h = int(BASE_H + (ROW_H * int(top_n)))
+
+# Base bar
+base_wkts = (
+    alt.Chart(impact)
+    .mark_bar()
+    .encode(
+        y=alt.Y("bowler:N", sort=order_list, title=""),
+        x=alt.X("wickets:Q", title="Wickets"),
+        color=alt.value(TAB5_COLORS["purple"]),
+        tooltip=[
+            alt.Tooltip("bowler:N", title="Bowler"),
+            alt.Tooltip("wickets:Q", title="Wickets", format=",.0f"),
+            alt.Tooltip("innings_bowled:Q", title="Innings", format=",.0f"),
+            alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
+            alt.Tooltip("overs:Q", title="Overs", format=",.1f"),
+            alt.Tooltip("economy:Q", title="Economy", format=".2f"),
+            alt.Tooltip("bowling_strike_rate:Q", title="Strike Rate", format=".2f"),
+            alt.Tooltip("dot_ball_pct:Q", title="Dot Ball %", format=".1f"),
+            alt.Tooltip("boundary_ball_pct:Q", title="Boundary Ball %", format=".1f"),
+            alt.Tooltip("pct_innings_3plus:Q", title="3+ Wkts Innings %", format=".1f"),
+        ],
+    )
+    .properties(height=chart_h)
+)
+
+# Wicket labels INSIDE bar (big font)
+wkt_labels = (
+    alt.Chart(impact)
+    .transform_calculate(x_pos="datum.wickets * 0.80")
+    .mark_text(color="#1b1b1b", fontSize=18)
+    .encode(
+        y=alt.Y("bowler:N", sort=order_list, title=""),
+        x=alt.X("x_pos:Q"),
+        text=alt.Text("wickets:Q", format=",.0f"),
+    )
+)
+
+impact_chart = apply_altair_theme(base_wkts + wkt_labels)
+st.altair_chart(impact_chart, use_container_width=True)
+
+with st.expander("📋 View Top Bowlers Table", expanded=False):
+    table_cols = [
+        "bowler",
+        "wickets",
+        "innings_bowled",
+        "balls",
+        "overs",
+        "economy",
+        "bowling_strike_rate",
+        "dot_ball_pct",
+        "boundary_ball_pct",
+        "pct_innings_3plus",
+    ]
+
+    leaderboard = impact[table_cols].copy()
+
+    leaderboard = leaderboard.rename(
+        columns={
+            "bowler": "Bowler",
+            "wickets": "Wickets",
+            "innings_bowled": "Innings",
+            "balls": "Balls",
+            "overs": "Overs",
+            "economy": "Economy",
+            "bowling_strike_rate": "Strike Rate",
+            "dot_ball_pct": "Dot Ball %",
+            "boundary_ball_pct": "Boundary Ball %",
+            "pct_innings_3plus": "3+ Wkts Innings %",
+        }
+    )
+
+    leaderboard["Overs"] = leaderboard["Overs"].round(1)
+    leaderboard["Economy"] = leaderboard["Economy"].round(2)
+    leaderboard["Strike Rate"] = leaderboard["Strike Rate"].round(2)
+    leaderboard["Dot Ball %"] = leaderboard["Dot Ball %"].round(1)
+    leaderboard["Boundary Ball %"] = leaderboard["Boundary Ball %"].round(1)
+    leaderboard["3+ Wkts Innings %"] = leaderboard["3+ Wkts Innings %"].round(1)
+
+    st.dataframe(leaderboard, use_container_width=True, hide_index=True)
+
+st.divider()
+
+
+# ============================================================
+# Data Preview (temporary)
+# ============================================================
+
 html_section("Data Preview")
 html_explain("Quick preview of the bowling KPI dataset structure for Tab 5 (first 25 rows).")
 
