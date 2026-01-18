@@ -7,71 +7,97 @@ import src.data_loader as dl
 # =========================================================
 # Page Config
 # =========================================================
-st.set_page_config(page_title="Match & Toss Strategy", layout="wide")
+st.set_page_config(page_title="Match & Toss Strategy", page_icon="🪙", layout="wide")
 
-st.title("🪙 Match & Toss Strategy 🏏")
-st.caption("Toss impact, decision preference, and chase vs defend outcomes 🎯")
+
+# =========================================================
+# Slightly deeper pastel palette (same family as Tab 3)
+# =========================================================
+PASTEL_GREEN = "#6EE7B7"
+PASTEL_RED = "#FDA4AF"
+PASTEL_BLUE = "#93C5FD"
+PASTEL_ORANGE = "#FCD34D"
+PASTEL_PURPLE = "#A5B4FC"
+PASTEL_DARK = "#0f172a"
+
+
+# =========================================================
+# Page Header (modern)
+# =========================================================
+st.markdown(
+    """
+    <div style="padding: 0.2rem 0 0.8rem 0;">
+        <div style="font-size: 2.1rem; font-weight: 800;">🪙 Match & Toss Strategy 🏏</div>
+        <div style="font-size: 1.05rem; opacity: 0.85;">
+            Toss impact, decision preference, and chase vs defend outcomes — KPI-first, decision-ready 🎯
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+st.divider()
 
 
 # =========================================================
 # Global UI Styling (cards + colorful accents)
 # =========================================================
 st.markdown(
-    """
+    f"""
     <style>
-    .kpi-card {
-        background: #ffffff;
-        border: 1px solid #eef2ff;
+    .kpi-card {{
+        background: rgba(255,255,255,0.75);
+        border: 1px solid rgba(0,0,0,0.06);
         border-radius: 18px;
         padding: 16px 16px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         min-height: 125px;
-    }
-    .kpi-title {
+    }}
+    .kpi-title {{
         font-size: 0.92rem;
         color: #334155;
         margin-bottom: 10px;
         font-weight: 800;
-    }
-    .kpi-value {
+    }}
+    .kpi-value {{
         font-size: 2.2rem;
         font-weight: 900;
-        color: #0f172a;
+        color: {PASTEL_DARK};
         line-height: 1.05;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-    .kpi-split {
+    }}
+    .kpi-value-green {{
+        color: #16a34a;
+    }}
+    .kpi-value-red {{
+        color: #dc2626;
+    }}
+    .kpi-value-blue {{
+        color: #2563eb;
+    }}
+    .kpi-value-orange {{
+        color: #f59e0b;
+    }}
+    .kpi-value-purple {{
+        color: #7c3aed;
+    }}
+
+    .kpi-split {{
         font-size: 1.05rem;
         font-weight: 850;
-        color: #0f172a;
+        color: {PASTEL_DARK};
         margin-top: 2px;
         line-height: 1.2;
-    }
-    .kpi-sub {
+    }}
+    .kpi-sub {{
         font-size: 0.82rem;
         color: #64748b;
         margin-top: 10px;
         line-height: 1.35;
-    }
+    }}
 
-    .wide-card {
-        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 60%);
-        border: 1px solid #e2e8f0;
-        border-radius: 18px;
-        padding: 16px 16px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    }
-
-    .wide-title {
-        font-size: 1.05rem;
-        font-weight: 900;
-        color: #0f172a;
-        margin-bottom: 8px;
-    }
-
-    .chip {
+    .chip {{
         display: inline-block;
         padding: 6px 10px;
         border-radius: 999px;
@@ -82,7 +108,7 @@ st.markdown(
         background: #f1f5f9;
         color: #0f172a;
         border: 1px solid #e2e8f0;
-    }
+    }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -163,19 +189,6 @@ avg_win_wkts = f["win_by_wickets"].dropna().mean() if "win_by_wickets" in f else
 
 
 # =========================================================
-# Extremes (biggest + closest)
-# =========================================================
-runs_series = f["win_by_runs"].dropna()
-wkts_series = f["win_by_wickets"].dropna()
-
-biggest_defend_runs = runs_series.max() if len(runs_series) else None
-closest_defend_runs = runs_series[runs_series > 0].min() if len(runs_series[runs_series > 0]) else None
-
-biggest_chase_wkts = wkts_series.max() if len(wkts_series) else None
-closest_chase_wkts = wkts_series[wkts_series > 0].min() if len(wkts_series[wkts_series > 0]) else None
-
-
-# =========================================================
 # Strategy Insight (simple, crisp)
 # =========================================================
 if chase_win_pct > defend_win_pct:
@@ -187,9 +200,23 @@ else:
 
 
 # =========================================================
+# Scope Chip
+# =========================================================
+st.markdown(
+    f"""
+    <div style="margin: 6px 0 16px 0;">
+        <span class="chip">📌 Showing: <b>{selected_region}</b> · <b>{selected_season}</b></span>
+        <span class="chip">🧾 Matches: <b>{match_count}</b></span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
 # KPI Row 1 (3 cards) — Toss Impact
 # =========================================================
-st.markdown("")  # spacer
+st.markdown("")
 r1c1, r1c2, r1c3 = st.columns(3)
 
 with r1c1:
@@ -197,7 +224,7 @@ with r1c1:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">🪙 Toss Winner Wins</div>
-            <div class="kpi-value">{toss_win_rate*100:.1f}%</div>
+            <div class="kpi-value kpi-value-blue">{toss_win_rate*100:.1f}%</div>
             <div class="kpi-sub">How often the toss winner also wins the match.</div>
         </div>
         """,
@@ -209,8 +236,8 @@ with r1c2:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">🧠 Toss Decision Preference</div>
-            <div class="kpi-split">🏃 Field: {field_pct*100:.1f}%</div>
-            <div class="kpi-split">🏏 Bat: {bat_pct*100:.1f}%</div>
+            <div class="kpi-split">🏃 Field: <span style="color:#2563eb;font-weight:900;">{field_pct*100:.1f}%</span></div>
+            <div class="kpi-split">🏏 Bat: <span style="color:#7c3aed;font-weight:900;">{bat_pct*100:.1f}%</span></div>
             <div class="kpi-sub">What captains choose after winning the toss.</div>
         </div>
         """,
@@ -222,8 +249,8 @@ with r1c3:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">🎯 Chase vs Defend (Toss Winner)</div>
-            <div class="kpi-split">🏃 Chase: {chase_win_pct*100:.1f}%</div>
-            <div class="kpi-split">🧱 Defend: {defend_win_pct*100:.1f}%</div>
+            <div class="kpi-split">🏃 Chase: <span style="color:#16a34a;font-weight:900;">{chase_win_pct*100:.1f}%</span></div>
+            <div class="kpi-split">🧱 Defend: <span style="color:#dc2626;font-weight:900;">{defend_win_pct*100:.1f}%</span></div>
             <div class="kpi-sub">Toss winner success when choosing field vs bat.</div>
         </div>
         """,
@@ -234,7 +261,7 @@ with r1c3:
 # =========================================================
 # KPI Row 2 (3 cards) — Result quality + Win margins
 # =========================================================
-st.markdown("")  # spacer
+st.markdown("")
 r2c1, r2c2, r2c3 = st.columns(3)
 
 with r2c1:
@@ -242,7 +269,7 @@ with r2c1:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">🌧️ No Result (Count)</div>
-            <div class="kpi-value">{no_result_count}</div>
+            <div class="kpi-value kpi-value-orange">{no_result_count}</div>
             <div class="kpi-sub">Matches abandoned / no result in this scope.</div>
         </div>
         """,
@@ -254,8 +281,8 @@ with r2c2:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">🤝 Tie + ⚡ Super Over</div>
-            <div class="kpi-split">🤝 Ties: {tie_count}</div>
-            <div class="kpi-split">⚡ Super Overs: {super_over_count}</div>
+            <div class="kpi-split">🤝 Ties: <span style="color:#7c3aed;font-weight:900;">{tie_count}</span></div>
+            <div class="kpi-split">⚡ Super Overs: <span style="color:#2563eb;font-weight:900;">{super_over_count}</span></div>
             <div class="kpi-sub">Close finishes and tiebreaker matches.</div>
         </div>
         """,
@@ -267,8 +294,8 @@ with r2c3:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">📏 Avg Win Margins</div>
-            <div class="kpi-split">🧱 Runs: {avg_win_runs:.1f}</div>
-            <div class="kpi-split">🏃 Wkts: {avg_win_wkts:.1f}</div>
+            <div class="kpi-split">🧱 Runs: <span style="color:#16a34a;font-weight:900;">{avg_win_runs:.1f}</span></div>
+            <div class="kpi-split">🏃 Wkts: <span style="color:#2563eb;font-weight:900;">{avg_win_wkts:.1f}</span></div>
             <div class="kpi-sub">Typical defend margin vs typical chase margin.</div>
         </div>
         """,
@@ -277,7 +304,7 @@ with r2c3:
 
 
 st.markdown("")
-st.info("🧠 Key Insight: Toss decisions vary by venue + season. Use the filters above to compare conditions.")
+st.info(f"🧠 Key Insight: {insight}")
 
 st.markdown("---")
 st.subheader("🆚 Compare 2 Seasons (Strategy Shift)")
@@ -323,18 +350,11 @@ def compute_season_kpis(base_df: pd.DataFrame, season_id: int) -> dict:
     }
 
 
-comp_df = pd.DataFrame([
-    compute_season_kpis(df, season_a),
-    compute_season_kpis(df, season_b),
-])
-
-# -----------------------------
 # Comparison KPIs (cards, not table)
-# -----------------------------
 a = compute_season_kpis(df, season_a)
 b = compute_season_kpis(df, season_b)
 
-st.markdown("")  # spacer
+st.markdown("")
 k1, k2, k3 = st.columns(3)
 
 with k1:
@@ -342,8 +362,8 @@ with k1:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">🧠 Toss Decision Preference</div>
-            <div class="kpi-split">🅰️ {a['Season']} → Field {a['Field %']:.1f}% | Bat {a['Bat %']:.1f}%</div>
-            <div class="kpi-split">🅱️ {b['Season']} → Field {b['Field %']:.1f}% | Bat {b['Bat %']:.1f}%</div>
+            <div class="kpi-split">🅰️ {a['Season']} → Field <span style="color:#2563eb;font-weight:900;">{a['Field %']:.1f}%</span> | Bat <span style="color:#7c3aed;font-weight:900;">{a['Bat %']:.1f}%</span></div>
+            <div class="kpi-split">🅱️ {b['Season']} → Field <span style="color:#2563eb;font-weight:900;">{b['Field %']:.1f}%</span> | Bat <span style="color:#7c3aed;font-weight:900;">{b['Bat %']:.1f}%</span></div>
             <div class="kpi-sub">How the toss call changed across seasons.</div>
         </div>
         """,
@@ -355,8 +375,8 @@ with k2:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">🎯 Chase vs Defend (Toss Winner)</div>
-            <div class="kpi-split">🅰️ {a['Season']} → Chase {a['Chase Win % (Toss Winner)']:.1f}% | Defend {a['Defend Win % (Toss Winner)']:.1f}%</div>
-            <div class="kpi-split">🅱️ {b['Season']} → Chase {b['Chase Win % (Toss Winner)']:.1f}% | Defend {b['Defend Win % (Toss Winner)']:.1f}%</div>
+            <div class="kpi-split">🅰️ {a['Season']} → Chase <span style="color:#16a34a;font-weight:900;">{a['Chase Win % (Toss Winner)']:.1f}%</span> | Defend <span style="color:#dc2626;font-weight:900;">{a['Defend Win % (Toss Winner)']:.1f}%</span></div>
+            <div class="kpi-split">🅱️ {b['Season']} → Chase <span style="color:#16a34a;font-weight:900;">{b['Chase Win % (Toss Winner)']:.1f}%</span> | Defend <span style="color:#dc2626;font-weight:900;">{b['Defend Win % (Toss Winner)']:.1f}%</span></div>
             <div class="kpi-sub">Toss winner success when choosing field vs bat.</div>
         </div>
         """,
@@ -368,12 +388,10 @@ with k3:
         f"""
         <div class="kpi-card">
             <div class="kpi-title">📏 Avg Win Margins</div>
-            <div class="kpi-split">🅰️ {a['Season']} → Runs {a['Avg Win Runs']} | Wkts {a['Avg Win Wkts']}</div>
-            <div class="kpi-split">🅱️ {b['Season']} → Runs {b['Avg Win Runs']} | Wkts {b['Avg Win Wkts']}</div>
+            <div class="kpi-split">🅰️ {a['Season']} → Runs <span style="color:#16a34a;font-weight:900;">{a['Avg Win Runs']}</span> | Wkts <span style="color:#2563eb;font-weight:900;">{a['Avg Win Wkts']}</span></div>
+            <div class="kpi-split">🅱️ {b['Season']} → Runs <span style="color:#16a34a;font-weight:900;">{b['Avg Win Runs']}</span> | Wkts <span style="color:#2563eb;font-weight:900;">{b['Avg Win Wkts']}</span></div>
             <div class="kpi-sub">Typical defend margin vs chase margin.</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
-
-

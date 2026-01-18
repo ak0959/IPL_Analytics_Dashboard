@@ -1,530 +1,465 @@
-import os
-import pandas as pd
 import streamlit as st
-import plotly.express as px
+import altair as alt
+import pandas as pd
 
-st.set_page_config(page_title="Venue Intelligence | IPL Strategy Dashboard", layout="wide")
+import src.data_loader as dl
 
-# ✅ KPI Root
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-KPI_ROOT = os.path.join(PROJECT_ROOT, "data", "KPIs")
-
-
-# ============================================================
-# TAB 3: Venue Intelligence (LOCKED + EXPLAINABLE + COLORS)
-# ============================================================
 
 # -----------------------------
-# HTML DESIGN SYSTEM (Tab 3)
+# PAGE CONFIG
 # -----------------------------
-def html_title(text):
-    st.markdown(
-        f"<div style='font-size: 2.0rem; font-weight: 800; color:#111; margin-bottom: 2px;'>{text}</div>",
-        unsafe_allow_html=True
-    )
+st.set_page_config(page_title="Venue Intelligence", page_icon="🏟️", layout="wide")
 
-def html_subtitle(text):
-    st.markdown(
-        f"<div style='font-size: 1.15rem; color:#555; margin-top: -2px; margin-bottom: 14px;'>{text}</div>",
-        unsafe_allow_html=True
-    )
 
-def html_section(text):
-    st.markdown(
-        f"<div style='font-size: 1.45rem; font-weight: 750; color:#111; margin-top: 6px;'>{text}</div>",
-        unsafe_allow_html=True
-    )
+# -----------------------------
+# SLIGHTLY DEEPER PASTEL COLORS (Not too light)
+# -----------------------------
+LIGHT_RAINBOW = [
+    "#6EE7B7",  # mint
+    "#93C5FD",  # light blue
+    "#FCD34D",  # warm yellow
+    "#F9A8D4",  # soft pink
+    "#A5B4FC",  # light indigo
+    "#FDBA74",  # soft orange
+    "#D8B4FE",  # soft purple
+    "#7DD3FC",  # sky
+    "#BEF264",  # lime
+    "#FDA4AF",  # soft red
+]
 
-def html_explain(text):
-    st.markdown(
-        f"<div style='font-size: 1.1rem; color:#555; margin-top: 4px; margin-bottom: 10px; line-height:1.45;'>{text}</div>",
-        unsafe_allow_html=True
-    )
+PASTEL_GREEN = "#6EE7B7"
+PASTEL_RED = "#FDA4AF"
+PASTEL_BLUE = "#93C5FD"
+PASTEL_ORANGE = "#FDBA74"
+PASTEL_PURPLE = "#D8B4FE"
 
-def html_note(text, color="#555"):
-    st.markdown(
-        f"<div style='font-size: 1.1rem; color:{color}; margin-top: 6px; margin-bottom: 8px; line-height:1.45;'>{text}</div>",
-        unsafe_allow_html=True
-    )
 
-def html_badge(text, bg="#EEF2FF", border="#D9E2FF", color="#2B3A67"):
-    st.markdown(
-        f"""
-        <div style="
-            display:inline-block;
-            padding: 6px 12px;
-            border-radius: 999px;
-            background: {bg};
-            border: 1px solid {border};
-            color: {color};
-            font-size: 1.02rem;
-            margin: 6px 0px 10px 0px;
-        ">
-            {text}
+# KPI number colors (logic based)
+KPI_BLUE = "#2563EB"      # total/sample
+KPI_PURPLE = "#7C3AED"    # unique venues
+KPI_DARK = "#111827"      # neutral
+KPI_ORANGE = "#F59E0B"    # pace
+KPI_GREEN = "#16A34A"     # high record (good)
+KPI_RED = "#DC2626"       # low record (bad)
+
+
+# -----------------------------
+# PAGE HEADER
+# -----------------------------
+st.markdown(
+    """
+    <div style="padding: 0.2rem 0 0.8rem 0;">
+        <div style="font-size: 2.1rem; font-weight: 800;">🏟️ Venue Intelligence</div>
+        <div style="font-size: 1.05rem; opacity: 0.85;">
+            Scoring patterns, chase bias & toss impact by ground — KPI-first, decision-ready.
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-def format_indian_number(n):
-    try:
-        n = float(n)
-    except:
-        return str(n)
-
-    if abs(n) < 1000:
-        return f"{n:,.0f}"
-
-    x = int(round(n))
-    s = str(x)
-    last3 = s[-3:]
-    rest = s[:-3]
-    if rest == "":
-        return last3
-
-    parts = []
-    while len(rest) > 2:
-        parts.append(rest[-2:])
-        rest = rest[:-2]
-    if rest:
-        parts.append(rest)
-
-    return ",".join(parts[::-1]) + "," + last3
-
-# ✅ Metric tile (no top title)
-def metric_tile(value, explanation, value_color="#111"):
-    st.markdown(
-        f"""
-        <div style="
-            border: 1px solid #EEE;
-            border-radius: 14px;
-            padding: 16px 16px;
-            background: #FFF;
-        ">
-            <div style="font-size: 2.25rem; font-weight: 800; color: {value_color};">
-                {value}
-            </div>
-            <div style="font-size: 1.1rem; color: #555; margin-top: 10px; line-height: 1.35;">
-                {explanation}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-# -----------------------------
-# Primary spectrum palette
-# -----------------------------
-PRIMARY_PALETTE = ["#1F77B4", "#2CA02C", "#FF7F0E", "#9467BD", "#D62728", "#17BECF"]
-
-# Meaningful colors for decisions
-COLOR_CHASE = "#2CA02C"     # green
-COLOR_DEFEND = "#D62728"    # red
-COLOR_NEUTRAL = "#FF7F0E"   # orange/amber
-COLOR_INFO = "#1F77B4"      # blue
+st.divider()
 
 
 # -----------------------------
-# Load KPI files
+# LOAD DATA (Tab 3 KPIs)
 # -----------------------------
-@st.cache_data(show_spinner=False)
-def load_tab3_files(region_choice: str):
-    region_key_map = {
-        "All Venues": "all",
-        "India": "india",
-        "Overseas": "overseas"
-    }
-    key = region_key_map.get(region_choice, "all")
+df_most_used = dl.load_csv("tab3_venue_kpis", "venue_most_used.csv")
+df_bias = dl.load_csv("tab3_venue_kpis", "venue_chase_defend_bias.csv")
+df_toss = dl.load_csv("tab3_venue_kpis", "venue_toss_influence.csv")
+df_phase = dl.load_csv("tab3_venue_kpis", "venue_phase_scoring.csv")
+df_avg_inns = dl.load_csv("tab3_venue_kpis", "venue_avg_innings_1v2.csv")
 
-    base_path = os.path.join(KPI_ROOT, "master_kpis", "venue")
+matches = dl.load_master_matches()
 
+# --- Apply venue cleanup mapping (same as KPI build) ---
+vmap = dl.load_csv("venue_cleanup_map.csv")  # from data/processed_new/
+venue_map = dict(zip(vmap["venue_raw"], vmap["venue_clean"]))
 
-    df_summary = pd.read_csv(os.path.join(base_path, f"tab3_venue_summary_{key}.csv"))
-    df_cd      = pd.read_csv(os.path.join(base_path, f"tab3_venue_chase_defend_{key}.csv"))
-    df_toss    = pd.read_csv(os.path.join(base_path, f"tab3_venue_toss_advantage_{key}.csv"))
+matches["venue"] = matches["venue"].astype(str).str.strip()
+matches["venue_region"] = matches["venue_region"].astype(str).str.strip()
 
-
-    for d in [df_summary, df_cd, df_toss]:
-        d["season"] = d["season"].astype(str)
-
-    return df_summary, df_cd, df_toss
-
-def season_sort_key(x):
-    if str(x).lower() == "all time":
-        return -1
-    try:
-        return int(x)
-    except:
-        return 999999
+matches["venue"] = matches["venue"].map(venue_map).fillna(matches["venue"])
 
 
 # -----------------------------
-# Ball-by-ball minimal load (for innings highs/lows)
+# FILTERS
 # -----------------------------
-@st.cache_data(show_spinner=False)
-def load_ball_master_for_innings():
-    path = os.path.join(PROJECT_ROOT, "data", "processed", "phase1_master_clean_validated_all_venues_v3.csv")
-
-    df = pd.read_csv(
-        path,
-        usecols=["match_id", "innings", "venue_region", "season_id_x", "total_runs"]
-    )
-
-    df["venue_region"] = df["venue_region"].astype(str).str.strip()
-    df["season_id_x"] = df["season_id_x"].astype(str)
-    df["innings"] = pd.to_numeric(df["innings"], errors="coerce").fillna(0).astype(int)
-    df["total_runs"] = pd.to_numeric(df["total_runs"], errors="coerce").fillna(0)
-
-    return df
-
-
-# -----------------------------
-# Header
-# -----------------------------
-html_title("Venue Intelligence")
-html_subtitle("Every chart answers one practical question: what decision should a team make at this venue?")
-st.markdown("")
-
-
-# -----------------------------
-# Filters
-# -----------------------------
-c1, c2, c3 = st.columns([1.2, 1.0, 1.0])
+c1, c2, c3, c4 = st.columns([1.3, 1.1, 1.1, 1.5], gap="large")
 
 with c1:
-    region_choice = st.selectbox(
-        "Venue Region",
-        ["All Venues", "India", "Overseas"],
-        index=0,
-        key="tab3_region"
+    region = st.selectbox(
+        "🌍 Venue Region",
+        options=["All"] + sorted(matches["venue_region"].dropna().unique().tolist()),
+        index=0
     )
 
-df_summary, df_cd, df_toss = load_tab3_files(region_choice)
-
-available_seasons = sorted(df_summary["season"].unique().tolist(), key=season_sort_key)
-if "All Time" not in available_seasons:
-    available_seasons = ["All Time"] + available_seasons
-
 with c2:
-    season_choice = st.selectbox(
-        "Season",
-        available_seasons,
-        index=0,
-        key="tab3_season"
+    season_id = st.selectbox(
+        "📅 Season",
+        options=["All"] + sorted(matches["season_id"].dropna().unique().tolist()),
+        index=0
     )
 
 with c3:
-    top_n = st.selectbox(
-        "Top Venues",
-        [10, 15, 20],
-        index=0,
-        key="tab3_topn"
+    min_matches = st.slider("🧱 Min matches (for bias charts)", 10, 50, 20, 5)
+
+with c4:
+    st.caption("✅ Tab 3 is powered by precomputed venue KPI files (fast + cloud-safe).")
+
+st.divider()
+
+
+# -----------------------------
+# APPLY FILTERS
+# -----------------------------
+matches_f = matches.copy()
+
+if region != "All":
+    matches_f = matches_f[matches_f["venue_region"] == region]
+
+if season_id != "All":
+    matches_f = matches_f[matches_f["season_id"] == season_id]
+
+match_ids = set(matches_f["match_id"].unique().tolist())
+
+# filter KPI tables by venue scope
+bias_f = df_bias[df_bias["venue"].isin(matches_f["venue"].unique())].copy()
+toss_f = df_toss[df_toss["venue"].isin(matches_f["venue"].unique())].copy()
+most_used_f = df_most_used[df_most_used["venue"].isin(matches_f["venue"].unique())].copy()
+avg_inns_f = df_avg_inns[df_avg_inns["venue"].isin(matches_f["venue"].unique())].copy()
+phase_f = df_phase[df_phase["venue"].isin(matches_f["venue"].unique())].copy()
+
+# For scoring KPIs, use balls master filtered by match_id
+balls = dl.load_master_balls()
+balls = balls[(balls["is_super_over"] == False) & (balls["match_id"].isin(match_ids))].copy()
+
+
+# -----------------------------
+# KPI CARD STYLING (COLOR VALUE)
+# -----------------------------
+def kpi_card(label, value, emoji="✅", value_color="#111"):
+    st.markdown(
+        f"""
+        <div style="
+            background: rgba(255,255,255,0.75);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
+            padding: 16px 16px 14px 16px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+            height: 110px;
+        ">
+            <div style="font-size: 1.60rem; font-weight: 850; line-height: 1; color:{value_color};">
+                {value}
+            </div>
+            <div style="margin-top: 8px; font-size: 0.95rem; opacity: 0.78;">
+                {emoji} {label}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-summary_f = df_summary[df_summary["season"] == season_choice].copy()
-cd_f = df_cd[df_cd["season"] == season_choice].copy()
-toss_f = df_toss[df_toss["season"] == season_choice].copy()
-
 
 # -----------------------------
-# Stability thresholds (LOCKED)
+# KPI CALCS (Screenshot KPIs)
 # -----------------------------
-if season_choice == "All Time":
-    min_matches_chase_bias = 20
-    min_matches_toss = 25
-else:
-    min_matches_chase_bias = 5
-    min_matches_toss = 5
+total_matches = matches_f["match_id"].nunique()
+unique_grounds = matches_f["venue"].nunique()
 
-html_badge(f"Showing: <b>{region_choice}</b> • <b>{season_choice}</b>")
+avg_match_runs = balls.groupby("match_id")["total_runs"].sum().mean()
+overall_rpo = (balls["total_runs"].sum() / len(balls)) * 6
 
-
-# -----------------------------
-# High/Low single innings totals (completed innings only)
-# -----------------------------
-ball_min = load_ball_master_for_innings()
-ball_scope = ball_min.copy()
-
-if region_choice != "All Venues":
-    ball_scope = ball_scope[ball_scope["venue_region"] == region_choice].copy()
-
-if season_choice != "All Time":
-    ball_scope = ball_scope[ball_scope["season_id_x"] == str(season_choice)].copy()
-
-innings_totals = (
-    ball_scope.groupby(["match_id", "innings"], as_index=False)
-    .agg(
-        innings_total_runs=("total_runs", "sum"),
-        balls=("total_runs", "count")
-    )
+inn_tot = (
+    balls.groupby(["match_id", "innings", "team_batting"], as_index=False)["total_runs"]
+    .sum()
+    .rename(columns={"total_runs": "innings_runs"})
 )
 
-innings_totals = innings_totals[innings_totals["innings"].isin([1, 2])].copy()
-innings_totals_completed = innings_totals[innings_totals["balls"] >= 60].copy()
+highest_innings = inn_tot["innings_runs"].max()
 
-if len(innings_totals_completed) > 0:
-    highest_innings_total = int(innings_totals_completed["innings_total_runs"].max())
-    lowest_innings_total = int(innings_totals_completed["innings_total_runs"].min())
-else:
-    highest_innings_total = 0
-    lowest_innings_total = 0
+legal = balls[(balls["is_wide_ball"] == False) & (balls["is_no_ball"] == False)].copy()
+inn_legal = (
+    legal.groupby(["match_id", "innings", "team_batting"], as_index=False)
+    .agg(innings_runs=("total_runs", "sum"), legal_balls=("total_runs", "size"))
+)
+lowest_innings_60 = inn_legal.loc[inn_legal["legal_balls"] >= 60, "innings_runs"].min()
 
 
 # -----------------------------
-# Key Stats Tiles
+# KPI GRID (6 cards)
 # -----------------------------
-total_matches = int(summary_f["matches"].sum()) if len(summary_f) else 0
-unique_venues = int(summary_f["venue"].nunique()) if len(summary_f) else 0
-avg_match_runs = float(summary_f["avg_total_runs_per_match"].mean()) if len(summary_f) else 0
-avg_run_rate = float(summary_f["avg_run_rate"].mean()) if len(summary_f) else 0
+st.markdown(
+    f"""
+    <div style="margin: 6px 0 14px 0;">
+        <span style="
+            display:inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,0,0,0.06);
+            background: rgba(0,0,0,0.03);
+            font-size: 0.9rem;
+            opacity: 0.9;">
+            📌 Showing: <b>{region}</b> · <b>{season_id}</b>
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-r1a, r1b, r1c, r1d = st.columns(4)
-with r1a:
-    metric_tile(format_indian_number(total_matches), "Total matches in the selected scope.", value_color=COLOR_INFO)
-with r1b:
-    metric_tile(format_indian_number(unique_venues), "Unique grounds covered in this selection.", value_color=COLOR_INFO)
-with r1c:
-    metric_tile(f"{avg_match_runs:,.1f}", "Average match runs (both innings combined).", value_color="#111")
-with r1d:
-    metric_tile(f"{avg_run_rate:,.2f}", "Overall scoring speed (runs per over).", value_color="#111")
+r1 = st.columns(4, gap="large")
+with r1[0]:
+    kpi_card("Total matches in selection", f"{total_matches:,}", "🧾", KPI_BLUE)
+with r1[1]:
+    kpi_card("Unique grounds covered", f"{unique_grounds:,}", "🏟️", KPI_PURPLE)
+with r1[2]:
+    kpi_card("Average match runs (both innings)", f"{avg_match_runs:,.1f}", "📈", KPI_DARK)
+with r1[3]:
+    kpi_card("Overall scoring speed (runs/over)", f"{overall_rpo:,.2f}", "⚡", KPI_ORANGE)
 
-r2a, r2b, r2c, r2d = st.columns(4)
-with r2a:
-    metric_tile(format_indian_number(highest_innings_total), "Highest team score in a single innings.", value_color=COLOR_CHASE)
-with r2b:
-    metric_tile(format_indian_number(lowest_innings_total), "Lowest team score in a single innings (min 60 balls).", value_color=COLOR_DEFEND)
-with r2c:
+r2 = st.columns(4, gap="large")
+with r2[0]:
+    kpi_card("Highest team score in a single innings", f"{int(highest_innings):,}", "🔥", KPI_GREEN)
+with r2[1]:
+    kpi_card("Lowest team score (min 60 balls)", f"{int(lowest_innings_60):,}", "🧊", KPI_RED)
+with r2[2]:
     st.empty()
-with r2d:
+with r2[3]:
     st.empty()
 
 st.divider()
 
 
-# ============================================================
-# SECTION: Most Used Venues
-# ============================================================
-html_section("Most Used Venues")
-html_explain("Question answered: where do teams play the most? These venues have the largest sample size.")
+# -----------------------------
+# SECTION: MOST USED VENUES
+# -----------------------------
+h1, h2 = st.columns([3, 1], vertical_alignment="center")
 
-top_venues = summary_f.sort_values("matches", ascending=False).head(int(top_n)).copy()
+with h1:
+    st.markdown("## 🏟️ Most Used Venues")
+    st.caption("Question answered: where do teams play the most? These venues have the largest sample size.")
 
-if len(top_venues) > 0:
-    fig_top = px.bar(
-        top_venues,
-        x="matches",
-        y="venue",
-        orientation="h",
-        text="matches",
-        color_discrete_sequence=[PRIMARY_PALETTE[0]],
-        height=460
+with h2:
+    venue_scope = st.radio(
+        "Venue Scope",
+        options=["India 🇮🇳", "Overseas ✈️"],
+        index=0,
+        horizontal=True,
+        label_visibility="collapsed",
     )
-    fig_top.update_traces(textposition="outside")
-    fig_top.update_layout(
-        margin=dict(l=10, r=10, t=10, b=10),
-        yaxis_title="",
-        xaxis_title="Matches",
-        yaxis=dict(categoryorder="total ascending")
-    )
-    st.plotly_chart(fig_top, use_container_width=True)
 
-    html_note("Key Insight: Venues with more matches give more reliable strategy signals.", color="#555")
+    top_choice = st.selectbox("🎯 Show Top", [5, 10], index=0)
+
+def is_overseas_venue(v: str) -> bool:
+    v = str(v)
+    return any(tag in v for tag in [", UAE", ", SA", "Abu Dhabi", "Dubai", "Sharjah"])
+
+most_used_scoped = most_used_f.copy()
+most_used_scoped["is_overseas"] = most_used_scoped["venue"].apply(is_overseas_venue)
+
+if venue_scope == "India 🇮🇳":
+    most_used_scoped = most_used_scoped[most_used_scoped["is_overseas"] == False]
 else:
-    st.info("No venue data available for the selected filters.")
+    most_used_scoped = most_used_scoped[most_used_scoped["is_overseas"] == True]
 
-st.markdown("")
+most_used_plot = most_used_scoped.sort_values("matches", ascending=False).head(top_choice).copy()
+most_used_plot["rank"] = range(1, len(most_used_plot) + 1)
 
-
-# ============================================================
-# SECTION: Chase vs Defend Bias (Meaningful + Sorted by ABS bias)
-# ============================================================
-html_section("Chase vs Defend Bias")
-html_explain(
-    f"Question answered: if you win the toss here, should you generally chase or defend? "
-    f"Only venues with at least <b>{min_matches_chase_bias}</b> matches are shown."
+base_bars = (
+    alt.Chart(most_used_plot)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("venue:N", sort="-x", title=None, axis=alt.Axis(labelLimit=500)),
+        x=alt.X("matches:Q", title="Matches"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=["venue:N", "matches:Q"]
+    )
 )
 
-cd_chart = cd_f.copy()
-if len(cd_chart) > 0:
-    cd_chart = cd_chart[cd_chart["matches"] >= min_matches_chase_bias].copy()
-
-    cd_chart["recommendation"] = cd_chart["chase_defend_delta_pct"].apply(
-        lambda x: "Chase" if x >= 8 else ("Defend" if x <= -8 else "Neutral")
+text_labels = (
+    alt.Chart(most_used_plot)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("venue:N", sort="-x"),
+        x=alt.X("matches:Q"),
+        text=alt.Text("matches:Q")
     )
-
-    cd_chart["signal_strength"] = cd_chart["chase_defend_delta_pct"].abs()
-
-    cd_chart = cd_chart.sort_values("signal_strength", ascending=False).head(int(top_n)).copy()
-
-    color_map = {"Chase": COLOR_CHASE, "Defend": COLOR_DEFEND, "Neutral": COLOR_NEUTRAL}
-
-if len(cd_chart) > 0:
-    fig_bias = px.bar(
-        cd_chart,
-        x="chase_defend_delta_pct",
-        y="venue",
-        orientation="h",
-        color="recommendation",
-        color_discrete_map=color_map,
-        hover_data={
-            "matches": True,
-            "chasing_win_pct": True,
-            "defending_win_pct": True,
-            "other_result_pct": True,
-            "recommendation": True
-        },
-        height=480
-    )
-
-    fig_bias.update_layout(
-        margin=dict(l=10, r=10, t=10, b=10),
-        yaxis_title="",
-        xaxis_title="Bias (%): Chasing win% − Defending win%",
-        legend_title="Recommendation",
-        yaxis=dict(categoryorder="total ascending")
-    )
-
-    st.plotly_chart(fig_bias, use_container_width=True)
-
-    html_note(
-        "<b>How to interpret:</b> "
-        "<span style='color:#2CA02C; font-weight:700;'>Green</span> → chasing historically wins more. "
-        "<span style='color:#D62728; font-weight:700;'>Red</span> → defending historically wins more. "
-        "<span style='color:#FF7F0E; font-weight:700;'>Amber</span> → no strong bias.",
-        color="#555"
-    )
-
-    html_note(
-        "Key Insight: This helps a captain decide the safer toss call. "
-        "If bias is strong and sample size is stable, follow the recommended strategy.",
-        color="#555"
-    )
-else:
-    st.info("Not enough venues meet the stability threshold for chase vs defend. Try All Time.")
-
-st.markdown("")
-
-
-# ============================================================
-# SECTION: Toss Influence (Split into Impact + Preference)
-# ============================================================
-html_section("Toss Influence")
-html_explain(
-    f"Question answered: (1) does the toss matter here? (2) what do captains prefer after winning the toss? "
-    f"Only venues with at least <b>{min_matches_toss}</b> matches are shown."
 )
 
-toss_scope = toss_f.copy()
-if len(toss_scope) > 0:
-    toss_scope = toss_scope[toss_scope["matches"] >= min_matches_toss].copy()
+chart_most_used = (base_bars + text_labels).properties(height=280)
+chart_most_used = chart_most_used.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
 
-unknown_avg = float(toss_f["toss_decision_unknown_pct"].mean()) if len(toss_f) else 0.0
-if unknown_avg <= 2:
-    dq_color = "#0F766E"
-    dq_text = "Good"
-elif unknown_avg <= 5:
-    dq_color = "#B45309"
-    dq_text = "Okay"
-else:
-    dq_color = "#B91C1C"
-    dq_text = "Caution"
+st.altair_chart(chart_most_used, use_container_width=True)
+st.caption("✅ Key insight: Venues with more matches give more reliable strategy signals.")
+st.divider()
 
-html_badge(
-    f"Decision data quality: <b style='color:{dq_color}'>{dq_text}</b> • Avg unknown: <b>{unknown_avg:.1f}%</b>",
-    bg="#FFF7ED", border="#FED7AA", color="#7C2D12"
+
+# -----------------------------
+# SECTION: CHASE vs DEFEND BIAS
+# -----------------------------
+st.markdown("## 🧭 Chase vs Defend Bias")
+st.caption("Question answered: if you win the toss here, should you generally chase or defend?")
+
+bias_plot = bias_f.copy()
+bias_plot = bias_plot[bias_plot["matches"] >= min_matches].copy()
+
+bias_plot["abs_bias"] = bias_plot["bias"].abs()
+bias_plot = bias_plot.sort_values("abs_bias", ascending=False).head(10).copy()
+bias_plot["recommendation"] = bias_plot["bias"].apply(lambda x: "Chase" if x >= 0 else "Defend")
+
+bars = (
+    alt.Chart(bias_plot)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("venue:N", sort=alt.SortField(field="bias", order="descending"), title=None, axis=alt.Axis(labelLimit=500)),
+        x=alt.X("bias:Q", title="Bias (% points)  →  Chase (+)  |  Defend (-)"),
+        color=alt.condition(
+            alt.datum.bias >= 0,
+            alt.value(PASTEL_GREEN),
+            alt.value(PASTEL_RED)
+        ),
+        tooltip=[
+            "venue:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("bias:Q", format=".1f", title="Bias"),
+            alt.Tooltip("recommendation:N", title="Recommendation"),
+        ]
+    )
+    .properties(height=360)
 )
 
-if len(toss_scope) == 0:
-    st.info("Not enough venues meet the stability threshold for toss patterns. Try All Time.")
-else:
-    html_section("Toss Impact (Where it matters most)")
-    html_explain("Higher values mean: winning the toss increases your chance of winning the match at this venue.")
+zero_line = (
+    alt.Chart(pd.DataFrame({"bias": [0]}))
+    .mark_rule(strokeWidth=2, opacity=0.35)
+    .encode(x="bias:Q")
+)
 
-    impact_chart = toss_scope.sort_values("toss_win_match_win_pct", ascending=False).head(int(top_n)).copy()
+chart_bias = (zero_line + bars)
+chart_bias = chart_bias.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
 
-    impact_chart["impact_band"] = impact_chart["toss_win_match_win_pct"].apply(
-        lambda x: "High impact" if x >= 55 else ("Low impact" if x <= 45 else "Moderate")
+st.altair_chart(chart_bias, use_container_width=True)
+st.caption("✅ How to read: Green = chase-friendly. Red = defend-friendly. Bigger bar = stronger advantage.")
+st.divider()
+
+
+# -----------------------------
+# SECTION: TOSS INFLUENCE
+# -----------------------------
+st.markdown("## 🪙 Toss Influence")
+st.caption("Question answered: (1) does toss matter here? (2) what do captains prefer after winning the toss?")
+
+toss_plot = toss_f.copy()
+toss_plot = toss_plot[toss_plot["matches"] >= max(10, min_matches)].copy()
+
+toss_plot["toss_impact_pct"] = toss_plot["toss_win_match_rate"] * 100
+toss_plot["impact_level"] = toss_plot["toss_impact_pct"].apply(lambda x: "High impact" if x >= 55 else "Moderate")
+
+toss_plot = toss_plot.sort_values("toss_impact_pct", ascending=False).head(10).copy()
+y_order = toss_plot["venue"].tolist()
+
+st.markdown("### Toss Impact (Where it matters most)")
+st.caption("Higher values mean: winning the toss increases your chance of winning the match at this venue.")
+
+bars = (
+    alt.Chart(toss_plot)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("venue:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=500)),
+        x=alt.X("toss_impact_pct:Q", title="Toss winner also won match (%)"),
+        color=alt.Color(
+            "impact_level:N",
+            scale=alt.Scale(domain=["High impact", "Moderate"], range=[PASTEL_GREEN, PASTEL_BLUE]),
+            legend=alt.Legend(title="Impact level")
+        ),
+        tooltip=[
+            "venue:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("toss_impact_pct:Q", format=".1f", title="Toss impact (%)"),
+        ],
     )
+    .properties(height=340)
+)
 
-    impact_color_map = {
-        "High impact": COLOR_CHASE,
-        "Moderate": COLOR_NEUTRAL,
-        "Low impact": COLOR_DEFEND
-    }
-
-    fig_impact = px.bar(
-        impact_chart,
-        x="toss_win_match_win_pct",
-        y="venue",
-        orientation="h",
-        color="impact_band",
-        color_discrete_map=impact_color_map,
-        hover_data={"matches": True, "toss_win_match_win_pct": True},
-        height=460
+labels = (
+    alt.Chart(toss_plot)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("venue:N", sort=y_order),
+        x=alt.X("toss_impact_pct:Q"),
+        text=alt.Text("toss_impact_pct:Q", format=".1f"),
     )
-    fig_impact.update_layout(
-        margin=dict(l=10, r=10, t=10, b=10),
-        yaxis_title="",
-        xaxis_title="Toss winner also won match (%)",
-        legend_title="Impact level",
-        yaxis=dict(categoryorder="total ascending")
+)
+
+chart_toss_impact = (bars + labels)
+chart_toss_impact = chart_toss_impact.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_toss_impact, use_container_width=True)
+st.caption("✅ Key insight: On high-impact venues, toss strategy (and conditions) matter more. On low-impact venues, execution matters more than the toss.")
+st.divider()
+
+
+# -----------------------------
+# SECTION: DECISION PREFERENCE
+# -----------------------------
+st.markdown("## 🧠 Decision Preference (Captain behaviour)")
+st.caption("Preference Index = Field-first% − Bat-first%. Positive = captains prefer to chase. Negative = captains prefer to defend.")
+
+pref_all = toss_f.copy()
+pref_all = pref_all[pref_all["matches"] >= max(10, min_matches)].copy()
+
+top_pos = pref_all.sort_values("decision_preference_index", ascending=False).head(5).copy()
+top_neg = pref_all.sort_values("decision_preference_index", ascending=True).head(5).copy()
+
+pref_plot = pd.concat([top_pos, top_neg], ignore_index=True)
+
+top_pos_order = top_pos.sort_values("decision_preference_index", ascending=False)["venue"].tolist()
+top_neg_order = top_neg.sort_values("decision_preference_index", ascending=True)["venue"].tolist()
+y_order = top_pos_order + top_neg_order
+
+pref_plot["pref_label"] = pref_plot["decision_preference_index"].apply(
+    lambda x: "Prefer Field First" if x >= 0 else "Prefer Bat First"
+)
+
+bars = (
+    alt.Chart(pref_plot)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("venue:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=500)),
+        x=alt.X("decision_preference_index:Q", title="Preference Index (Field% − Bat%)"),
+        color=alt.condition(
+            alt.datum.decision_preference_index >= 0,
+            alt.value(PASTEL_GREEN),
+            alt.value(PASTEL_RED)
+        ),
+        tooltip=[
+            "venue:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("decision_preference_index:Q", format=".1f", title="Preference Index"),
+            alt.Tooltip("pref_label:N", title="Decision pattern"),
+        ],
     )
-    st.plotly_chart(fig_impact, use_container_width=True)
+    .properties(height=360)
+)
 
-    html_note(
-        "Key Insight: On high-impact venues, toss strategy (and playing conditions) matter more. "
-        "On low-impact venues, outcomes depend more on skill and execution than the toss.",
-        color="#555"
+zero_line = (
+    alt.Chart(pd.DataFrame({"x": [0]}))
+    .mark_rule(strokeWidth=2, opacity=0.35)
+    .encode(x="x:Q")
+)
+
+labels = (
+    alt.Chart(pref_plot)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("venue:N", sort=y_order),
+        x=alt.X("decision_preference_index:Q"),
+        text=alt.Text("decision_preference_index:Q", format=".1f"),
     )
+)
 
-    st.markdown("")
+chart_pref = (zero_line + bars + labels)
+chart_pref = chart_pref.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
 
-    html_section("Decision Preference (Captain behavior)")
-    html_explain(
-        "Preference Index = Field-first% − Bat-first%. "
-        "Positive means captains prefer to chase. Negative means captains prefer to defend."
-    )
-
-    pref_chart = toss_scope.copy()
-    pref_chart["field_first_index"] = pref_chart["toss_win_field_first_pct"] - pref_chart["toss_win_bat_first_pct"]
-    pref_chart["preference"] = pref_chart["field_first_index"].apply(
-        lambda x: "Prefer Field First" if x >= 10 else ("Prefer Bat First" if x <= -10 else "Mixed")
-    )
-
-    pref_color_map = {
-        "Prefer Field First": COLOR_CHASE,
-        "Prefer Bat First": COLOR_DEFEND,
-        "Mixed": COLOR_NEUTRAL
-    }
-
-    pref_chart["pref_strength"] = pref_chart["field_first_index"].abs()
-    pref_chart = pref_chart.sort_values("pref_strength", ascending=False).head(int(top_n)).copy()
-
-    fig_pref = px.bar(
-        pref_chart,
-        x="field_first_index",
-        y="venue",
-        orientation="h",
-        color="preference",
-        color_discrete_map=pref_color_map,
-        hover_data={
-            "matches": True,
-            "toss_win_field_first_pct": True,
-            "toss_win_bat_first_pct": True
-        },
-        height=460
-    )
-    fig_pref.update_layout(
-        margin=dict(l=10, r=10, t=10, b=10),
-        yaxis_title="",
-        xaxis_title="Preference Index (Field% − Bat%)",
-        legend_title="Decision pattern",
-        yaxis=dict(categoryorder="total ascending")
-    )
-    st.plotly_chart(fig_pref, use_container_width=True)
-
-    html_note(
-        "Key Insight: This shows how captains behave at each venue. "
-        "A strong preference often reflects dew, pitch deterioration, or par-score pressure.",
-        color="#555"
-    )
+st.altair_chart(chart_pref, use_container_width=True)
+st.caption("✅ Key insight: Strong field-first venues often indicate dew or better chasing conditions. Strong bat-first venues indicate scoreboard pressure or pitch deterioration.")
+st.divider()
