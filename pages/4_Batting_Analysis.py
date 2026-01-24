@@ -1,1395 +1,1769 @@
-import pandas as pd
 import streamlit as st
 import altair as alt
+import pandas as pd
 
-from src.ui import (
-    html_title,
-    html_subtitle,
-    html_section,
-    html_explain,
-    html_badge,
-    metric_tile,
-)
-from src.data_loader import load_kpi_csv
+import src.data_loader as dl
 
 
-st.set_page_config(page_title="Batting Analysis | IPL Strategy Dashboard", layout="wide")
+# -----------------------------
+# PAGE CONFIG
+# -----------------------------
+st.set_page_config(page_title="Batting Analysis", page_icon="🏏", layout="wide")
 
 
-# ============================================================
-# GLOBAL UI STYLING (applies across Tab 4)
-# ============================================================
+# -----------------------------
+# COLORS (same as Tab 3)
+# -----------------------------
+LIGHT_RAINBOW = [
+    "#6EE7B7",  # mint
+    "#93C5FD",  # light blue
+    "#FCD34D",  # warm yellow
+    "#F9A8D4",  # soft pink
+    "#A5B4FC",  # light indigo
+    "#FDBA74",  # soft orange
+    "#D8B4FE",  # soft purple
+    "#7DD3FC",  # sky
+    "#BEF264",  # lime
+    "#FDA4AF",  # soft red
+]
 
-st.markdown(
-    """
-    <style>
-    div[data-testid="stDataFrame"] * {
-        font-size: 14px !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+PASTEL_GREEN = "#6EE7B7"
+PASTEL_RED = "#FDA4AF"
+PASTEL_BLUE = "#93C5FD"
+PASTEL_ORANGE = "#FDBA74"
+PASTEL_PURPLE = "#D8B4FE"
+
+KPI_BLUE = "#2563EB"
+KPI_PURPLE = "#7C3AED"
+KPI_DARK = "#111827"
+KPI_ORANGE = "#F59E0B"
+KPI_GREEN = "#16A34A"
+KPI_RED = "#DC2626"
 
 
-def apply_altair_theme(chart: alt.Chart) -> alt.Chart:
-    """
-    Global Altair styling for Tab 4 charts (axis + legend).
-    Ensures consistent formatting across the page.
-    """
-    return (
-        chart.configure_axis(
-            labelFontSize=14,
-            labelColor="#2f3e46",
-            titleFontSize=14,
-            titleColor="#2f3e46",
-        )
-        .configure_legend(
-            labelFontSize=13,
-            labelColor="#2f3e46",
-            titleFontSize=13,
-            titleColor="#2f3e46",
-        )
+# -----------------------------
+# KPI CARD (same component style)
+# -----------------------------
+def kpi_card(label, value, emoji="✅", value_color="#111", desc=""):
+    desc_html = ""
+    if desc:
+        desc_html = f"""
+        <div style="margin-top: 6px; font-size: 0.82rem; opacity: 0.70; line-height: 1.2;">
+            {desc}
+        </div>
+        """
+
+    st.markdown(
+        f"""
+        <div style="
+            background: rgba(255,255,255,0.75);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
+            padding: 16px 16px 14px 16px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+            height: 124px;
+        ">
+            <div style="font-size: 1.60rem; font-weight: 850; line-height: 1; color:{value_color};">
+                {value}
+            </div>
+            <div style="margin-top: 8px; font-size: 0.95rem; opacity: 0.78;">
+                {emoji} {label}
+            </div>
+            {desc_html}
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
 
-# ============================================================
-# TAB 4: Batting Analysis (FAST - KPI file)
-# ============================================================
 
-html_title("Batting Analysis")
-html_subtitle(
-    "Explore impactful batters, scoring style, and phase-wise intent using precomputed season + region KPIs."
+# -----------------------------
+# PAGE HEADER
+# -----------------------------
+st.markdown(
+    """
+    <div style="padding: 0.2rem 0 0.8rem 0;">
+        <div style="font-size: 2.1rem; font-weight: 800;">🏏 Batting Analysis</div>
+        <div style="font-size: 1.05rem; opacity: 0.85;">
+            Top batters, scoring efficiency & phase-wise dominance — KPI-first, decision-ready.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
-st.markdown("")
 
 
 # -----------------------------
-# Load KPI file
+# LOAD DATA (masters only)
 # -----------------------------
-bat = load_kpi_csv("sub_kpis", "batting", "tab4_batting_master.csv")
+matches = dl.load_master_matches()
+balls = dl.load_master_balls()
 
-# Basic cleanup
-bat["venue_region"] = bat["venue_region"].astype(str).str.strip()
-bat["season"] = bat["season"].astype(str).str.strip()
-bat["batter"] = bat["batter"].astype(str).str.strip()
+# baseline: remove super overs for standard analysis
+balls = balls[balls["is_super_over"] == False].copy()
 
 
 # -----------------------------
-# Filters
+# KPI GUIDE (placed above filters - better UX)
 # -----------------------------
-c1, c2, c3, c4 = st.columns([1.2, 1.2, 1.2, 1.2])
+with st.expander("📘 KPI Guide (how to read these metrics)", expanded=False):
+    st.markdown(
+        """
+**Runs**: Total batter runs scored.  
+Example: 42 off 30 balls → Runs = 42
+
+**Balls Faced (legal balls)**: Excludes wides (wides don’t count as a ball faced).  
+Example: 1 wide + 1 dot → Balls Faced = 1
+
+**Strike Rate (SR)**: How fast a batter scores.  
+Formula: (Runs / Balls) × 100  
+Example: 42 off 30 → SR = 140.0
+
+**Batting Average (Avg)**: Consistency per dismissal.  
+Formula: Runs / Outs  
+Example: 500 runs, 10 outs → Avg = 50.0
+
+**Dot Ball %**: Pressure indicator (more dots = more pressure).  
+Formula: (Dot Balls / Balls) × 100  
+Example: 12 dots in 30 balls → 40%
+
+**4s / 6s**: Boundary volume (style indicator).  
+Example: 5 fours + 2 sixes → 4s=5, 6s=2
+
+**Boundary %**: How dependent a batter is on boundaries.  
+Formula: (Boundary Runs / Total Runs) × 100  
+Example: (5×4 + 2×6)=32 boundary runs out of 42 → 76.2%
+
+**Non-boundary SR**: Strike rotation ability without boundaries.  
+Formula: (Non-boundary Runs / Non-boundary Balls) × 100  
+Example: (42−32)=10 runs off (30−7)=23 balls → 43.5
+
+**Phases (T20)**:  
+Powerplay = overs 1–6, Middle = 7–15, Death = 16–20  
+(We map using 0-based over_number in data.)
+        """
+    )
+
+# -----------------------------
+# FILTERS (same UI density)
+# -----------------------------
+c1, c2, c3 = st.columns([1.3, 1.1, 1.1], gap="large")
 
 with c1:
-    region_choice = st.selectbox(
-        "Venue Region",
-        ["All Venues", "India", "Overseas"],
-        index=0,
-        key="tab4_region",
+    region = st.selectbox(
+        "🌍 Venue Region",
+        options=["All"] + sorted(matches["venue_region"].dropna().unique().tolist()),
+        index=0
     )
 
 with c2:
-    if region_choice == "All Venues":
-        season_list = sorted(
-            bat["season"].unique().tolist(), key=lambda x: (x != "All Time", x)
-        )
-    else:
-        season_list = sorted(
-            bat[bat["venue_region"] == region_choice]["season"].unique().tolist(),
-            key=lambda x: (x != "All Time", x),
-        )
-
-    season_choice = st.selectbox(
-        "Season",
-        season_list,
-        index=0,
-        key="tab4_season",
+    season_id = st.selectbox(
+        "📅 Season",
+        options=["All"] + sorted(matches["season_id"].dropna().unique().tolist()),
+        index=0
     )
 
 with c3:
-    min_balls = st.selectbox(
-        "Min balls faced",
-        [0, 30, 60, 120, 250],
-        index=2,
-        key="tab4_min_balls",
-    )
+    top_choice = st.selectbox("🎯 Show Top", [5, 10], index=1)
 
-with c4:
-    top_n = st.selectbox(
-        "Top Batters",
-        [5, 10, 15],
-        index=0,  # default = 5
-        key="tab4_topn",
-    )
+# -----------------------------
+# APPLY FILTERS (match-scoped)
+# -----------------------------
+matches_f = matches.copy()
+
+if region != "All":
+    matches_f = matches_f[matches_f["venue_region"] == region]
+
+if season_id != "All":
+    matches_f = matches_f[matches_f["season_id"] == season_id]
+
+match_ids = set(matches_f["match_id"].unique().tolist())
+
+balls_f = balls[balls["match_id"].isin(match_ids)].copy()
 
 
 # -----------------------------
-# Theme selector (applies across Tab 4)
+# SCOPE BADGE
 # -----------------------------
-theme_choice = st.selectbox(
-    "Theme",
-    ["Light", "Classic (Bold)", "Greyscale"],
-    index=0,
-    key="tab4_theme",
+st.markdown(
+    f"""
+    <div style="margin: 6px 0 14px 0;">
+        <span style="
+            display:inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,0,0,0.06);
+            background: rgba(0,0,0,0.03);
+            font-size: 0.9rem;
+            opacity: 0.9;">
+            📌 Showing: <b>{region}</b> · <b>{season_id}</b>
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
-THEMES = {
-    "Light": {
-        "blue": "#4f93c7",
-        "green": "#5bb85b",
-        "orange": "#ff9a45",
-        "red": "#e05a5b",
-        "purple": "#ad8ad0",
-        "teal": "#55b3a8",
-        "slate": "#87919a",
-    },
-    "Classic (Bold)": {
-        "blue": "#1f77b4",
-        "green": "#2ca02c",
-        "orange": "#ff7f0e",
-        "red": "#d62728",
-        "purple": "#9467bd",
-        "teal": "#2a9d8f",
-        "slate": "#6c757d",
-    },
-    "Greyscale": {
-        "blue": "#6c757d",
-        "green": "#adb5bd",
-        "orange": "#87919a",
-        "red": "#57666d",
-        "purple": "#a3adb6",
-        "teal": "#c1c7cd",
-        "slate": "#2f3e46",
-    },
+st.divider()
+
+import numpy as np
+
+import numpy as np
+
+# -----------------------------
+# SECTION 1: BATTING SUMMARY KPIs
+# -----------------------------
+st.markdown("## 📌 Batting Summary KPIs")
+st.caption("Quick snapshot of scoring volume, efficiency and pressure in the selected scope.")
+
+# --- Locked rules ---
+balls_f["is_legal_ball_faced"] = (~balls_f["is_wide_ball"]).astype(int)
+balls_f["is_batter_out"] = ((balls_f["is_wicket"] == True) & (balls_f["player_out"] == balls_f["batter"])).astype(int)
+balls_f["is_dot_ball"] = ((balls_f["batter_runs"] == 0) & (balls_f["is_legal_ball_faced"] == 1)).astype(int)
+
+# --- Base totals ---
+total_runs = int(balls_f["batter_runs"].sum())
+total_balls = int(balls_f["is_legal_ball_faced"].sum())
+total_outs = int(balls_f["is_batter_out"].sum())
+unique_batters = int(balls_f["batter"].nunique())
+
+overall_sr = (total_runs / total_balls) * 100 if total_balls > 0 else 0
+overall_dot_pct = (balls_f["is_dot_ball"].sum() / total_balls) * 100 if total_balls > 0 else 0
+overall_avg = (total_runs / total_outs) if total_outs > 0 else 0
+
+# --- KPI cards (4) ---
+k1, k2, k3, k4 = st.columns(4, gap="large")
+
+with k1:
+    kpi_card(
+        "Total runs scored",
+        f"{total_runs:,}",
+        "🏏",
+        KPI_BLUE,
+        desc="Overall scoring volume in this scope"
+    )
+
+with k2:
+    kpi_card(
+        "Overall strike rate",
+        f"{overall_sr:,.1f}",
+        "⚡",
+        KPI_ORANGE,
+        desc="Runs per 100 balls (scoring speed)"
+    )
+
+with k3:
+    kpi_card(
+        "Overall batting average",
+        f"{overall_avg:,.1f}",
+        "🎯",
+        KPI_GREEN,
+        desc="Runs per dismissal (consistency)"
+    )
+
+with k4:
+    kpi_card(
+        "Dot ball % (pressure)",
+        f"{overall_dot_pct:,.1f}%",
+        "🧱",
+        KPI_RED,
+        desc="Share of balls with 0 runs"
+    )
+
+st.divider()
+
+
+# -----------------------------
+# SECTION 1A: TOP BATTERS (LEADERBOARD)
+# -----------------------------
+h1, h2, h3 = st.columns([3, 1, 1.4], vertical_alignment="center")
+
+with h1:
+    st.markdown("## 🥇 Top Batters — Leaderboard")
+    st.caption("Ranks batters by key KPIs using stability gates and experience buckets.")
+
+with h2:
+    leaderboard_metric = st.selectbox(
+        "📌 Rank by",
+        options=["Runs", "SR", "Avg", "Matches"],
+        index=0,
+        key="sec1_leader_metric"
+    )
+
+with h3:
+    match_bucket_s1 = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="sec1_match_bucket"
+    )
+
+# label -> clean bucket mapping (same style as Sections 2–3)
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_s1_clean = bucket_map[match_bucket_s1]
+
+player_alltime = (
+    balls_f.groupby("batter", as_index=False)
+    .agg(
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        outs=("is_batter_out", "sum"),
+        matches=("match_id", "nunique")
+    )
+)
+
+player_alltime["strike_rate"] = np.where(
+    player_alltime["balls"] > 0,
+    (player_alltime["runs"] / player_alltime["balls"]) * 100,
+    np.nan
+)
+
+player_alltime["average"] = np.where(
+    player_alltime["outs"] > 0,
+    (player_alltime["runs"] / player_alltime["outs"]),
+    np.nan
+)
+
+# Experience bucket (by matches)
+player_alltime["match_bucket"] = pd.cut(
+    player_alltime["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+# Apply user bucket filter
+qual_df = player_alltime.copy()
+if match_bucket_s1_clean != "All":
+    qual_df = qual_df[qual_df["match_bucket"] == match_bucket_s1_clean].copy()
+
+# -----------------------------
+# METRIC-SPECIFIC STABILITY GATES (LOCKED)
+# -----------------------------
+metric_map = {
+    "Runs": ("runs", "Runs", ".0f"),
+    "SR": ("strike_rate", "Strike Rate", ".1f"),
+    "Avg": ("average", "Average", ".1f"),
+    "Matches": ("matches", "Matches", ".0f"),
 }
 
-TAB4_COLORS = THEMES[theme_choice]
+metric_col, metric_label, metric_fmt = metric_map[leaderboard_metric]
 
+# metric-specific gates (LOCKED)
+if leaderboard_metric in ["Runs", "Matches"]:
+    qual_df = qual_df[qual_df["balls"] >= 200].copy()
 
-# -----------------------------
-# Apply filters
-# -----------------------------
-bat_scope = bat.copy()
+elif leaderboard_metric == "SR":
+    qual_df = qual_df[qual_df["balls"] >= 400].copy()
 
-if region_choice != "All Venues":
-    bat_scope = bat_scope[bat_scope["venue_region"] == region_choice].copy()
+elif leaderboard_metric == "Avg":
+    qual_df = qual_df[(qual_df["balls"] >= 300) & (qual_df["outs"] >= 15)].copy()
 
-bat_scope = bat_scope[bat_scope["season"] == season_choice].copy()
-bat_scope = bat_scope[bat_scope["balls"] >= int(min_balls)].copy()
-
-html_badge(
-    f"Showing: <b>{region_choice}</b> • <b>{season_choice}</b> • Min balls: <b>{min_balls}</b>"
-)
-
-if len(bat_scope) == 0:
-    st.warning("No batters match the selected filters. Try lowering the minimum balls filter.")
-    st.stop()
-
-
-# -----------------------------
-# Dynamic chart height (master)
-# -----------------------------
-BASE_H = 180
-ROW_H = 36
-chart_h = int(BASE_H + (ROW_H * int(top_n)))
-
-
-# -----------------------------
-# Summary tiles
-# -----------------------------
-total_batters = int(bat_scope["batter"].nunique())
-total_runs = int(bat_scope["runs"].sum())
-avg_sr = float(bat_scope["strike_rate"].mean())
-
-a, b, c, d = st.columns(4)
-
-with a:
-    metric_tile(
-        f"{total_batters}",
-        "Batters in scope after filters.",
-        value_color=TAB4_COLORS["blue"],
-    )
-
-with b:
-    metric_tile(
-        f"{total_runs:,}",
-        "Total runs scored by this batter group.",
-        value_color=TAB4_COLORS["orange"],
-    )
-
-with c:
-    metric_tile(
-        f"{avg_sr:.2f}",
-        "Average strike rate across batters in scope.",
-        value_color=TAB4_COLORS["green"],
-    )
-
-with d:
-    metric_tile(
-        f"{min_balls}",
-        "Minimum balls filter (stability control).",
-        value_color=TAB4_COLORS["purple"],
-    )
-
-st.divider()
-
-
-# ============================================================
-# SECTION 1: Impact Leaders (Runs)
-# ============================================================
-
-html_section("Impact Leaders (Runs)")
-html_explain("Question answered: who are the biggest run contributors in the selected scope?")
-
-impact = (
-    bat_scope.sort_values("runs", ascending=False)
-    .head(int(top_n))
+# leaderboard top-N
+top_df = (
+    qual_df.sort_values(metric_col, ascending=False)
+    .head(top_choice)
     .copy()
 )
 
-order_list = impact["batter"].tolist()
+top_df["rank"] = range(1, len(top_df) + 1)
 
-# Base purple bar
-base_runs = (
-    alt.Chart(impact)
-    .mark_bar()
+# --- enforce y-order to match sorting ---
+y_order = top_df["batter"].tolist()
+
+# -----------------------------
+# CHART (same Tab 3 style)
+# -----------------------------
+bars = (
+    alt.Chart(top_df)
+    .mark_bar(cornerRadiusEnd=6)
     .encode(
-        y=alt.Y("batter:N", sort=order_list, title=""),
-        x=alt.X("runs:Q", title="Runs"),
-        color=alt.value(TAB4_COLORS["purple"]),
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X(f"{metric_col}:Q", title=metric_label),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
         tooltip=[
-            alt.Tooltip("batter:N", title="Batter"),
-            alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-            alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-            alt.Tooltip("strike_rate:Q", title="Strike Rate", format=".1f"),
-            alt.Tooltip("consistency_20_plus_pct:Q", title="Consistency (20+ %)", format=".1f"),
-            alt.Tooltip("avg_share_of_team_runs_pct:Q", title="Avg Share Team Runs (%)", format=".1f"),
-        ],
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("runs:Q", title="Runs"),
+            alt.Tooltip("balls:Q", title="Balls faced"),
+            alt.Tooltip("outs:Q", title="Outs"),
+            alt.Tooltip("strike_rate:Q", title="SR", format=".1f"),
+            alt.Tooltip("average:Q", title="Avg", format=".1f"),
+        ]
     )
-    .properties(height=chart_h)
+    .properties(height=340)
 )
-
-# Runs label inside bar
-runs_labels = (
-    alt.Chart(impact)
-    .transform_calculate(x_pos="datum.runs * 0.80")
-    .mark_text(color="#1b1b1b", fontSize=18)
-    .encode(
-        y=alt.Y("batter:N", sort=order_list, title=""),
-        x=alt.X("x_pos:Q"),
-        text=alt.Text("runs:Q", format=",.0f"),
-    )
-)
-
-impact_chart = apply_altair_theme(base_runs + runs_labels)
-st.altair_chart(impact_chart, use_container_width=True)
-
-with st.expander("📋 View Top Batters Table", expanded=False):
-    leaderboard_cols = [
-        "batter",
-        "runs",
-        "balls",
-        "strike_rate",
-        "consistency_20_plus_pct",
-        "avg_share_of_team_runs_pct",
-    ]
-
-    leaderboard = impact[leaderboard_cols].copy()
-
-    leaderboard = leaderboard.rename(
-        columns={
-            "batter": "Batter",
-            "runs": "Runs",
-            "balls": "Balls",
-            "strike_rate": "Strike Rate",
-            "consistency_20_plus_pct": "Consistency (20+ %)",
-            "avg_share_of_team_runs_pct": "Avg Share of Team Runs (%)",
-        }
-    )
-
-    leaderboard["Strike Rate"] = leaderboard["Strike Rate"].round(1)
-    leaderboard["Consistency (20+ %)"] = leaderboard["Consistency (20+ %)"].round(1)
-    leaderboard["Avg Share of Team Runs (%)"] = leaderboard["Avg Share of Team Runs (%)"].round(1)
-
-    st.dataframe(leaderboard, use_container_width=True, hide_index=True)
-
-st.divider()
-
-
-# ============================================================
-# SECTION 2: Scoring Mix (Stacked Runs + % labels inside)
-# ============================================================
-
-html_section("Scoring Mix: Boundary vs Non-Boundary Runs")
-html_explain("Question answered: how much of each batter’s output comes from boundaries vs non-boundary scoring?")
-
-# Local Top N for this chart only (compact)
-dd1, dd2, dd3 = st.columns([1, 4, 4])
-with dd1:
-    top_n_mix = st.selectbox(
-        "Top Batters",
-        [5, 10, 15],
-        index=[5, 10, 15].index(int(top_n)),
-        key="tab4_topn_mix",
-    )
-
-mix_scope = (
-    bat_scope.sort_values("runs", ascending=False)
-    .head(int(top_n_mix))
-    .copy()
-)
-
-mix_scope["non_boundary_runs"] = (mix_scope["runs"] - mix_scope["boundary_runs"]).clip(lower=0)
-mix_scope["boundary_pct"] = (mix_scope["boundary_runs"] / mix_scope["runs"] * 100).fillna(0)
-mix_scope["non_boundary_pct"] = (100 - mix_scope["boundary_pct"]).clip(lower=0)
-
-# Runs stack data
-stack_df = pd.DataFrame(
-    {
-        "batter": list(mix_scope["batter"]) * 2,
-        "run_type": (["Boundary Runs"] * len(mix_scope)) + (["Non-Boundary Runs"] * len(mix_scope)),
-        "runs": list(mix_scope["boundary_runs"]) + list(mix_scope["non_boundary_runs"]),
-    }
-)
-
-# % label data (same 2 segments)
-pct_df = pd.DataFrame(
-    {
-        "batter": list(mix_scope["batter"]) * 2,
-        "run_type": (["Boundary Runs"] * len(mix_scope)) + (["Non-Boundary Runs"] * len(mix_scope)),
-        "pct": list(mix_scope["boundary_pct"]) + list(mix_scope["non_boundary_pct"]),
-    }
-)
-
-order_list_2 = mix_scope["batter"].tolist()
-
-# Dynamic height for this chart only
-chart_h_mix = int(BASE_H + (ROW_H * int(top_n_mix)))
-
-# Base stacked runs bar
-base_stack = (
-    alt.Chart(stack_df)
-    .mark_bar()
-    .encode(
-        y=alt.Y("batter:N", sort=order_list_2, title=""),
-        x=alt.X("sum(runs):Q", title="Runs"),
-        color=alt.Color(
-            "run_type:N",
-            title="",
-            scale=alt.Scale(
-                domain=["Boundary Runs", "Non-Boundary Runs"],
-                range=[TAB4_COLORS["blue"], TAB4_COLORS["green"]],
-            ),
-        ),
-        tooltip=[
-            alt.Tooltip("batter:N", title="Batter"),
-            alt.Tooltip("run_type:N", title="Type"),
-            alt.Tooltip("sum(runs):Q", title="Runs", format=",.0f"),
-        ],
-    )
-    .properties(height=chart_h_mix)
-)
-
-# --- % labels positioned INSIDE each segment (mapped to absolute runs scale)
-pct_df2 = pct_df.copy()
-
-runs_total_map = mix_scope.set_index("batter")["runs"].to_dict()
-boundary_frac_map = (
-    (mix_scope.set_index("batter")["boundary_runs"] / mix_scope.set_index("batter")["runs"])
-    .fillna(0)
-    .to_dict()
-)
-
-pct_df2["pct_frac"] = pct_df2["pct"] / 100.0
-
-
-def segment_mid_abs(row):
-    total = float(runs_total_map.get(row["batter"], 0))
-    b = float(boundary_frac_map.get(row["batter"], 0))
-    w = float(row["pct_frac"])
-
-    start_frac = 0.0 if row["run_type"] == "Boundary Runs" else b
-    mid_frac = start_frac + (w / 2)
-
-    return total * mid_frac
-
-
-pct_df2["x_mid_abs"] = pct_df2.apply(segment_mid_abs, axis=1)
 
 labels = (
-    alt.Chart(pct_df2)
-    .mark_text(color="#1b1b1b", fontSize=18)
+    alt.Chart(top_df)
+    .mark_text(align="left", dx=6, fontSize=14)
     .encode(
-        y=alt.Y("batter:N", sort=order_list_2, title=""),
-        x=alt.X("x_mid_abs:Q"),
-        detail="run_type:N",
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X(f"{metric_col}:Q"),
+        text=alt.Text(f"{metric_col}:Q", format=metric_fmt),
     )
-    .transform_calculate(label="round(datum.pct) + '%'")
-    .encode(text="label:N")
 )
 
-mix_chart = apply_altair_theme(base_stack + labels)
-st.altair_chart(mix_chart, use_container_width=True)
+chart_leaderboard = (bars + labels)
+chart_leaderboard = chart_leaderboard.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_leaderboard, use_container_width=True)
+
+# -----------------------------
+# EXPLANATION (dropdown)
+# -----------------------------
+with st.expander("🧠 How to read this leaderboard (experience + stability logic)", expanded=False):
+
+    st.markdown(
+        f"""
+### What this shows
+Top **{top_choice}** batters ranked by **{leaderboard_metric}** in the selected scope.
+
+### Why “Matches played” filter exists (All vs 75+)
+- **All (all experience levels)** includes everyone in the dataset (subject to metric gates below).
+- **75+ (elite longevity)** shows only long-career batters → most stable and repeatable comparisons.
+
+✅ Use **All** to explore emerging impact players.  
+✅ Use **75+** to compare proven long-term greats.
+
+---
+
+## ✅ Stability gates (LOCKED)
+
+### Runs / Matches
+- Minimum **200 balls**
+Reason: avoids ranking players with very low ball volume.
+
+### Strike Rate (SR)
+- Minimum **400 balls**
+Reason: SR can spike with small samples.
+
+### Average (Avg)
+- Minimum **300 balls** AND **15 outs**
+Reason: average becomes misleading if dismissals are too few.
+
+### Example (why this matters)
+A batter can show **SR 180** over 200 balls (short burst),
+but sustaining a top SR over 800+ balls is far more meaningful.
+        """
+    )
 
 
-bat_scope = bat_scope[bat_scope["balls"] >= int(min_balls)].copy()
-
+# -----------------------------
+# SECTION 2: PRESSURE & BOUNDARIES
+# -----------------------------
 st.divider()
 
-# ============================================================
-# SECTION 3: Reliability (Stable Run-Makers)
-# ============================================================
+h1, h2, h3 = st.columns([3, 1, 1.4], vertical_alignment="center")
 
-html_section("Reliability: Stable Run-Makers")
-html_explain("How stable and repeatable is batting impact across innings (with sample-size fairness)?")
+with h1:
+    st.markdown("## 🧱 Pressure & Boundaries")
+    st.caption("Dot balls show pressure. Boundaries show dominance. This section highlights both.")
 
-# -----------------------------
-# Ranking method selector
-# -----------------------------
-rank_method = st.radio(
-    "Ranking Method (applies to all reliability charts)",
-    ["Pure KPI (Metric only)", "Volume-adjusted (Metric × √balls)"],
-    index=1,
-    horizontal=True,
-    key="tab4_sec3_rank_method",
+with h2:
+    pb_metric = st.selectbox(
+        "📌 Rank by",
+        options=["Dot Ball % ↓", "4s", "6s", "Boundary %"],
+        index=0,
+        key="pb_metric_select"
+    )
+
+with h3:
+    match_bucket_pb = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="pb_match_bucket"
+    )
+
+# label -> clean bucket mapping (same style as Section 3)
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_pb_clean = bucket_map[match_bucket_pb]
+
+# --- Derived flags (locked rules) ---
+balls_f["is_dot_ball"] = ((balls_f["batter_runs"] == 0) & (balls_f["is_legal_ball_faced"] == 1)).astype(int)
+balls_f["is_four"] = ((balls_f["batter_runs"] == 4) & (balls_f["is_legal_ball_faced"] == 1)).astype(int)
+balls_f["is_six"] = ((balls_f["batter_runs"] == 6) & (balls_f["is_legal_ball_faced"] == 1)).astype(int)
+balls_f["boundary_runs"] = (balls_f["is_four"] * 4 + balls_f["is_six"] * 6).astype(int)
+
+pb = (
+    balls_f.groupby("batter", as_index=False)
+    .agg(
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        dot_balls=("is_dot_ball", "sum"),
+        fours=("is_four", "sum"),
+        sixes=("is_six", "sum"),
+        boundary_runs=("boundary_runs", "sum"),
+        matches=("match_id", "nunique"),
+    )
 )
 
-with st.expander("ℹ️ Why we use volume-adjusted ranking (with examples)", expanded=False):
+pb["dot_ball_pct"] = np.where(pb["balls"] > 0, (pb["dot_balls"] / pb["balls"]) * 100, np.nan)
+pb["boundary_pct"] = np.where(pb["runs"] > 0, (pb["boundary_runs"] / pb["runs"]) * 100, np.nan)
+
+# ✅ Base stability gate (LOCKED)
+pb = pb[pb["balls"] >= 200].copy()
+
+# Experience bucket (by matches)
+pb["match_bucket"] = pd.cut(
+    pb["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+# Apply user bucket filter
+if match_bucket_pb_clean != "All":
+    pb = pb[pb["match_bucket"] == match_bucket_pb_clean].copy()
+
+# metric logic
+pb_map = {
+    "Dot Ball % ↓": ("dot_ball_pct", "Dot Ball % (Lower is better)", ".1f", True),
+    "4s": ("fours", "4s", ".0f", False),
+    "6s": ("sixes", "6s", ".0f", False),
+    "Boundary %": ("boundary_pct", "Boundary %", ".1f", False),
+}
+
+metric_col, metric_label, metric_fmt, invert = pb_map[pb_metric]
+
+# sorting direction (invert=True => ascending for Dot%)
+pb_sorted = pb.sort_values(metric_col, ascending=invert).head(top_choice).copy()
+pb_sorted["rank"] = range(1, len(pb_sorted) + 1)
+
+# ✅ important: force y-order to match the sorted dataframe
+y_order = pb_sorted["batter"].tolist()
+
+bars = (
+    alt.Chart(pb_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X(f"{metric_col}:Q", title=metric_label),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("balls:Q", title="Balls"),
+            alt.Tooltip("dot_ball_pct:Q", title="Dot%", format=".1f"),
+            alt.Tooltip("fours:Q", title="4s"),
+            alt.Tooltip("sixes:Q", title="6s"),
+            alt.Tooltip("boundary_pct:Q", title="Boundary%", format=".1f"),
+        ]
+    )
+    .properties(height=340)
+)
+
+labels = (
+    alt.Chart(pb_sorted)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X(f"{metric_col}:Q"),
+        text=alt.Text(f"{metric_col}:Q", format=metric_fmt),
+    )
+)
+
+chart_pb = (bars + labels)
+chart_pb = chart_pb.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_pb, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
     st.markdown(
         """
-**Why this matters**  
-Reliability KPIs can look extreme for batters with limited sample size. For example, someone can show
-very high consistency if they had a short run of strong innings.  
+### What this section measures
+**Dot Ball % (lower is better):** how often a batter gets stuck (0 runs on a legal ball).  
+Example: 12 dot balls in 30 balls → **40%** dot balls.
 
-To keep the rankings fair, we allow two approaches:
+**Boundary %:** how dependent the batter is on boundaries for scoring.  
+Example: 32 boundary runs out of 42 total runs → **76.2%** boundary dependency.
 
-**1) Pure KPI ranking**  
-- Ranks batters only by the metric value  
-- Example: highest Consistency (20+ %) ranks #1  
-- Best when you want the “best metric value” without considering volume.
+### Why “Matches played” filter exists (All vs 75+)
+- **All (all experience levels)** includes everyone who passes the base ball filter.
+- **75+ (elite longevity)** shows only long-career batters → most stable comparisons.
 
-**2) Volume-adjusted ranking (recommended)**  
-- Ranks batters by: **KPI × √balls**  
-- Rewards strong performance **and** meaningful batting volume  
-- √balls is used because it boosts stability, but avoids letting volume dominate too aggressively.
+✅ Use **All** to discover short-career impact batters.  
+✅ Use **75+** to compare proven long-term performers.
 
----
-
-### Worked example (Consistency 20+ %)  
-Assume in the selected scope:
-
-**Sai Sudarshan**  
-- Consistency = 79%  
-- Balls = 1,279  
-- √balls ≈ √1279 ≈ 35.76  
-- Volume-adjusted score = 79 × 35.76 ≈ **2,825**
-
-**Virat Kohli**  
-- Consistency = 61%  
-- Balls = 5,804  
-- √balls ≈ √5804 ≈ 76.18  
-- Volume-adjusted score = 61 × 76.18 ≈ **4,647**
-
-✅ Even though Sai has the higher % consistency, Kohli ranks higher because the performance is proven across far more volume.
-
----
-
-### Same idea for Runs per Dismissal  
-If:
-- Player A has Runs/Dismissal = 47 with 1,279 balls → score ≈ 47 × 35.76 = 1,681  
-- Player B has Runs/Dismissal = 42 with 5,804 balls → score ≈ 42 × 76.18 = 3,199  
-
-✅ Player B ranks higher due to much higher stability.
+### Qualification rule (base stability)
+Minimum **200 balls faced** in the selected scope
         """
     )
 
 
-# --- Stability threshold (innings)
-avg_innings = float(bat_scope["innings_played"].mean())
-min_innings_threshold = int(round(avg_innings))
 
-avg_runs_per_innings = float((bat_scope["runs"] / bat_scope["innings_played"]).mean())
+# -----------------------------
+# SECTION 3: PHASE PERFORMANCE
+# -----------------------------
+st.divider()
 
-st.caption(
-    f"Stability filter: innings_played ≥ {min_innings_threshold} | Avg runs/innings ≈ {avg_runs_per_innings:.0f}"
+st.markdown("## ⏱️ Phase Performance")
+st.caption("Compare batter impact across phases using Strike Rate, Runs and Boundary%. (Experience bucketed)")
+
+# ✅ Filters in ONE LINE (Phase | Rank by | Matches played)
+f1, f2, f3 = st.columns([1.2, 1.2, 1.4], vertical_alignment="center")
+
+with f1:
+    phase_choice = st.selectbox(
+        "🧩 Phase",
+        options=["Powerplay", "Middle", "Death"],
+        index=0,
+        key="phase_choice"
+    )
+
+with f2:
+    phase_metric = st.selectbox(
+        "📌 Rank by",
+        options=["SR", "Runs", "Boundary %"],
+        index=0,
+        key="phase_metric"
+    )
+
+with f3:
+    match_bucket_phase = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)"
+        ],
+        index=0,
+        key="phase_match_bucket"
+    )
+
+# map label -> bucket code
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_phase_clean = bucket_map[match_bucket_phase]
+
+# --- Phase tagging (over_number is 0-based) ---
+balls_f["phase"] = pd.Series(pd.NA, index=balls_f.index)
+balls_f.loc[balls_f["over_number"].between(0, 5), "phase"] = "Powerplay"
+balls_f.loc[balls_f["over_number"].between(6, 14), "phase"] = "Middle"
+balls_f.loc[balls_f["over_number"].between(15, 19), "phase"] = "Death"
+
+phase_balls = balls_f[balls_f["phase"] == phase_choice].copy()
+
+# boundary flags in-phase
+phase_balls["is_four"] = ((phase_balls["batter_runs"] == 4) & (phase_balls["is_legal_ball_faced"] == 1)).astype(int)
+phase_balls["is_six"] = ((phase_balls["batter_runs"] == 6) & (phase_balls["is_legal_ball_faced"] == 1)).astype(int)
+phase_balls["boundary_runs"] = (phase_balls["is_four"] * 4 + phase_balls["is_six"] * 6).astype(int)
+
+ph = (
+    phase_balls.groupby("batter", as_index=False)
+    .agg(
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        fours=("is_four", "sum"),
+        sixes=("is_six", "sum"),
+        boundary_runs=("boundary_runs", "sum"),
+        matches=("match_id", "nunique"),
+    )
 )
 
-stable_scope = bat_scope.copy()
-stable_scope = stable_scope[stable_scope["innings_played"] >= min_innings_threshold].copy()
+ph["strike_rate"] = np.where(ph["balls"] > 0, (ph["runs"] / ph["balls"]) * 100, np.nan)
+ph["boundary_pct"] = np.where(ph["runs"] > 0, (ph["boundary_runs"] / ph["runs"]) * 100, np.nan)
 
-if len(stable_scope) == 0:
-    st.warning("No batters meet the stability threshold in this scope.")
+# ✅ base phase stability gate (LOCKED)
+ph = ph[ph["balls"] >= 120].copy()
+
+# Experience bucket (by matches)
+ph["match_bucket"] = pd.cut(
+    ph["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+# Apply user bucket filter
+if match_bucket_phase_clean != "All":
+    ph = ph[ph["match_bucket"] == match_bucket_phase_clean].copy()
+
+# metric map (short labels)
+phase_map = {
+    "SR": ("strike_rate", "Strike Rate", ".1f"),
+    "Runs": ("runs", "Runs", ".0f"),
+    "Boundary %": ("boundary_pct", "Boundary %", ".1f"),
+}
+
+metric_col, metric_label, metric_fmt = phase_map[phase_metric]
+
+ph_sorted = ph.sort_values(metric_col, ascending=False).head(top_choice).copy()
+ph_sorted["rank"] = range(1, len(ph_sorted) + 1)
+
+y_order = ph_sorted["batter"].tolist()
+
+bars = (
+    alt.Chart(ph_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X(f"{metric_col}:Q", title=f"{phase_choice} — {metric_label}"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("runs:Q", title="Runs"),
+            alt.Tooltip("balls:Q", title="Balls"),
+            alt.Tooltip("strike_rate:Q", title="SR", format=".1f"),
+            alt.Tooltip("boundary_pct:Q", title="Boundary%", format=".1f"),
+            alt.Tooltip("fours:Q", title="4s"),
+            alt.Tooltip("sixes:Q", title="6s"),
+        ]
+    )
+    .properties(height=340)
+)
+
+labels = (
+    alt.Chart(ph_sorted)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X(f"{metric_col}:Q"),
+        text=alt.Text(f"{metric_col}:Q", format=metric_fmt),
+    )
+)
+
+chart_phase = (bars + labels)
+chart_phase = chart_phase.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_phase, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### Phases (T20)
+- **Powerplay (1–6):** field restrictions → easier boundary value
+- **Middle (7–15):** rotation + matchup control
+- **Death (16–20):** finishing power + boundary hitting
+
+### Why “Matches played” filter exists (All vs 75+)
+- **All** includes every batter who qualifies by phase balls (>=120) → includes short & long careers.
+- **75+** shows only long-tenure IPL batters → most stable comparisons.
+
+✅ Use **All** to discover new impact players.  
+✅ Use **75+** to compare proven long-term performers.
+        """
+    )
+
+# -----------------------------
+# SECTION 4A: NON-BOUNDARY STRIKE RATE (ROTATION)
+# -----------------------------
+st.divider()
+
+h1, h2 = st.columns([3, 1.4], vertical_alignment="center")
+
+with h1:
+    st.markdown("## 🔁 Rotation Engine — Non-Boundary Strike Rate")
+    st.caption("Measures strike rotation: scoring speed excluding boundary runs (4s & 6s).")
+
+with h2:
+    match_bucket_nb = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="nb_match_bucket"
+    )
+
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_nb_clean = bucket_map[match_bucket_nb]
+
+# --- Build non-boundary components ---
+balls_f["is_four"] = ((balls_f["batter_runs"] == 4) & (balls_f["is_legal_ball_faced"] == 1)).astype(int)
+balls_f["is_six"] = ((balls_f["batter_runs"] == 6) & (balls_f["is_legal_ball_faced"] == 1)).astype(int)
+
+balls_f["boundary_runs"] = (balls_f["is_four"] * 4 + balls_f["is_six"] * 6).astype(int)
+
+# a legal ball is a "boundary ball" if it resulted in 4 or 6 off the bat
+balls_f["is_boundary_ball"] = (
+    ((balls_f["batter_runs"] == 4) | (balls_f["batter_runs"] == 6))
+    & (balls_f["is_legal_ball_faced"] == 1)
+).astype(int)
+
+nb = (
+    balls_f.groupby("batter", as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        boundary_runs=("boundary_runs", "sum"),
+        boundary_balls=("is_boundary_ball", "sum"),
+    )
+)
+
+nb["non_boundary_runs"] = nb["runs"] - nb["boundary_runs"]
+nb["non_boundary_balls"] = nb["balls"] - nb["boundary_balls"]
+
+nb["non_boundary_sr"] = np.where(
+    nb["non_boundary_balls"] > 0,
+    (nb["non_boundary_runs"] / nb["non_boundary_balls"]) * 100,
+    np.nan
+)
+
+# ✅ base stability gate (LOCKED)
+nb = nb[nb["balls"] >= 200].copy()
+
+# experience bucket
+nb["match_bucket"] = pd.cut(
+    nb["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+if match_bucket_nb_clean != "All":
+    nb = nb[nb["match_bucket"] == match_bucket_nb_clean].copy()
+
+nb_sorted = nb.sort_values("non_boundary_sr", ascending=False).head(top_choice).copy()
+nb_sorted["rank"] = range(1, len(nb_sorted) + 1)
+
+y_order = nb_sorted["batter"].tolist()
+
+bars = (
+    alt.Chart(nb_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X("non_boundary_sr:Q", title="Non-Boundary Strike Rate"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("balls:Q", title="Balls"),
+            alt.Tooltip("runs:Q", title="Runs"),
+            alt.Tooltip("boundary_runs:Q", title="Boundary runs"),
+            alt.Tooltip("non_boundary_runs:Q", title="Non-boundary runs"),
+            alt.Tooltip("non_boundary_balls:Q", title="Non-boundary balls"),
+            alt.Tooltip("non_boundary_sr:Q", title="Non-Boundary SR", format=".1f"),
+        ]
+    )
+    .properties(height=340)
+)
+
+labels = (
+    alt.Chart(nb_sorted)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X("non_boundary_sr:Q"),
+        text=alt.Text("non_boundary_sr:Q", format=".1f"),
+    )
+)
+
+chart_nb = (bars + labels)
+chart_nb = chart_nb.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_nb, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### What this metric tracks
+**Non-Boundary Strike Rate** = scoring speed excluding boundary runs.
+
+It focuses on:
+✅ strike rotation  
+✅ singles + doubles  
+✅ ability to keep scoreboard moving without relying only on 4s/6s
+
+### Why “Matches played” filter exists (All vs 75+)
+- **All (all experience levels)** includes everyone who qualifies by volume.
+- **75+ (elite longevity)** shows proven long-career batters → most stable rotation profiles.
+
+### Qualification rule (base stability)
+Minimum **200 balls faced** in the selected scope
+        """
+    )
+# -----------------------------
+# SECTION 4B: AVERAGE BALLS FACED PER INNINGS (BAT TIME)
+# -----------------------------
+st.divider()
+
+h1, h2 = st.columns([3, 1.4], vertical_alignment="center")
+
+with h1:
+    st.markdown("## 🕒 Bat Time — Average Balls Faced per Innings")
+    st.caption("Shows who bats deep vs who plays shorter cameos (stability gated + experience bucketed).")
+
+with h2:
+    match_bucket_bpi = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="bpi_match_bucket"
+    )
+
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_bpi_clean = bucket_map[match_bucket_bpi]
+
+# --- Batter-innings grain (match_id + innings + batter) ---
+# we count only legal balls faced as "balls faced"
+bi = (
+    balls_f.groupby(["match_id", "innings", "batter"], as_index=False)
+    .agg(
+        balls_faced=("is_legal_ball_faced", "sum"),
+        runs=("batter_runs", "sum"),
+    )
+)
+
+# remove empty rows (shouldn't happen, but safe)
+bi = bi[bi["balls_faced"] > 0].copy()
+
+bpi = (
+    bi.groupby("batter", as_index=False)
+    .agg(
+        innings=("match_id", "count"),  # number of batter-innings appearances
+        total_balls=("balls_faced", "sum"),
+        total_runs=("runs", "sum"),
+        matches=("match_id", "nunique"),
+    )
+)
+
+bpi["avg_balls_per_innings"] = np.where(
+    bpi["innings"] > 0,
+    bpi["total_balls"] / bpi["innings"],
+    np.nan
+)
+
+# ✅ base stability gate (LOCKED)
+bpi = bpi[bpi["total_balls"] >= 200].copy()
+
+# experience bucket
+bpi["match_bucket"] = pd.cut(
+    bpi["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+if match_bucket_bpi_clean != "All":
+    bpi = bpi[bpi["match_bucket"] == match_bucket_bpi_clean].copy()
+
+bpi_sorted = bpi.sort_values("avg_balls_per_innings", ascending=False).head(top_choice).copy()
+bpi_sorted["rank"] = range(1, len(bpi_sorted) + 1)
+
+y_order = bpi_sorted["batter"].tolist()
+
+bars = (
+    alt.Chart(bpi_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X("avg_balls_per_innings:Q", title="Average balls faced per innings"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("innings:Q", title="Innings"),
+            alt.Tooltip("total_balls:Q", title="Total balls"),
+            alt.Tooltip("total_runs:Q", title="Total runs"),
+            alt.Tooltip("avg_balls_per_innings:Q", title="Avg balls/innings", format=".1f"),
+        ]
+    )
+    .properties(height=340)
+)
+
+labels = (
+    alt.Chart(bpi_sorted)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X("avg_balls_per_innings:Q"),
+        text=alt.Text("avg_balls_per_innings:Q", format=".1f"),
+    )
+)
+
+chart_bpi = (bars + labels)
+chart_bpi = chart_bpi.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_bpi, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### What this metric tracks
+**Average Balls Faced per Innings** = how long a batter typically stays at the crease.
+
+- Higher value → bats deep, anchors or long innings
+- Lower value → cameo hitter / finisher role (short bursts)
+
+### Example
+If a batter plays 5 innings and faces:
+20, 35, 10, 28, 27 balls  
+Average balls/innings = (20+35+10+28+27) / 5 = **24.0**
+
+### Why “Matches played” filter exists (All vs 75+)
+- **All (all experience levels)** includes short and long careers.
+- **75+ (elite longevity)** highlights proven long-term batting profiles.
+
+### Qualification rule (base stability)
+Minimum **200 balls faced** in the selected scope
+        """
+    )
+# -----------------------------
+# SECTION 4C: BOUNDARY % BY PHASE (DOMINANCE)
+# -----------------------------
+st.divider()
+
+h1, h2, h3 = st.columns([3, 1.2, 1.4], vertical_alignment="center")
+
+with h1:
+    st.markdown("## 🎯 Boundary Dominance — Boundary % by Phase")
+    st.caption("Shows how boundary-dependent a batter is in each phase (Powerplay / Middle / Death).")
+
+with h2:
+    phase_choice_bp = st.selectbox(
+        "🧩 Phase",
+        options=["Powerplay", "Middle", "Death"],
+        index=0,
+        key="bp_phase_choice"
+    )
+
+with h3:
+    match_bucket_bp = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="bp_match_bucket"
+    )
+
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_bp_clean = bucket_map[match_bucket_bp]
+
+# --- Phase tagging (over_number is 0-based) ---
+balls_f["phase"] = pd.Series(pd.NA, index=balls_f.index)
+balls_f.loc[balls_f["over_number"].between(0, 5), "phase"] = "Powerplay"
+balls_f.loc[balls_f["over_number"].between(6, 14), "phase"] = "Middle"
+balls_f.loc[balls_f["over_number"].between(15, 19), "phase"] = "Death"
+
+phase_balls = balls_f[balls_f["phase"] == phase_choice_bp].copy()
+
+# boundary flags in-phase
+phase_balls["is_four"] = ((phase_balls["batter_runs"] == 4) & (phase_balls["is_legal_ball_faced"] == 1)).astype(int)
+phase_balls["is_six"] = ((phase_balls["batter_runs"] == 6) & (phase_balls["is_legal_ball_faced"] == 1)).astype(int)
+phase_balls["boundary_runs"] = (phase_balls["is_four"] * 4 + phase_balls["is_six"] * 6).astype(int)
+
+bp = (
+    phase_balls.groupby("batter", as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        fours=("is_four", "sum"),
+        sixes=("is_six", "sum"),
+        boundary_runs=("boundary_runs", "sum"),
+    )
+)
+
+bp["boundary_pct"] = np.where(bp["runs"] > 0, (bp["boundary_runs"] / bp["runs"]) * 100, np.nan)
+
+# ✅ Phase stability gate (LOCKED baseline)
+bp = bp[bp["balls"] >= 120].copy()
+
+# experience bucket
+bp["match_bucket"] = pd.cut(
+    bp["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+if match_bucket_bp_clean != "All":
+    bp = bp[bp["match_bucket"] == match_bucket_bp_clean].copy()
+
+bp_sorted = bp.sort_values("boundary_pct", ascending=False).head(top_choice).copy()
+bp_sorted["rank"] = range(1, len(bp_sorted) + 1)
+
+y_order = bp_sorted["batter"].tolist()
+
+bars = (
+    alt.Chart(bp_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X("boundary_pct:Q", title=f"{phase_choice_bp} — Boundary %"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("balls:Q", title="Balls"),
+            alt.Tooltip("runs:Q", title="Runs"),
+            alt.Tooltip("fours:Q", title="4s"),
+            alt.Tooltip("sixes:Q", title="6s"),
+            alt.Tooltip("boundary_pct:Q", title="Boundary %", format=".1f"),
+        ]
+    )
+    .properties(height=340)
+)
+
+labels = (
+    alt.Chart(bp_sorted)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X("boundary_pct:Q"),
+        text=alt.Text("boundary_pct:Q", format=".1f"),
+    )
+)
+
+chart_bp = (bars + labels)
+chart_bp = chart_bp.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_bp, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### What this metric tracks
+**Boundary %** = share of total runs coming from **4s + 6s**.
+
+- High Boundary % → power / dominance
+- Lower Boundary % → more singles + rotation
+
+### Example
+If a batter scores **50 runs**, and **32 runs** come from boundaries:  
+Boundary % = (32 / 50) × 100 = **64%**
+
+### Why Phase matters
+Boundary dependence changes by phase:
+- Powerplay: field restrictions → easier boundaries
+- Middle: rotation + matchups → fewer boundaries needed
+- Death: finishing → boundary-heavy scoring
+
+### Why “Matches played” filter exists (All vs 75+)
+- **All (all experience levels)** includes short and long careers.
+- **75+ (elite longevity)** highlights proven long-term phase profiles.
+
+### Qualification rule (phase stability)
+Minimum **120 balls faced in the selected phase**
+        """
+    )
+
+# -----------------------------
+# SECTION 4D: DISMISSAL PATTERNS (HOW BATTERS GET OUT)
+# -----------------------------
+st.divider()
+
+h1, h2, h3 = st.columns([3, 1.2, 1.4], vertical_alignment="center")
+
+with h1:
+    st.markdown("## 🎯 Dismissal Patterns — How Batters Get Out")
+    st.caption("Identify dismissal tendencies: caught-heavy, bowled-heavy, LBW risk, etc.")
+
+with h2:
+    dismissal_choice = st.selectbox(
+        "🧤 Dismissal type",
+        options=["Caught", "Bowled", "LBW", "Run Out", "Stumped"],
+        index=0,
+        key="dismissal_type_choice"
+    )
+
+with h3:
+    match_bucket_dis = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="dismissal_match_bucket"
+    )
+
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_dis_clean = bucket_map[match_bucket_dis]
+
+# --- Batter outs table ---
+outs = balls_f[(balls_f["is_batter_out"] == 1)].copy()
+
+# normalize wicket kind (defensive)
+outs["wicket_kind"] = outs["wicket_kind"].astype(str).str.strip()
+
+# map user choice -> wicket_kind values
+dismissal_map = {
+    "Caught": ["caught"],
+    "Bowled": ["bowled"],
+    "LBW": ["lbw"],
+    "Run Out": ["run out"],
+    "Stumped": ["stumped"],
+}
+
+# create a normalized version for matching
+outs["wicket_kind_norm"] = outs["wicket_kind"].str.lower()
+
+target_kinds = dismissal_map[dismissal_choice]
+
+# count outs per batter (total + chosen type)
+dis = (
+    outs.groupby("batter", as_index=False)
+    .agg(
+        total_outs=("batter", "size"),
+        matches=("match_id", "nunique"),
+    )
+)
+
+dis_target = (
+    outs[outs["wicket_kind_norm"].isin(target_kinds)]
+    .groupby("batter", as_index=False)
+    .agg(target_outs=("batter", "size"))
+)
+
+dis = dis.merge(dis_target, on="batter", how="left")
+dis["target_outs"] = dis["target_outs"].fillna(0).astype(int)
+
+# dismissal share (% of a batter's dismissals)
+dis["dismissal_share_pct"] = np.where(
+    dis["total_outs"] > 0,
+    (dis["target_outs"] / dis["total_outs"]) * 100,
+    np.nan
+)
+
+# stability gate (LOCKED baseline for dismissal patterns)
+dis = dis[dis["total_outs"] >= 15].copy()
+
+# experience bucket (by matches)
+dis["match_bucket"] = pd.cut(
+    dis["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+if match_bucket_dis_clean != "All":
+    dis = dis[dis["match_bucket"] == match_bucket_dis_clean].copy()
+
+dis_sorted = dis.sort_values("dismissal_share_pct", ascending=False).head(top_choice).copy()
+dis_sorted["rank"] = range(1, len(dis_sorted) + 1)
+
+y_order = dis_sorted["batter"].tolist()
+
+bars = (
+    alt.Chart(dis_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X("dismissal_share_pct:Q", title=f"{dismissal_choice} share of dismissals (%)"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("total_outs:Q", title="Total outs"),
+            alt.Tooltip("target_outs:Q", title=f"{dismissal_choice} outs"),
+            alt.Tooltip("dismissal_share_pct:Q", title="Share %", format=".1f"),
+        ]
+    )
+    .properties(height=340)
+)
+
+labels = (
+    alt.Chart(dis_sorted)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X("dismissal_share_pct:Q"),
+        text=alt.Text("dismissal_share_pct:Q", format=".1f"),
+    )
+)
+
+chart_dis = (bars + labels)
+chart_dis = chart_dis.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_dis, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### What this metric tracks
+This chart shows what **percentage of a batter’s dismissals** come from a chosen wicket type.
+
+Example:
+If a batter got out **40 times**, and **22 were caught** → Caught share = (22 / 40) × 100 = **55%**
+
+### How to use it
+- High **Caught share** → hitting into the field / aerial risk
+- High **Bowled/LBW share** → susceptible to straight balls / movement
+- High **Stumped share** → vulnerable vs spin / using feet
+- High **Run Out share** → risky singles or poor running
+
+### Qualification rule (stability)
+Minimum **15 total outs** (to avoid small-sample distortion)
+        """
+    )
+
+# -----------------------------
+# SECTION 4E: BATTING MATCHUPS — VS SPIN / VS PACE
+# -----------------------------
+st.divider()
+
+h1, h2, h3, h4 = st.columns([3, 1.15, 1.15, 1.4], vertical_alignment="center")
+
+with h1:
+    st.markdown("## 🧩 Batting Matchups — vs Spin / Pace")
+    st.caption("Shows which batters perform best depending on the bowler type faced.")
+
+with h2:
+    bowler_type_choice = st.selectbox(
+        "🎯 Bowler type",
+        options=["Spin", "Pace"],
+        index=0,
+        key="matchup_bowler_type"
+    )
+
+with h3:
+    matchup_metric = st.selectbox(
+        "📌 Rank by",
+        options=["SR", "Runs", "Dot Ball % ↓"],
+        index=0,
+        key="matchup_metric"
+    )
+
+with h4:
+    match_bucket_matchup = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="matchup_match_bucket"
+    )
+
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+match_bucket_matchup_clean = bucket_map[match_bucket_matchup]
+
+# --- filter balls by bowler type faced ---
+matchup_balls = balls_f.copy()
+
+# normalize bowler_type labels (defensive)
+# normalize bowler_type labels (defensive)
+matchup_balls["bowler_type_norm"] = matchup_balls["bowler_type"].astype(str).str.lower().str.strip()
+
+# classify spin using bowling style keywords
+spin_keywords = [
+    "spin", "legbreak", "offbreak", "orthodox", "chinaman", "googly"
+]
+
+is_spin = matchup_balls["bowler_type_norm"].str.contains("|".join(spin_keywords), regex=True, na=False)
+
+if bowler_type_choice == "Spin":
+    matchup_balls = matchup_balls[is_spin].copy()
+else:
+    matchup_balls = matchup_balls[~is_spin].copy()
+
+
+# dot balls
+matchup_balls["is_dot_ball"] = (
+    (matchup_balls["batter_runs"] == 0) & (matchup_balls["is_legal_ball_faced"] == 1)
+).astype(int)
+
+mu = (
+    matchup_balls.groupby("batter", as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        dot_balls=("is_dot_ball", "sum"),
+    )
+)
+
+mu["strike_rate"] = np.where(mu["balls"] > 0, (mu["runs"] / mu["balls"]) * 100, np.nan)
+mu["dot_ball_pct"] = np.where(mu["balls"] > 0, (mu["dot_balls"] / mu["balls"]) * 100, np.nan)
+
+# ✅ base stability gate (LOCKED)
+mu = mu[mu["balls"] >= 200].copy()
+
+# experience bucket (by matches)
+mu["match_bucket"] = pd.cut(
+    mu["matches"],
+    bins=[0, 25, 50, 75, 10_000],
+    labels=["1–25", "26–50", "51–75", "75+"],
+    include_lowest=True
+)
+
+if match_bucket_matchup_clean != "All":
+    mu = mu[mu["match_bucket"] == match_bucket_matchup_clean].copy()
+
+# metric map
+mu_map = {
+    "SR": ("strike_rate", "Strike Rate", ".1f", False),
+    "Runs": ("runs", "Runs", ".0f", False),
+    "Dot Ball % ↓": ("dot_ball_pct", "Dot Ball % (Lower is better)", ".1f", True),
+}
+
+metric_col, metric_label, metric_fmt, invert = mu_map[matchup_metric]
+
+mu_sorted = mu.sort_values(metric_col, ascending=invert).head(top_choice).copy()
+mu_sorted["rank"] = range(1, len(mu_sorted) + 1)
+
+y_order = mu_sorted["batter"].tolist()
+
+bars = (
+    alt.Chart(mu_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+        x=alt.X(f"{metric_col}:Q", title=f"vs {bowler_type_choice} — {metric_label}"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            "batter:N",
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("runs:Q", title="Runs"),
+            alt.Tooltip("balls:Q", title="Balls"),
+            alt.Tooltip("strike_rate:Q", title="SR", format=".1f"),
+            alt.Tooltip("dot_ball_pct:Q", title="Dot%", format=".1f"),
+        ]
+    )
+    .properties(height=340)
+)
+
+labels = (
+    alt.Chart(mu_sorted)
+    .mark_text(align="left", dx=6, fontSize=14)
+    .encode(
+        y=alt.Y("batter:N", sort=y_order),
+        x=alt.X(f"{metric_col}:Q"),
+        text=alt.Text(f"{metric_col}:Q", format=metric_fmt),
+    )
+)
+
+chart_mu = (bars + labels)
+chart_mu = chart_mu.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+st.altair_chart(chart_mu, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### What this section tracks
+This leaderboard ranks batters based on performance **vs a selected bowler type**:
+- **Spin** (slow bowlers)
+- **Pace** (fast/medium bowlers)
+
+### Why this matters
+Many batters have clear matchup patterns:
+- Some dominate spin in the middle overs
+- Some are elite pace hitters at the death
+- Some struggle when the bowler type changes
+
+### Qualification rule (base stability)
+Minimum **200 balls faced** vs the selected bowler type
+        """
+    )
+
+# -----------------------------
+# SECTION 5: RUNS TREND (PER SEASON)
+# -----------------------------
+st.divider()
+
+st.markdown("## 📈 Runs Trend — Batter Performance Over Seasons")
+st.caption("Track how a batter’s output changes across IPL seasons (runs + efficiency context).")
+
+# --- build season-level batting table (all-time, from selected scope) ---
+season_bat = (
+    balls_f.groupby(["season_id", "batter"], as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        outs=("is_batter_out", "sum"),
+    )
+)
+
+season_bat["strike_rate"] = np.where(season_bat["balls"] > 0, (season_bat["runs"] / season_bat["balls"]) * 100, np.nan)
+season_bat["average"] = np.where(season_bat["outs"] > 0, (season_bat["runs"] / season_bat["outs"]), np.nan)
+
+# --- choose batter list: restrict to meaningful batters (avoid clutter) ---
+batter_pool = (
+    season_bat.groupby("batter", as_index=False)
+    .agg(total_runs=("runs", "sum"), total_balls=("balls", "sum"), total_matches=("matches", "sum"))
+)
+
+batter_pool = batter_pool[batter_pool["total_balls"] >= 200].copy()
+batter_pool = batter_pool.sort_values("total_runs", ascending=False)
+
+top_batters = batter_pool["batter"].head(50).tolist()
+
+c1, c2 = st.columns([1.8, 1.2], vertical_alignment="center")
+
+with c1:
+    selected_batter = st.selectbox(
+        "🏏 Select batter (Top 50 by runs in current scope)",
+        options=top_batters,
+        index=0,
+        key="runs_trend_batter"
+    )
+
+with c2:
+    st.caption("✅ Tip: This list changes based on your Region / Season filters.")
+
+trend_df = season_bat[season_bat["batter"] == selected_batter].copy()
+trend_df = trend_df.sort_values("season_id")
+
+# --- chart: runs trend line ---
+line = (
+    alt.Chart(trend_df)
+    .mark_line(point=True)
+    .encode(
+        x=alt.X("season_id:O", title="Season"),
+        y=alt.Y("runs:Q", title="Runs"),
+        tooltip=[
+            alt.Tooltip("season_id:O", title="Season"),
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("runs:Q", title="Runs"),
+            alt.Tooltip("balls:Q", title="Balls"),
+            alt.Tooltip("strike_rate:Q", title="SR", format=".1f"),
+            alt.Tooltip("average:Q", title="Avg", format=".1f"),
+            alt.Tooltip("outs:Q", title="Outs"),
+        ]
+    )
+    .properties(height=320)
+)
+
+chart_trend = line.configure_view(strokeOpacity=0).configure_axis(labelFontSize=12, titleFontSize=13)
+
+st.altair_chart(chart_trend, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### What this section shows
+Runs scored by the selected batter **season by season**.
+
+### How to use it
+- Rising trend → improving impact / growing role
+- Drop in runs → lower form, fewer matches, or role change
+
+### Read with context
+A season with fewer runs can still be good if:
+- matches played were fewer
+- strike rate stayed high
+- average remained stable
+        """
+    )
+
+# -----------------------------
+# SECTION 6: PLAYER DEEP DIVE SUMMARY
+# -----------------------------
+st.divider()
+
+st.markdown("## 🧠 Player Deep Dive — Summary Card")
+st.caption("One batter, full profile: volume + efficiency + pressure + phase impact (stability gated).")
+
+# --- Build batter pool for selection (top 75 by runs in current scope, balls>=200) ---
+batter_pool = (
+    balls_f.groupby("batter", as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum"),
+        outs=("is_batter_out", "sum"),
+    )
+)
+
+batter_pool["strike_rate"] = np.where(batter_pool["balls"] > 0, (batter_pool["runs"] / batter_pool["balls"]) * 100, np.nan)
+batter_pool["average"] = np.where(batter_pool["outs"] > 0, (batter_pool["runs"] / batter_pool["outs"]), np.nan)
+
+batter_pool = batter_pool[batter_pool["balls"] >= 200].copy()
+batter_pool = batter_pool.sort_values("runs", ascending=False)
+
+top_batters = batter_pool["batter"].head(75).tolist()
+
+selected_batter_deep = st.selectbox(
+    "🏏 Select batter (Top 75 by runs in current scope)",
+    options=top_batters,
+    index=0,
+    key="deep_dive_batter"
+)
+
+# --- Base profile row (all overs) ---
+p = batter_pool[batter_pool["batter"] == selected_batter_deep].copy()
+if p.empty:
+    st.warning("No batter data found for this selection.")
     st.stop()
 
+p = p.iloc[0].to_dict()
 
-def chart_style_for_topn(n: int) -> dict:
-    if n <= 5:
-        return {"angle": -25, "label_size": 12, "text_size": 16}
-    if n <= 10:
-        return {"angle": -45, "label_size": 11, "text_size": 14}
-    return {"angle": -60, "label_size": 10, "text_size": 12}
+# --- Pressure & boundary features ---
+tmp = balls_f[balls_f["batter"] == selected_batter_deep].copy()
 
+tmp["is_dot_ball"] = ((tmp["batter_runs"] == 0) & (tmp["is_legal_ball_faced"] == 1)).astype(int)
+tmp["is_four"] = ((tmp["batter_runs"] == 4) & (tmp["is_legal_ball_faced"] == 1)).astype(int)
+tmp["is_six"] = ((tmp["batter_runs"] == 6) & (tmp["is_legal_ball_faced"] == 1)).astype(int)
 
-def compute_rank_score(df: pd.DataFrame, metric_col: str) -> pd.DataFrame:
-    """
-    Adds a rank_score column depending on ranking method.
-    Pure KPI -> rank_score = metric
-    Volume-adjusted -> rank_score = metric × √balls
-    """
-    df = df.copy()
+tmp["boundary_runs"] = (tmp["is_four"] * 4 + tmp["is_six"] * 6).astype(int)
+tmp["is_boundary_ball"] = (((tmp["batter_runs"] == 4) | (tmp["batter_runs"] == 6)) & (tmp["is_legal_ball_faced"] == 1)).astype(int)
 
-    if rank_method.startswith("Pure KPI"):
-        df["rank_score"] = df[metric_col]
-        return df
+dot_pct = (tmp["is_dot_ball"].sum() / max(1, tmp["is_legal_ball_faced"].sum())) * 100
+boundary_pct = (tmp["boundary_runs"].sum() / max(1, tmp["batter_runs"].sum())) * 100
 
-    # Volume-adjusted
-    df["vol_weight"] = df["balls"] ** 0.5
-    df["rank_score"] = df[metric_col] * df["vol_weight"]
-    return df
+non_boundary_runs = tmp["batter_runs"].sum() - tmp["boundary_runs"].sum()
+non_boundary_balls = tmp["is_legal_ball_faced"].sum() - tmp["is_boundary_ball"].sum()
+non_boundary_sr = (non_boundary_runs / max(1, non_boundary_balls)) * 100
 
+# --- Phase SRs ---
+tmp["phase"] = pd.Series(pd.NA, index=tmp.index)
+tmp.loc[tmp["over_number"].between(0, 5), "phase"] = "Powerplay"
+tmp.loc[tmp["over_number"].between(6, 14), "phase"] = "Middle"
+tmp.loc[tmp["over_number"].between(15, 19), "phase"] = "Death"
 
-FIXED_H = 340
+phase_kpi = (
+    tmp.groupby("phase", as_index=False)
+    .agg(
+        runs=("batter_runs", "sum"),
+        balls=("is_legal_ball_faced", "sum")
+    )
+)
 
+phase_kpi["sr"] = np.where(phase_kpi["balls"] > 0, (phase_kpi["runs"] / phase_kpi["balls"]) * 100, np.nan)
 
-# ============================================================
-# ROW 1: Consistency + Runs per Dismissal
-# ============================================================
+def get_phase_sr(df, phase_name):
+    row = df[df["phase"] == phase_name]
+    if row.empty:
+        return np.nan
+    return float(row["sr"].iloc[0])
 
-row1_left, gap1, row1_right = st.columns([1, 0.12, 1])
-with gap1:
-    st.markdown("")
-
+pp_sr = get_phase_sr(phase_kpi, "Powerplay")
+mid_sr = get_phase_sr(phase_kpi, "Middle")
+death_sr = get_phase_sr(phase_kpi, "Death")
 
 # -----------------------------
-# Chart 1: Consistency (20+ %)
+# KPI STRIP (8 cards)
 # -----------------------------
-with row1_left:
-    st.markdown("### Consistency (20+ Scores %)")
+st.markdown("### 📌 Batter KPI Profile")
 
-    top_n_cons = st.selectbox(
-        "Top Batters",
-        [5, 10, 15],
-        index=0,
-        key="tab4_topn_consistency_vertical_row",
-    )
-    style_cons = chart_style_for_topn(int(top_n_cons))
+c1, c2, c3, c4 = st.columns(4, gap="large")
+with c1:
+    kpi_card("Matches", f"{int(p['matches']):,}", "🧾", KPI_BLUE, desc="Career games in this scope")
+with c2:
+    kpi_card("Runs", f"{int(p['runs']):,}", "🏏", KPI_PURPLE, desc="Total batting runs")
+with c3:
+    kpi_card("Strike Rate", f"{p['strike_rate']:.1f}", "⚡", KPI_ORANGE, desc="Runs per 100 balls")
+with c4:
+    kpi_card("Average", f"{p['average']:.1f}", "🎯", KPI_GREEN, desc="Runs per dismissal")
 
-    cons_df = stable_scope[
-        ["batter", "consistency_20_plus_pct", "innings_played", "runs", "balls"]
-    ].copy()
-
-    cons_df = compute_rank_score(cons_df, "consistency_20_plus_pct")
-
-    cons_df = (
-        cons_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_cons))
-        .copy()
-    )
-
-    # Sort descending by KPI for visual order
-    cons_df = cons_df.sort_values("consistency_20_plus_pct", ascending=False).copy()
-    order_cons = cons_df["batter"].tolist()
-
-    base_cons = (
-        alt.Chart(cons_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_cons,
-                title="",
-                axis=alt.Axis(labelAngle=style_cons["angle"], labelFontSize=style_cons["label_size"]),
-            ),
-            y=alt.Y("consistency_20_plus_pct:Q", title="Consistency (20+ %)"),
-            color=alt.value(TAB4_COLORS["teal"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("consistency_20_plus_pct:Q", title="Consistency (20+ %)", format=".0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    cons_labels = (
-        alt.Chart(cons_df)
-        .transform_calculate(y_pos="datum.consistency_20_plus_pct * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_cons["text_size"])
-        .encode(
-            x=alt.X("batter:N", sort=order_cons, axis=alt.Axis(labelAngle=style_cons["angle"])),
-            y=alt.Y("y_pos:Q"),
-        )
-        .transform_calculate(label="round(datum.consistency_20_plus_pct) + '%'")
-        .encode(text="label:N")
-    )
-
-    st.altair_chart(apply_altair_theme(base_cons + cons_labels), use_container_width=True)
-    st.caption("Higher = more frequent 20+ contributions across innings.")
-
-
-# -----------------------------
-# Chart 2: Runs per Dismissal
-# -----------------------------
-with row1_right:
-    st.markdown("### Runs per Dismissal (Efficiency)")
-
-    top_n_rpd = st.selectbox(
-        "Top Batters",
-        [5, 10, 15],
-        index=0,
-        key="tab4_topn_rpd_vertical_row",
-    )
-    style_rpd = chart_style_for_topn(int(top_n_rpd))
-
-    rpd_df = stable_scope[
-        ["batter", "runs_per_dismissal", "innings_played", "runs", "outs", "balls"]
-    ].copy()
-
-    rpd_df = rpd_df.dropna(subset=["runs_per_dismissal"]).copy()
-
-    rpd_df = compute_rank_score(rpd_df, "runs_per_dismissal")
-
-    rpd_df = (
-        rpd_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_rpd))
-        .copy()
-    )
-
-    rpd_df = rpd_df.sort_values("runs_per_dismissal", ascending=False).copy()
-    order_rpd = rpd_df["batter"].tolist()
-
-    base_rpd = (
-        alt.Chart(rpd_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_rpd,
-                title="",
-                axis=alt.Axis(labelAngle=style_rpd["angle"], labelFontSize=style_rpd["label_size"]),
-            ),
-            y=alt.Y("runs_per_dismissal:Q", title="Runs per Dismissal"),
-            color=alt.value(TAB4_COLORS["orange"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("runs_per_dismissal:Q", title="Runs/Dismissal", format=".0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-                alt.Tooltip("outs:Q", title="Outs", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    rpd_labels = (
-        alt.Chart(rpd_df)
-        .transform_calculate(y_pos="datum.runs_per_dismissal * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_rpd["text_size"])
-        .encode(
-            x=alt.X("batter:N", sort=order_rpd, axis=alt.Axis(labelAngle=style_rpd["angle"])),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("runs_per_dismissal:Q", format=".0f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(base_rpd + rpd_labels), use_container_width=True)
-    st.caption("Higher = more runs scored per wicket (strong stability signal).")
-
+c5, c6, c7, c8 = st.columns(4, gap="large")
+with c5:
+    kpi_card("Dot Ball %", f"{dot_pct:.1f}%", "🧱", KPI_RED, desc="Pressure / stagnation")
+with c6:
+    kpi_card("Boundary %", f"{boundary_pct:.1f}%", "🎯", KPI_ORANGE, desc="Boundary dependency")
+with c7:
+    kpi_card("Non-Boundary SR", f"{non_boundary_sr:.1f}", "🔁", KPI_BLUE, desc="Rotation speed")
+with c8:
+    kpi_card("Balls Faced", f"{int(p['balls']):,}", "🟡", KPI_DARK, desc="Total legal balls faced")
 
 st.divider()
 
-
-# ============================================================
-# ROW 2: Team Dependency + Strike Rate
-# ============================================================
-
-row2_left, gap2, row2_right = st.columns([1, 0.12, 1])
-with gap2:
-    st.markdown("")
-
-
 # -----------------------------
-# Chart 3: Team Dependency (%)
+# PHASE KPI MINI-CARDS
 # -----------------------------
-with row2_left:
-    st.markdown("### Team Dependency (Avg Share of Team Runs %)")
+st.markdown("### ⏱️ Phase Impact (Strike Rate)")
 
-    top_n_share = st.selectbox(
-        "Top Batters",
-        [5, 10, 15],
-        index=0,
-        key="tab4_topn_team_share_vertical_half",
-    )
-    style_share = chart_style_for_topn(int(top_n_share))
+p1, p2, p3 = st.columns(3, gap="large")
 
-    share_df = stable_scope[
-        ["batter", "avg_share_of_team_runs_pct", "innings_played", "runs", "balls"]
-    ].copy()
+with p1:
+    kpi_card("Powerplay SR", f"{pp_sr:.1f}" if not np.isnan(pp_sr) else "—", "🌟", KPI_GREEN, desc="Overs 1–6")
+with p2:
+    kpi_card("Middle Overs SR", f"{mid_sr:.1f}" if not np.isnan(mid_sr) else "—", "🧠", KPI_BLUE, desc="Overs 7–15")
+with p3:
+    kpi_card("Death Overs SR", f"{death_sr:.1f}" if not np.isnan(death_sr) else "—", "🔥", KPI_ORANGE, desc="Overs 16–20")
 
-    share_df = compute_rank_score(share_df, "avg_share_of_team_runs_pct")
-
-    share_df = (
-        share_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_share))
-        .copy()
-    )
-
-    share_df = share_df.sort_values("avg_share_of_team_runs_pct", ascending=False).copy()
-    order_share = share_df["batter"].tolist()
-
-    base_share = (
-        alt.Chart(share_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_share,
-                title="",
-                axis=alt.Axis(labelAngle=style_share["angle"], labelFontSize=style_share["label_size"]),
-            ),
-            y=alt.Y("avg_share_of_team_runs_pct:Q", title="Avg Share of Team Runs (%)"),
-            color=alt.value(TAB4_COLORS["blue"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("avg_share_of_team_runs_pct:Q", title="Team Share (%)", format=".0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    share_labels = (
-        alt.Chart(share_df)
-        .transform_calculate(y_pos="datum.avg_share_of_team_runs_pct * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_share["text_size"])
-        .encode(
-            x=alt.X("batter:N", sort=order_share, axis=alt.Axis(labelAngle=style_share["angle"])),
-            y=alt.Y("y_pos:Q"),
-        )
-        .transform_calculate(label="round(datum.avg_share_of_team_runs_pct) + '%'")
-        .encode(text="label:N")
-    )
-
-    st.altair_chart(apply_altair_theme(base_share + share_labels), use_container_width=True)
-    st.caption("Higher = batter carries a larger share of team scoring.")
-
-# -----------------------------
-# Chart 4: Strike Rate (Tempo)
-# -----------------------------
-with row2_right:
-    st.markdown("### Strike Rate (Tempo)")
-
-    top_n_sr = st.selectbox(
-        "Top Batters",
-        [5, 10, 15],
-        index=0,
-        key="tab4_topn_strike_rate_vertical_half",
-    )
-
-    # ✅ NEW: display order selector (visual sorting)
-    display_order_sr = st.radio(
-        "Display Order",
-        ["Ranking score (recommended)", "Raw strike rate"],
-        index=0,
-        horizontal=True,
-        key="tab4_sr_display_order",
-    )
-
-    style_sr = chart_style_for_topn(int(top_n_sr))
-
-    sr_df = stable_scope[
-        ["batter", "strike_rate", "innings_played", "runs", "balls"]
-    ].copy()
-
-    # Apply ranking score (pure KPI or volume-adjusted)
-    sr_df = compute_rank_score(sr_df, "strike_rate")
-
-    # ✅ Top N membership always decided by rank_score
-    sr_df = (
-        sr_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_sr))
-        .copy()
-    )
-
-    # ✅ Display order (visual sorting)
-    if display_order_sr == "Raw strike rate":
-        sr_df = sr_df.sort_values("strike_rate", ascending=False).reset_index(drop=True)
-    else:
-        sr_df = sr_df.sort_values("rank_score", ascending=False).reset_index(drop=True)
-
-    # ✅ FORCE ORDER for Altair using Pandas Categorical
-    batter_order = sr_df["batter"].tolist()
-    sr_df["batter_ordered"] = pd.Categorical(sr_df["batter"], categories=batter_order, ordered=True)
-
-    base_sr = (
-        alt.Chart(sr_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter_ordered:N",
-                sort=None,
-                title="",
-                axis=alt.Axis(
-                    labelAngle=style_sr["angle"],
-                    labelFontSize=style_sr["label_size"],
-                ),
-            ),
-            y=alt.Y("strike_rate:Q", title="Strike Rate"),
-            color=alt.value(TAB4_COLORS["purple"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("strike_rate:Q", title="Strike Rate", format=".0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-                alt.Tooltip("rank_score:Q", title="Ranking Score", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    sr_labels = (
-        alt.Chart(sr_df)
-        .transform_calculate(y_pos="datum.strike_rate * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_sr["text_size"])
-        .encode(
-            x=alt.X(
-                "batter_ordered:N",
-                sort=None,
-                axis=alt.Axis(labelAngle=style_sr["angle"]),
-            ),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("strike_rate:Q", format=".0f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(base_sr + sr_labels), use_container_width=True)
-    st.caption("Higher = faster scoring tempo. Use ranking score for stability, raw SR for pure speed.")
-
-st.divider()
-
-# ============================================================
-# SECTION 4: Boundaries Profile
-# ============================================================
-
-html_section("Boundaries Profile")
-html_explain(
-    "This section highlights boundary-scoring output and efficiency. "
-    "We compare total fours/sixes and how frequently batters find boundaries per ball faced."
-)
-
-# -----------------------------
-# Local controls (Boundaries Section)
-# -----------------------------
-c_bnd_1, c_bnd_2 = st.columns([1.2, 3.8])
-
-with c_bnd_1:
-    top_n_bnd = st.selectbox(
-        "Top Batters",
-        [5, 10, 15],
-        index=[5, 10, 15].index(int(top_n)),
-        key="tab4_sec4_topn_boundaries",
-    )
-
-# -----------------------------
-# Auto stability threshold (innings)
-# -----------------------------
-avg_innings_bnd = float(bat_scope["innings_played"].mean())
-median_innings_bnd = float(bat_scope["innings_played"].median())
-min_innings_threshold_bnd = int(round(median_innings_bnd))
-
-st.caption(
-    f"Stability context: Avg innings ≈ {avg_innings_bnd:.0f} | "
-    f"Median innings ≈ {median_innings_bnd:.0f} | "
-    f"Applying: innings_played ≥ {min_innings_threshold_bnd}"
-)
-
-# ============================================================
-# ROW 1 (Side-by-side): Total 4s + Balls per 4
-# ============================================================
-
-row_bnd_1_left, gap_bnd_1, row_bnd_1_right = st.columns([1, 0.12, 1])
-with gap_bnd_1:
-    st.markdown("")
-
-# -----------------------------
-# Left Chart: Total 4s
-# -----------------------------
-with row_bnd_1_left:
-    st.markdown("### Total Fours (4s)")
-
-    rank_method_fours = st.radio(
-        "Ranking Method (Total 4s)",
-        ["Pure KPI (Metric only)", "Volume-adjusted (Metric × √balls)"],
-        index=1,
-        horizontal=True,
-        key="tab4_sec4_fours_rank_method",
-    )
-
-    fours_df = bat_scope[
-        ["batter", "fours", "balls", "innings_played", "runs"]
-    ].copy()
-
-    fours_df["fours"] = fours_df["fours"].fillna(0).astype(int)
-
-    # ✅ Stability filter (innings)
-    fours_df = fours_df[fours_df["innings_played"] >= min_innings_threshold_bnd].copy()
-
-    if len(fours_df) == 0:
-        st.warning(
-            "No batters meet the stability threshold for Total 4s in this scope. "
-            "Try widening the scope or reducing Min balls faced."
-        )
-        st.stop()
-
-    # Rank score
-    if rank_method_fours.startswith("Pure KPI"):
-        fours_df["rank_score"] = fours_df["fours"]
-    else:
-        fours_df["vol_weight"] = fours_df["balls"] ** 0.5
-        fours_df["rank_score"] = fours_df["fours"] * fours_df["vol_weight"]
-
-    # ✅ Membership decided by rank_score
-    fours_df = (
-        fours_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_bnd))
-        .copy()
-    )
-
-    # ✅ Visual order by raw KPI
-    fours_df = fours_df.sort_values("fours", ascending=False).reset_index(drop=True)
-    order_fours = fours_df["batter"].tolist()
-
-    style_fours = chart_style_for_topn(int(top_n_bnd))
-
-    base_fours = (
-        alt.Chart(fours_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_fours,
-                title="",
-                axis=alt.Axis(
-                    labelAngle=style_fours["angle"],
-                    labelFontSize=style_fours["label_size"],
-                ),
-            ),
-            y=alt.Y("fours:Q", title="Total 4s"),
-            color=alt.value(TAB4_COLORS["blue"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("fours:Q", title="Fours", format=",.0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-                alt.Tooltip("rank_score:Q", title="Ranking Score", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    fours_labels = (
-        alt.Chart(fours_df)
-        .transform_calculate(y_pos="datum.fours * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_fours["text_size"])
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_fours,
-                axis=alt.Axis(labelAngle=style_fours["angle"]),
-            ),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("fours:Q", format=",.0f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(base_fours + fours_labels), use_container_width=True)
-    st.caption("Higher = more boundary scoring via fours in the selected scope.")
-
-# -----------------------------
-# Right Chart: Balls per 4
-# -----------------------------
-with row_bnd_1_right:
-    st.markdown("### Balls per 4 (4s Frequency)")
-
-    rank_method_bpf = st.radio(
-        "Ranking Method (Balls per 4)",
-        ["Pure KPI (Metric only)", "Volume-adjusted (Metric × √balls)"],
-        index=1,
-        horizontal=True,
-        key="tab4_sec4_balls_per_four_rank_method",
-    )
-
-    bpf_df = bat_scope[
-        ["batter", "fours", "balls", "innings_played", "runs"]
-    ].copy()
-
-    bpf_df["fours"] = bpf_df["fours"].fillna(0).astype(int)
-
-    # ✅ Stability filter (innings)
-    bpf_df = bpf_df[bpf_df["innings_played"] >= int(min_innings_threshold_bnd)].copy()
-
-    # Avoid divide-by-zero
-    bpf_df = bpf_df[bpf_df["fours"] > 0].copy()
-
-    if len(bpf_df) == 0:
-        st.warning("No batters have at least 1 four (after innings stability filter) in this scope.")
-        st.stop()
-
-    # ✅ Data-driven stability: median balls faced
-    median_balls_bpf = int(round(float(bpf_df["balls"].median())))
-    min_balls_local = max(int(min_balls), median_balls_bpf)
-
-    # ✅ Extra stability gate: minimum fours
-    min_fours_threshold = 10
-
-    bpf_df = bpf_df[bpf_df["balls"] >= int(min_balls_local)].copy()
-    bpf_df = bpf_df[bpf_df["fours"] >= int(min_fours_threshold)].copy()
-
-    if len(bpf_df) == 0:
-        st.warning(
-            "No batters meet the stability filters for Balls per 4 in this scope. "
-            "Try widening scope or lowering Min balls faced."
-        )
-        st.stop()
-
-    # KPI (lower is better)
-    bpf_df["balls_per_four"] = (bpf_df["balls"] / bpf_df["fours"]).round(1)
-
-    # Lower is better -> ranking uses negative proxy
-    bpf_df["rank_proxy"] = -bpf_df["balls_per_four"]
-
-    if rank_method_bpf.startswith("Pure KPI"):
-        bpf_df["rank_score"] = bpf_df["rank_proxy"]
-    else:
-        bpf_df["vol_weight"] = bpf_df["balls"] ** 0.5
-        bpf_df["rank_score"] = bpf_df["rank_proxy"] * bpf_df["vol_weight"]
-
-    # ✅ Membership decided by rank_score
-    bpf_df = (
-        bpf_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_bnd))
-        .copy()
-    )
-
-    # ✅ Visual order by KPI (lowest first)
-    bpf_df = bpf_df.sort_values("balls_per_four", ascending=True).reset_index(drop=True)
-    order_bpf = bpf_df["batter"].tolist()
-
-    style_bpf = chart_style_for_topn(int(top_n_bnd))
-
-    base_bpf = (
-        alt.Chart(bpf_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_bpf,
-                title="",
-                axis=alt.Axis(
-                    labelAngle=style_bpf["angle"],
-                    labelFontSize=style_bpf["label_size"],
-                ),
-            ),
-            y=alt.Y("balls_per_four:Q", title="Balls per 4"),
-            color=alt.value(TAB4_COLORS["blue"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("balls_per_four:Q", title="Balls per 4", format=".1f"),
-                alt.Tooltip("fours:Q", title="Total 4s", format=",.0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-                alt.Tooltip("rank_score:Q", title="Ranking Score", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    bpf_labels = (
-        alt.Chart(bpf_df)
-        .transform_calculate(y_pos="datum.balls_per_four * 0.65")
-        .mark_text(color="#1b1d1b", fontSize=style_bpf["text_size"])
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_bpf,
-                axis=alt.Axis(labelAngle=style_bpf["angle"]),
-            ),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("balls_per_four:Q", format=".1f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(base_bpf + bpf_labels), use_container_width=True)
-    st.caption("Lower = a four is hit more frequently (faster boundary conversion via 4s).")
-
-
-# ✅ Full-width explanation (keeps layout clean)
-with st.expander("ℹ️ How to interpret Balls per 4 (and why stability filters matter)", expanded=False):
+with st.expander("🧠 How to read this profile card", expanded=False):
     st.markdown(
-        f"""
-**What this metric shows**  
-**Balls per 4 = Balls faced ÷ Total 4s**  
-Lower = the batter hits fours more frequently.
-
-**Why stability filters are important**  
-This metric can look artificially strong for batters with small boundary sample sizes.  
-To keep the ranking credible, we apply stability checks before selecting the Top N:
-
-- **innings_played ≥ {int(min_innings_threshold_bnd)}**  
-- **balls ≥ {int(min_balls_local)}** (data-driven: max(global min balls, median balls = {int(median_balls_bpf)})  
-- **total 4s ≥ {int(min_fours_threshold)}**
-
-**Ranking logic**  
-- *Pure KPI*: ranks by lowest Balls per 4  
-- *Volume-adjusted*: ranks by **(−Balls per 4) × √balls** so efficiency must hold over volume
         """
-    )
+### What this section gives you
+A full batter snapshot in one place:
+- **Volume:** matches, runs, balls
+- **Efficiency:** strike rate, average
+- **Pressure:** dot ball %
+- **Style:** boundary %, non-boundary SR
+- **Situation:** phase SRs (Powerplay / Middle / Death)
 
-# ============================================================
-# ROW 2 (Side-by-side): Total 6s + Balls per 6
-# ============================================================
-
-row_bnd_2_left, gap_bnd_2, row_bnd_2_right = st.columns([1, 0.12, 1])
-with gap_bnd_2:
-    st.markdown("")
-
-# -----------------------------
-# Left Chart: Total 6s
-# -----------------------------
-with row_bnd_2_left:
-    st.markdown("### Total Sixes (6s)")
-
-    rank_method_sixes = st.radio(
-        "Ranking Method (Total 6s)",
-        ["Pure KPI (Metric only)", "Volume-adjusted (Metric × √balls)"],
-        index=1,
-        horizontal=True,
-        key="tab4_sec4_sixes_rank_method",
-    )
-
-    sixes_df = bat_scope[
-        ["batter", "sixes", "balls", "innings_played", "runs"]
-    ].copy()
-
-    sixes_df["sixes"] = sixes_df["sixes"].fillna(0).astype(int)
-
-    # ✅ Stability filter (innings)
-    sixes_df = sixes_df[sixes_df["innings_played"] >= int(min_innings_threshold_bnd)].copy()
-
-    if len(sixes_df) == 0:
-        st.warning(
-            "No batters meet the stability threshold for Total 6s in this scope. "
-            "Try widening scope or reducing Min balls faced."
-        )
-        st.stop()
-
-    # Rank score
-    if rank_method_sixes.startswith("Pure KPI"):
-        sixes_df["rank_score"] = sixes_df["sixes"]
-    else:
-        sixes_df["vol_weight"] = sixes_df["balls"] ** 0.5
-        sixes_df["rank_score"] = sixes_df["sixes"] * sixes_df["vol_weight"]
-
-    # ✅ Membership decided by rank_score
-    sixes_df = (
-        sixes_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_bnd))
-        .copy()
-    )
-
-    # ✅ Visual order by raw KPI
-    sixes_df = sixes_df.sort_values("sixes", ascending=False).reset_index(drop=True)
-    order_sixes = sixes_df["batter"].tolist()
-
-    style_sixes = chart_style_for_topn(int(top_n_bnd))
-
-    base_sixes = (
-        alt.Chart(sixes_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_sixes,
-                title="",
-                axis=alt.Axis(
-                    labelAngle=style_sixes["angle"],
-                    labelFontSize=style_sixes["label_size"],
-                ),
-            ),
-            y=alt.Y("sixes:Q", title="Total 6s"),
-            color=alt.value(TAB4_COLORS["slate"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("sixes:Q", title="Sixes", format=",.0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-                alt.Tooltip("rank_score:Q", title="Ranking Score", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    sixes_labels = (
-        alt.Chart(sixes_df)
-        .transform_calculate(y_pos="datum.sixes * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_sixes["text_size"])
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_sixes,
-                axis=alt.Axis(labelAngle=style_sixes["angle"]),
-            ),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("sixes:Q", format=",.0f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(base_sixes + sixes_labels), use_container_width=True)
-    st.caption("Higher = more power scoring via sixes in the selected scope.")
-
-
-# -----------------------------
-# Right Chart: Balls per 6
-# -----------------------------
-with row_bnd_2_right:
-    st.markdown("### Balls per 6 (6s Frequency)")
-
-    rank_method_bps = st.radio(
-        "Ranking Method (Balls per 6)",
-        ["Pure KPI (Metric only)", "Volume-adjusted (Metric × √balls)"],
-        index=1,
-        horizontal=True,
-        key="tab4_sec4_balls_per_six_rank_method",
-    )
-
-    bps_df = bat_scope[
-        ["batter", "sixes", "balls", "innings_played", "runs"]
-    ].copy()
-
-    bps_df["sixes"] = bps_df["sixes"].fillna(0).astype(int)
-
-    # ✅ Stability filter (innings)
-    bps_df = bps_df[bps_df["innings_played"] >= int(min_innings_threshold_bnd)].copy()
-
-    # Avoid divide-by-zero
-    bps_df = bps_df[bps_df["sixes"] > 0].copy()
-
-    if len(bps_df) == 0:
-        st.warning("No batters have at least 1 six (after innings stability filter) in this scope.")
-        st.stop()
-
-    # ✅ Data-driven stability: median balls faced
-    median_balls_bps = int(round(float(bps_df["balls"].median())))
-    min_balls_local_six = max(int(min_balls), median_balls_bps)
-
-    # ✅ Extra stability gate: minimum sixes
-    min_sixes_threshold = 5
-
-    bps_df = bps_df[bps_df["balls"] >= int(min_balls_local_six)].copy()
-    bps_df = bps_df[bps_df["sixes"] >= int(min_sixes_threshold)].copy()
-
-    if len(bps_df) == 0:
-        st.warning("No batters meet the stability filters for Balls per 6 in this scope.")
-        st.stop()
-
-    # KPI (lower is better)
-    bps_df["balls_per_six"] = (bps_df["balls"] / bps_df["sixes"]).round(1)
-
-    # Lower is better -> ranking uses negative proxy
-    bps_df["rank_proxy"] = -bps_df["balls_per_six"]
-
-    if rank_method_bps.startswith("Pure KPI"):
-        bps_df["rank_score"] = bps_df["rank_proxy"]
-    else:
-        bps_df["vol_weight"] = bps_df["balls"] ** 0.5
-        bps_df["rank_score"] = bps_df["rank_proxy"] * bps_df["vol_weight"]
-
-    # ✅ Membership decided by rank_score
-    bps_df = (
-        bps_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_bnd))
-        .copy()
-    )
-
-    # ✅ Visual order by KPI (lowest first)
-    bps_df = bps_df.sort_values("balls_per_six", ascending=True).reset_index(drop=True)
-    order_bps = bps_df["batter"].tolist()
-
-    style_bps = chart_style_for_topn(int(top_n_bnd))
-
-    base_bps = (
-        alt.Chart(bps_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_bps,
-                title="",
-                axis=alt.Axis(
-                    labelAngle=style_bps["angle"],
-                    labelFontSize=style_bps["label_size"],
-                ),
-            ),
-            y=alt.Y("balls_per_six:Q", title="Balls per 6"),
-            color=alt.value(TAB4_COLORS["slate"]),
-            tooltip=[
-                alt.Tooltip("batter:N", title="Batter"),
-                alt.Tooltip("balls_per_six:Q", title="Balls per 6", format=".1f"),
-                alt.Tooltip("sixes:Q", title="Total 6s", format=",.0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_played:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("runs:Q", title="Runs", format=",.0f"),
-                alt.Tooltip("rank_score:Q", title="Ranking Score", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    bps_labels = (
-        alt.Chart(bps_df)
-        .transform_calculate(y_pos="datum.balls_per_six * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_bps["text_size"])
-        .encode(
-            x=alt.X(
-                "batter:N",
-                sort=order_bps,
-                axis=alt.Axis(labelAngle=style_bps["angle"]),
-            ),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("balls_per_six:Q", format=".1f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(base_bps + bps_labels), use_container_width=True)
-    st.caption("Lower = a six is hit more frequently (faster power conversion via 6s).")
-
-
-# ✅ Full-width explanation (keeps side-by-side alignment clean)
-with st.expander("ℹ️ How to interpret Balls per 6 (and why stability filters matter)", expanded=False):
-    st.markdown(
-        f"""
-**What this metric shows**  
-**Balls per 6 = Balls faced ÷ Total 6s**  
-Lower = the batter hits sixes more frequently.
-
-**Why stability filters are important**  
-This metric can be noisy in small samples. To keep rankings meaningful, we apply:
-
-- **innings_played ≥ {int(min_innings_threshold_bnd)}**
-- **balls ≥ {int(min_balls_local_six)}** (data-driven: max(global min balls, median balls = {int(median_balls_bps)})
-- **total 6s ≥ {int(min_sixes_threshold)}**
-
-**Ranking logic**  
-- *Pure KPI*: ranks by lowest Balls per 6  
-- *Volume-adjusted*: ranks by **(−Balls per 6) × √balls**
+### How to use it
+✅ Use this as a quick player profile for auctions, matchups and role clarity.  
+Example: a batter with high **Death SR** + high **Boundary %** is a strong finisher profile.
         """
     )
