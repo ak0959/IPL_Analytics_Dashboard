@@ -1,862 +1,1412 @@
-import pandas as pd
 import streamlit as st
 import altair as alt
+import pandas as pd
+import numpy as np
 
-from src.ui import (
-    html_title,
-    html_subtitle,
-    html_section,
-    html_explain,
-    html_badge,
-    metric_tile,
-)
-from src.data_loader import load_processed_csv
-
-
-st.set_page_config(page_title="Bowling Analysis | IPL Strategy Dashboard", layout="wide")
-
-
-# ============================================================
-# GLOBAL UI STYLING (keep same feel as Tab 4)
-# ============================================================
-
-st.markdown(
-    """
-    <style>
-    div[data-testid="stDataFrame"] * {
-        font-size: 14px !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-def apply_altair_theme(chart: alt.Chart) -> alt.Chart:
-    """
-    Global Altair styling (same approach as Tab 4).
-    """
-    return (
-        chart.configure_axis(
-            labelFontSize=14,
-            labelColor="#2f3e46",
-            titleFontSize=14,
-            titleColor="#2f3e46",
-        )
-        .configure_legend(
-            labelFontSize=13,
-            labelColor="#2f3e46",
-            titleFontSize=13,
-            titleColor="#2f3e46",
-        )
-    )
-
-
-def chart_style_for_topn(n: int) -> dict:
-    """
-    Horizontal label/number sizing helper.
-    Keeps label readability consistent across Top 5 vs Top 10 charts.
-    """
-    if n <= 5:
-        return {"label_size": 12, "text_size": 18}
-    return {"label_size": 11, "text_size": 16}
-
-
-def compute_rank_score(df: pd.DataFrame, metric_col: str, rank_method: str) -> pd.DataFrame:
-    """
-    Adds a rank_score column depending on ranking method.
-
-    Pure KPI -> rank_score = metric
-    Volume-adjusted -> rank_score = metric × √balls
-
-    Note:
-    - For bowling metrics where LOWER is better (e.g., economy, strike_rate, runs_per_wicket),
-      pass metric_col as a "rank_proxy" where higher = better (e.g., -economy).
-    """
-    df = df.copy()
-
-    if rank_method.startswith("Pure KPI"):
-        df["rank_score"] = df[metric_col]
-        return df
-
-    # Volume-adjusted (sample fairness)
-    df["vol_weight"] = df["balls"] ** 0.5
-    df["rank_score"] = df[metric_col] * df["vol_weight"]
-    return df
-
-
-# ============================================================
-# TAB 5: Bowling Analysis (FAST - KPI file)
-# ============================================================
-
-html_title("Bowling Analysis")
-html_subtitle(
-    "Analyze wicket-taking impact, economy control, and reliability using precomputed season + region bowling KPIs."
-)
-st.markdown("")
+import src.data_loader as dl
 
 
 # -----------------------------
-# Load KPI file (DO NOT change loader utility)
+# PAGE CONFIG
 # -----------------------------
-KPI_FILE = "kpi_player_bowling_alltime.csv"
-
-try:
-    bowl = load_processed_csv(KPI_FILE)
-except FileNotFoundError:
-    html_section("Bowling KPI File Not Found")
-    html_explain("This tab depends on a precomputed KPI CSV in data/processed_new.")
-
-    st.error(f"Missing file: data/processed_new/{KPI_FILE}")
-    st.stop()
-
+st.set_page_config(page_title="Bowling Analysis", page_icon="🎯", layout="wide")
 
 
 # -----------------------------
-# Basic cleanup
+# COLORS (same as Tab 3/Tab 4)
 # -----------------------------
-bowl["venue_region"] = bowl["venue_region"].astype(str).str.strip()
-bowl["season"] = bowl["season"].astype(str).str.strip()
-bowl["bowler"] = bowl["bowler"].astype(str).str.strip()
+LIGHT_RAINBOW = [
+    "#6EE7B7",  # mint
+    "#93C5FD",  # light blue
+    "#FCD34D",  # warm yellow
+    "#F9A8D4",  # soft pink
+    "#A5B4FC",  # light indigo
+    "#FDBA74",  # soft orange
+    "#D8B4FE",  # soft purple
+    "#7DD3FC",  # sky
+    "#BEF264",  # lime
+    "#FDA4AF",  # soft red
+]
 
+PASTEL_GREEN = "#6EE7B7"
+PASTEL_RED = "#FDA4AF"
+PASTEL_BLUE = "#93C5FD"
+PASTEL_ORANGE = "#FDBA74"
+PASTEL_PURPLE = "#D8B4FE"
 
-# ============================================================
-# FILTERS (Top section = ONLY Region + Season)
-# ============================================================
-
-html_section("Filters")
-html_explain(
-    "Select the venue region and season scope. Stability filtering is handled automatically to keep comparisons fair."
-)
-
-c1, c2 = st.columns([1.2, 1.2])
-
-with c1:
-    region_choice = st.selectbox(
-        "Venue Region",
-        ["All Venues", "India", "Overseas"],
-        index=0,
-        key="tab5_region",
-    )
-
-with c2:
-    if region_choice == "All Venues":
-        season_list = sorted(
-            bowl["season"].unique().tolist(), key=lambda x: (x != "All Time", x)
-        )
-    else:
-        season_list = sorted(
-            bowl[bowl["venue_region"] == region_choice]["season"].unique().tolist(),
-            key=lambda x: (x != "All Time", x),
-        )
-
-    # If "All Time" doesn't exist for some reason, we still keep the list safe.
-    season_choice = st.selectbox(
-        "Season",
-        season_list,
-        index=0,
-        key="tab5_season",
-    )
+KPI_BLUE = "#2563EB"
+KPI_PURPLE = "#7C3AED"
+KPI_DARK = "#111827"
+KPI_ORANGE = "#F59E0B"
+KPI_GREEN = "#16A34A"
+KPI_RED = "#DC2626"
 
 
 # -----------------------------
-# Apply scope filters (Region + Season)
+# KPI CARD (same component style)
 # -----------------------------
-bowl_scope = bowl.copy()
+def kpi_card(label, value, emoji="✅", value_color="#111", desc=""):
+    desc_html = ""
+    if desc:
+        desc_html = f"""
+        <div style="margin-top: 6px; font-size: 0.82rem; opacity: 0.70; line-height: 1.2;">
+            {desc}
+        </div>
+        """
 
-if region_choice != "All Venues":
-    bowl_scope = bowl_scope[bowl_scope["venue_region"] == region_choice].copy()
-
-bowl_scope = bowl_scope[bowl_scope["season"] == season_choice].copy()
-
-# ============================================================
-# STABILITY CONTROL (Blended Rule: Median balls + innings floor)
-# ============================================================
-
-html_section("Stability Control (Fair Rankings)")
-html_explain(
-    "Bowling KPIs can swing heavily in small samples. We apply a stability filter so leaderboards reflect repeatable performance."
-)
-
-# -----------------------------
-# Data-driven threshold: median balls in current scope
-# -----------------------------
-median_balls_threshold = int(round(float(bowl_scope["balls"].median())))
-
-# -----------------------------
-# Blended innings rule
-# All Time -> strict floor (credibility)
-# Single season -> flexible floor (coverage)
-# -----------------------------
-if str(season_choice).strip() == "All Time":
-    innings_floor = 20
-else:
-    innings_floor = 6
-
-# Apply stability filters
-stable_scope = bowl_scope.copy()
-stable_scope = stable_scope[stable_scope["balls"] >= median_balls_threshold].copy()
-stable_scope = stable_scope[stable_scope["innings_bowled"] >= int(innings_floor)].copy()
-
-# Badge for transparency
-html_badge(
-    f"Stability filter applied: balls ≥ <b>{median_balls_threshold}</b> "
-    f"and innings_bowled ≥ <b>{innings_floor}</b>"
-)
-
-# -----------------------------
-# Detailed explanation + examples
-# -----------------------------
-with st.expander("ℹ️ Why stability filtering matters (with examples)", expanded=False):
     st.markdown(
         f"""
-### Why we apply stability filters
-Bowling metrics like **economy**, **strike rate**, and **3+ wicket frequency** are naturally volatile.
+        <div style="
+            background: rgba(255,255,255,0.75);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
+            padding: 16px 16px 14px 16px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+            height: 124px;
+        ">
+            <div style="font-size: 1.60rem; font-weight: 850; line-height: 1; color:{value_color};">
+                {value}
+            </div>
+            <div style="margin-top: 8px; font-size: 0.95rem; opacity: 0.78;">
+                {emoji} {label}
+            </div>
+            {desc_html}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-A bowler can look *elite* in a short burst of matches, but that doesn’t always represent a repeatable skill level.
-To keep leaderboards credible, we filter out small samples.
+
+# -----------------------------
+# PAGE HEADER
+# -----------------------------
+st.markdown(
+    """
+    <div style="padding: 0.2rem 0 0.8rem 0;">
+        <div style="font-size: 2.1rem; font-weight: 800;">🎯 Bowling Analysis</div>
+        <div style="font-size: 1.05rem; opacity: 0.85;">
+            KPI-first bowling performance with stability gates + experience buckets.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# -----------------------------
+# LOAD DATA (masters only)
+# -----------------------------
+matches = dl.load_master_matches()
+balls = dl.load_master_balls()
+
+# baseline: remove super overs for standard analysis
+balls = balls[balls["is_super_over"] == False].copy()
+
+
+# -----------------------------
+# Build base bowling dataset (minimal columns + flags)
+# -----------------------------
+df = balls.copy()
+
+# ✅ locked rules
+df["is_wide_ball"] = df["is_wide_ball"].fillna(False).astype(bool)
+df["is_no_ball"] = df["is_no_ball"].fillna(False).astype(bool)
+
+# wides are not legal deliveries
+df["is_legal_ball"] = (~df["is_wide_ball"]).astype(int)
+
+# bowler runs conceded = batter runs + wides + no-balls
+# (byes/legbyes are already excluded in your baseline runs model)
+df["wide_ball_runs"] = df["wide_ball_runs"].fillna(0).astype(int)
+df["no_ball_runs"] = df["no_ball_runs"].fillna(0).astype(int)
+df["batter_runs"] = df["batter_runs"].fillna(0).astype(int)
+
+df["bowler_runs_conceded"] = df["batter_runs"] + df["wide_ball_runs"] + df["no_ball_runs"]
+
+# dot balls (legal only)
+df["is_dot_ball"] = ((df["batter_runs"] == 0) & (df["is_legal_ball"] == 1)).astype(int)
+
+# boundary flags (legal only)
+df["is_four"] = ((df["batter_runs"] == 4) & (df["is_legal_ball"] == 1)).astype(int)
+df["is_six"] = ((df["batter_runs"] == 6) & (df["is_legal_ball"] == 1)).astype(int)
+
+# bowler wickets (exclude run-outs etc)
+# if wicket_kind is null => no wicket
+# if wicket_kind in ["run out", "retired hurt", "obstructing the field"] => not bowler wicket
+df["wicket_kind"] = df["wicket_kind"].astype("string")
+df["is_wicket"] = df["is_wicket"].fillna(False).astype(bool)
+
+NOT_BOWLER_WKTS = {"run out", "retired hurt", "obstructing the field"}
+
+df["is_bowler_wicket"] = (
+    (df["is_wicket"] == True) &
+    (~df["wicket_kind"].str.lower().isin(NOT_BOWLER_WKTS))
+).astype(int)
+
+base = df[[
+    "match_id", "season_id", "match_date", "venue", "venue_region",
+    "innings", "team_bowling", "bowler",
+    "over_number", "ball_number",
+    "is_legal_ball",
+    "bowler_runs_conceded",
+    "is_bowler_wicket",
+    "is_dot_ball",
+    "is_four", "is_six",
+    "is_wide_ball", "wide_ball_runs",
+    "is_no_ball", "no_ball_runs"
+]].copy()
+
+
+# -----------------------------
+# FILTERS (Region -> Season -> Top N)
+# -----------------------------
+c1, c2, c3 = st.columns([1.3, 1.1, 1.1], gap="large")
+
+with c1:
+    region = st.selectbox(
+        "🌍 Region",
+        options=["All"] + sorted(base["venue_region"].dropna().unique().tolist()),
+        index=0
+    )
+
+base_f = base.copy()
+if region != "All":
+    base_f = base_f[base_f["venue_region"] == region]
+
+with c2:
+    season = st.selectbox(
+        "📅 Season",
+        options=["All"] + sorted(base_f["season_id"].dropna().unique().tolist()),
+        index=0
+    )
+
+if season != "All":
+    base_f = base_f[base_f["season_id"] == int(season)]
+
+with c3:
+    top_n = st.selectbox("🎯 Show Top", [5, 10], index=0)  # ✅ default Top 5
+
+
+
+# -----------------------------
+# SCOPE BADGE
+# -----------------------------
+st.markdown(
+    f"""
+    <div style="margin: 6px 0 14px 0;">
+        <span style="
+            display:inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,0,0,0.06);
+            background: rgba(0,0,0,0.03);
+            font-size: 0.9rem;
+            opacity: 0.9;">
+            📌 Showing: <b>{region}</b> · <b>{season}</b> · <b>Top {top_n}</b>
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
+# =========================
+# SECTION 1: FUNDAMENTALS
+# =========================
+st.markdown("## 🧱 Fundamentals")
+st.caption("Quick snapshot of bowling efficiency and control in the selected scope (stability gated).")
+
+# -------------------------
+# Pack (bowler summary)
+# -------------------------
+MIN_LEGAL_BALLS = 300
+MIN_WKTS = 15
+
+pack = (
+    base_f.groupby("bowler", as_index=False)
+          .agg(
+              matches=("match_id", "nunique"),
+              legal_balls=("is_legal_ball", "sum"),
+              overs=("is_legal_ball", lambda x: x.sum() / 6),
+              runs=("bowler_runs_conceded", "sum"),
+              wkts=("is_bowler_wicket", "sum"),
+              dots=("is_dot_ball", "sum"),
+              fours=("is_four", "sum"),
+              sixes=("is_six", "sum"),
+              wide_runs=("wide_ball_runs", "sum"),
+              noball_runs=("no_ball_runs", "sum"),
+          )
+)
+
+pack["econ"] = pack["runs"] / pack["overs"]
+pack["avg"] = np.where(pack["wkts"] > 0, pack["runs"] / pack["wkts"], np.nan)
+pack["sr"] = np.where(pack["wkts"] > 0, pack["legal_balls"] / pack["wkts"], np.nan)
+pack["dot_pct"] = np.where(pack["legal_balls"] > 0, (pack["dots"] / pack["legal_balls"]) * 100, np.nan)
+
+def add_exp_bucket(m):
+    if m <= 25:
+        return "1–25"
+    if m <= 50:
+        return "26–50"
+    if m <= 75:
+        return "51–75"
+    return "75+"
+
+pack["exp_bucket"] = pack["matches"].apply(add_exp_bucket)
+
+# Stability gates
+pack_gated = pack[pack["legal_balls"] >= MIN_LEGAL_BALLS].copy()
+pack_avg_sr = pack[(pack["legal_balls"] >= MIN_LEGAL_BALLS) & (pack["wkts"] >= MIN_WKTS)].copy()
+
+# -------------------------
+# KPI cards
+# -------------------------
+k1, k2, k3, k4 = st.columns(4, gap="large")
+
+kpi_econ = pack_gated["econ"].mean() if len(pack_gated) else 0
+kpi_avg = pack_avg_sr["avg"].mean() if len(pack_avg_sr) else 0
+kpi_sr = pack_avg_sr["sr"].mean() if len(pack_avg_sr) else 0
+kpi_dot = pack_gated["dot_pct"].mean() if len(pack_gated) else 0
+
+with k1:
+    kpi_card("ECON (runs/over)", f"{kpi_econ:.2f}", "💸", KPI_BLUE, desc="Lower is better")
+with k2:
+    kpi_card("Bowling AVG", f"{kpi_avg:.2f}", "🎯", KPI_GREEN, desc="Runs per wicket (lower is better)")
+with k3:
+    kpi_card("Strike Rate (SR)", f"{kpi_sr:.2f}", "⚡", KPI_ORANGE, desc="Balls per wicket (lower is better)")
+with k4:
+    kpi_card("Dot Ball %", f"{kpi_dot:.1f}%", "🧱", KPI_RED, desc="More dots = more pressure")
+
+
+# -------------------------
+# Best Economy chart — Pastel multi-color
+# -------------------------
+st.markdown(f"### 🌟 Top Wicket Takers (Top {top_n})")
+st.caption(f"Stability gate: min legal balls = {MIN_LEGAL_BALLS}")
+
+wkts_df = (
+    pack_gated.sort_values(["wkts", "legal_balls"], ascending=[False, False])
+             .head(top_n)
+             .copy()
+)
+
+
+
+bars = (
+    alt.Chart(wkts_df)
+    .mark_bar()
+    .encode(
+        x=alt.X("wkts:Q", title="Wickets"),
+        y=alt.Y("bowler:N", sort="-x", title="Bowler"),
+        color=alt.Color(
+            "bowler:N",
+            scale=alt.Scale(range=LIGHT_RAINBOW),
+            legend=None
+        ),
+        tooltip=[
+            "bowler",
+            "exp_bucket",
+            "matches",
+            "overs",
+            alt.Tooltip("wkts:Q", title="Wkts"),
+            alt.Tooltip("econ:Q", format=".2f", title="ECON"),
+            alt.Tooltip("dot_pct:Q", format=".1f", title="Dot%"),
+        ],
+    )
+)
+
+labels = (
+    alt.Chart(wkts_df)
+    .mark_text(align="left", dx=4)
+    .encode(
+        x="wkts:Q",
+        y=alt.Y("bowler:N", sort="-x"),
+        text=alt.Text("wkts:Q"),
+    )
+)
+
+wkts_chart = (bars + labels).properties(height=360)
+
+# LOCKED RULE: layer first -> then configure
+wkts_chart = wkts_chart.configure_axis(labelFontSize=12, titleFontSize=12).configure_title(fontSize=16)
+
+st.altair_chart(wkts_chart, use_container_width=True)
+
+# -----------------------------
+# SECTION 1 EXPLAINER (dropdown)
+# -----------------------------
+with st.expander("📘 How to read this section (stability logic + KPI meaning)", expanded=False):
+    st.markdown(
+        f"""
+### What this section shows
+A quick snapshot of **bowling efficiency + control** in the selected scope (**{region} · {season}**).  
+Leaderboards are **stability gated**, so rankings don’t get distorted by tiny samples.
 
 ---
 
-## The stability rules used in Tab 5
+## ✅ Fundamentals KPIs (what they mean)
 
-### ✅ Rule 1: Median balls threshold (data-driven)
-We require:
+**ECON (Economy Rate)**  
+Runs conceded per over (lower = better).  
+Formula: *(Runs Conceded / Overs)*
 
-**balls ≥ median(balls) within the selected scope**
+**AVG (Bowling Average)**  
+Runs conceded per wicket (lower = better).  
+Formula: *(Runs Conceded / Wickets)*  
+Only meaningful when wicket count is stable.
 
-This means a bowler must have bowled at least the **typical workload** for that scope.
+**SR (Strike Rate)**  
+Balls per wicket (lower = better).  
+Formula: *(Legal Balls / Wickets)*
 
-**Example**  
-If you select:
-- Venue Region = **{region_choice}**
-- Season = **{season_choice}**
-
-…and the median balls bowled across bowlers in that scope is:
-
-**median balls = {median_balls_threshold}**
-
-Then anyone with fewer than {median_balls_threshold} balls is excluded.
-
-This prevents cases where someone ranks highly after bowling only a handful of overs.
+**Dot %**  
+% of legal balls that are dot balls (higher = better).  
+Formula: *(Dot Balls / Legal Balls) × 100*
 
 ---
 
-### ✅ Rule 2: Innings floor (repeatability)
-In addition to balls, we require an innings minimum:
+## 🎯 Leaderboard: Most Wickets (Top {top_n})
+This chart ranks bowlers by **total wickets taken** in the selected scope.  
+We use this because wickets = direct match impact.
 
-**innings_bowled ≥ {innings_floor}**
-
-Why innings matters:
-- **balls** measures total volume  
-- **innings** measures repeatability across multiple spells/matches  
-
-A bowler with high impact across many innings is far more reliable than one who appears strong in just a few matches.
+Tie-breaker logic:  
+- If wickets are equal → higher **legal balls** ranks higher (more sustained contribution)
 
 ---
 
-## Why “All Time” is stricter than single season
+## ✅ Stability gates (LOCKED)
+To avoid “small sample” noise, we apply:
 
-### ✅ All Time scope (strict)
-When you select **All Time**, we set:
+**Wickets leaderboard gate**
+- Minimum **{MIN_LEGAL_BALLS} legal balls** bowled
 
-**innings_bowled ≥ 20**
-
-Because All Time leaderboards are expected to reflect **long-term performance**.
-A bowler with 8–12 innings might still look extreme due to variance.
-
-**Worked example**  
-Bowler A:
-- balls = 250  
-- innings = 11  
-- wickets = 16  
-- strike rate looks amazing  
-
-But 11 innings is still a small career window, so we don’t rank it as “All Time elite”.
+✅ Why this matters:  
+A bowler with 6 wickets in 2 matches can look elite, but isn’t a stable comparison.
 
 ---
 
-### ✅ Single season scope (flexible)
-When you select a specific season, we set:
+## Notes (dataset rules)
+- **Legal balls** exclude wides  
+- **Wickets credited to bowler** exclude run outs (and other non-bowler dismissals)
+- **Dot balls** are counted only on **legal deliveries**
 
-**innings_bowled ≥ 6**
-
-Because a season is short. If we demand 20 innings in a single season,
-most seasons would have too few bowlers left and charts would break.
-
----
-
-## Bottom line
-This blended approach keeps the dashboard balanced:
-
-✅ **Credible All Time rankings**  
-✅ **Usable season-level rankings**  
-✅ **No misleading small-sample leaderboards**
         """
     )
 
+# =========================================================
+# SECTION 2: PRESSURE & BOUNDARIES (Matches played filter)
+# =========================================================
+st.markdown("## 🧱 Pressure & Boundaries")
+st.caption("Dot balls show control. Boundaries conceded show damage. Ranked with experience buckets + stability gated pack.")
+
 # -----------------------------
-# Stop if stability removes everything
+# Controls (Rank by + Matches played)
 # -----------------------------
-if len(stable_scope) == 0:
-    st.warning(
-        "No bowlers meet the stability thresholds in this scope. "
-        "Try switching venue region or season."
+c1, c2 = st.columns([1.2, 1.3], gap="large")
+
+with c1:
+    rank_metric = st.selectbox(
+        "📌 Rank by",
+        ["Dot Ball % ↑", "Boundary % Conceded ↓"],
+        index=0,
+        key="pb_rank_metric"
     )
-    st.stop()
 
-st.divider()
+with c2:
+    exp_bucket = st.selectbox(
+        "🎯 Matches played",
+        [
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="pb_exp_bucket"
+    )
 
+# -----------------------------
+# Pack for this section
+# Using pack_gated (199 rows) so Dot%/Boundary% are stable by default
+# -----------------------------
+pack_pb = pack_gated.copy()
 
-# ============================================================
-# SUMMARY TILES (sanity check)
-# ============================================================
+# Map exp_bucket selection to actual value in data
+exp_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
 
-html_section("Bowling Summary")
-html_explain("A quick scope overview after applying stability filtering.")
+exp_choice = exp_map.get(exp_bucket, "All")
 
-total_bowlers = int(stable_scope["bowler"].nunique())
-total_balls = int(stable_scope["balls"].sum())
-total_wkts = int(stable_scope["wickets"].sum())
-avg_econ = float(stable_scope["economy"].mean())
+if exp_choice != "All":
+    pack_pb = pack_pb[pack_pb["exp_bucket"] == exp_choice].copy()
 
-a, b, c, d = st.columns(4)
+# -----------------------------
+# Ensure required columns exist
+# -----------------------------
+# Dot%
+if "dot_pct" not in pack_pb.columns:
+    pack_pb["dot_pct"] = np.where(
+        pack_pb["legal_balls"] > 0,
+        (pack_pb["dots"] / pack_pb["legal_balls"]) * 100,
+        0
+    )
 
-with a:
-    metric_tile(f"{total_bowlers:,}", "Bowlers in scope after stability filter.")
+# Boundary%
+if "boundary_pct" not in pack_pb.columns:
+    pack_pb["boundary_balls"] = pack_pb["fours"].fillna(0) + pack_pb["sixes"].fillna(0)
+    pack_pb["boundary_pct"] = np.where(
+        pack_pb["legal_balls"] > 0,
+        (pack_pb["boundary_balls"] / pack_pb["legal_balls"]) * 100,
+        0
+    )
 
-with b:
-    metric_tile(f"{total_balls:,}", "Total balls in scope (stable sample).")
+# -----------------------------
+# Metric logic (your arrows)
+# Dot Ball % ↑  => higher is better => DESC
+# Boundary % ↓  => lower is better  => ASC
+# -----------------------------
+if rank_metric == "Dot Ball % ↑":
+    metric_col = "dot_pct"
+    metric_title = "Dot Ball %"
+    x_title = "Dot Ball % (Higher is better)"
+    sort_asc = False
+    fmt = ".1f"
+else:
+    metric_col = "boundary_pct"
+    metric_title = "Boundary % Conceded"
+    x_title = "Boundary % Conceded (Lower is better)"
+    sort_asc = True
+    fmt = ".2f"
 
-with c:
-    metric_tile(f"{total_wkts:,}", "Total wickets taken (bowler-attributed).")
-
-with d:
-    metric_tile(f"{avg_econ:.2f}", "Average economy across stable bowlers.")
-
-st.divider()
-
-
-# ============================================================
-# SECTION 1: Impact Leaders (Wickets)
-# ============================================================
-
-html_section("Impact Leaders (Wickets)")
-html_explain(
-    "Who are the highest wicket-taking bowlers in the selected scope (after stability filtering)?"
+# -----------------------------
+# Top N (uses top_n from page dropdown)
+# -----------------------------
+plot_df = (
+    pack_pb.sort_values(metric_col, ascending=sort_asc)
+          .head(top_n)
+          .copy()
 )
 
-top_n_wkts = st.selectbox(
-    "Top Bowlers",
-    [5, 10],
-    index=0,
-    key="tab5_topn_wickets",
-)
+# lock order for Altair
+plot_df["bowler_order"] = plot_df["bowler"]
 
-style_w = chart_style_for_topn(int(top_n_wkts))
-
-impact_w = (
-    stable_scope.sort_values("wickets", ascending=False)
-    .head(int(top_n_wkts))
-    .copy()
-)
-
-order_w = impact_w["bowler"].tolist()
-
-BASE_H = 180
-ROW_H = 36
-chart_h_w = int(BASE_H + (ROW_H * int(top_n_wkts)))
-
-base_w = (
-    alt.Chart(impact_w)
-    .mark_bar()
+# -----------------------------
+# Chart
+# -----------------------------
+bars = (
+    alt.Chart(plot_df)
+    .mark_bar(cornerRadiusEnd=6)
     .encode(
-        y=alt.Y(
-            "bowler:N",
-            sort=order_w,
-            title="",
-            axis=alt.Axis(labelFontSize=style_w["label_size"]),
+        y=alt.Y("bowler_order:N", sort=None, title=""),
+        x=alt.X(f"{metric_col}:Q", title=x_title),
+        color=alt.Color(
+            "bowler_order:N",
+            scale=alt.Scale(range=LIGHT_RAINBOW),
+            legend=None
         ),
-        x=alt.X("wickets:Q", title="Wickets"),
-        color=alt.value("#ad8ad0"),  # purple (Tab 4 Light theme)
         tooltip=[
             alt.Tooltip("bowler:N", title="Bowler"),
-            alt.Tooltip("wickets:Q", title="Wickets", format=",.0f"),
-            alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-            alt.Tooltip("innings_bowled:Q", title="Innings", format=",.0f"),
-            alt.Tooltip("economy:Q", title="Economy", format=".2f"),
-            alt.Tooltip("bowling_strike_rate:Q", title="Strike Rate", format=".2f"),
-            alt.Tooltip("runs_per_wicket:Q", title="Runs/Wicket", format=".2f"),
-        ],
+            alt.Tooltip("exp_bucket:N", title="Matches bucket"),
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("overs:Q", title="Overs", format=".1f"),
+            alt.Tooltip("wkts:Q", title="Wkts"),
+            alt.Tooltip("econ:Q", title="ECON", format=".2f"),
+            alt.Tooltip("dot_pct:Q", title="Dot%", format=".1f"),
+            alt.Tooltip("boundary_pct:Q", title="Boundary%", format=".2f"),
+        ]
     )
-    .properties(height=chart_h_w)
 )
 
-labels_w = (
-    alt.Chart(impact_w)
-    .transform_calculate(x_pos="datum.wickets * 0.80")
-    .mark_text(color="#1b1b1b", fontSize=style_w["text_size"])
+labels = (
+    alt.Chart(plot_df)
+    .mark_text(align="left", dx=6, fontSize=12)
     .encode(
-        y=alt.Y("bowler:N", sort=order_w, title=""),
-        x=alt.X("x_pos:Q"),
-        text=alt.Text("wickets:Q", format=",.0f"),
+        y=alt.Y("bowler_order:N", sort=None),
+        x=alt.X(f"{metric_col}:Q"),
+        text=alt.Text(f"{metric_col}:Q", format=fmt),
     )
 )
 
-st.altair_chart(apply_altair_theme(base_w + labels_w), use_container_width=True)
-
-st.caption(
-    "Wickets shown here are bowler-attributed wickets from the dataset. "
-    "Totals may differ slightly from official records depending on dataset coverage and attribution rules."
+pb_chart = (bars + labels).properties(
+    height=380,
+    title=f"{metric_title} Leaders (Top {top_n})"
 )
+
+pb_chart = pb_chart.configure_axis(
+    labelFontSize=12,
+    titleFontSize=12
+).configure_title(
+    fontSize=16
+)
+
+st.altair_chart(pb_chart, use_container_width=True)
+
+# -----------------------------
+# Explanation dropdown (like Batting)
+# -----------------------------
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        """
+### What this section shows
+This leaderboard highlights **bowling control vs damage**:
+
+✅ **Dot Ball % ↑ (higher is better)**  
+More dots = more pressure & better control.
+
+✅ **Boundary % Conceded ↓ (lower is better)**  
+Lower boundary frequency = fewer easy runs allowed.
+
+### Why the “Matches played” filter exists
+- **All** = includes everyone who passes stability gates  
+- **75+** = elite longevity only (most reliable comparisons)  
+- Lower buckets help find emerging specialists.
+        """
+    )
+
+st.divider()
+
+# ============================================================
+# COMBINED SECTION: Phase Specialists (Powerplay / Middle / Death)
+# ============================================================
+
+st.markdown("## ⏱️ Phase Specialists")
+st.caption("One combined leaderboard for Powerplay / Middle / Death with stable KPI-first ranking logic.")
+
+# -----------------------------
+# Phase mapping (LOCKED)
+# -----------------------------
+# over_number is 0-based:
+# Powerplay = 0–5, Middle = 6–14, Death = 15–19
+phase_df = base_f[base_f["is_legal_ball"] == 1].copy()
+
+phase_df["phase"] = np.select(
+    [
+        phase_df["over_number"].between(0, 5),
+        phase_df["over_number"].between(6, 14),
+        phase_df["over_number"].between(15, 19),
+    ],
+    ["Powerplay", "Middle", "Death"],
+    default="Other"
+)
+
+phase_df = phase_df[phase_df["phase"] != "Other"].copy()
+
+# -----------------------------
+# Pack: bowler x phase
+# -----------------------------
+phase_pack = (
+    phase_df.groupby(["phase", "bowler"], as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        legal_balls=("is_legal_ball", "sum"),
+        runs=("bowler_runs_conceded", "sum"),
+        wkts=("is_bowler_wicket", "sum"),
+        dots=("is_dot_ball", "sum"),
+    )
+)
+
+phase_pack["overs"] = phase_pack["legal_balls"] / 6
+phase_pack["econ"] = np.where(phase_pack["overs"] > 0, phase_pack["runs"] / phase_pack["overs"], np.nan)
+phase_pack["dot_pct"] = np.where(phase_pack["legal_balls"] > 0, (phase_pack["dots"] / phase_pack["legal_balls"]) * 100, np.nan)
+
+# Experience bucket (same as Section 1)
+phase_pack["exp_bucket"] = phase_pack["matches"].apply(add_exp_bucket)
+
+# -----------------------------
+# Stability gate (LOCKED)
+# -----------------------------
+MIN_PHASE_BALLS = 120
+phase_gated = phase_pack[phase_pack["legal_balls"] >= MIN_PHASE_BALLS].copy()
+
+# -----------------------------
+# Controls (3 dropdowns side-by-side)
+# -----------------------------
+c1, c2, c3 = st.columns([1.2, 1.3, 1.3], gap="large")
+
+with c1:
+    phase_choice = st.selectbox(
+        "⏱️ Phase Controllers",
+        options=["Powerplay", "Middle", "Death"],
+        index=0,
+        key="combined_phase_choice"
+    )
+
+with c2:
+    phase_rank_metric = st.selectbox(
+        "📌 Rank by",
+        options=[
+            "Best Economy ↓",
+            "Most Wickets ↑",
+            "Dot Ball % ↑",
+        ],
+        index=0,
+        key="combined_phase_rank"
+    )
+
+with c3:
+    phase_exp_bucket = st.selectbox(
+        "🌀 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="combined_phase_exp"
+    )
+
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+bucket_clean = bucket_map[phase_exp_bucket]
+
+# -----------------------------
+# Filter dataset by phase + bucket
+# -----------------------------
+plot_phase = phase_gated[phase_gated["phase"] == phase_choice].copy()
+
+if bucket_clean != "All":
+    plot_phase = plot_phase[plot_phase["exp_bucket"] == bucket_clean].copy()
+
+# -----------------------------
+# Metric logic (LOCKED)
+# -----------------------------
+metric_map = {
+    "Best Economy ↓": ("econ", True, "Economy (Lower is better)", ".2f"),
+    "Most Wickets ↑": ("wkts", False, "Wickets (Higher is better)", ".0f"),
+    "Dot Ball % ↑": ("dot_pct", False, "Dot Ball % (Higher is better)", ".1f"),
+}
+
+metric_col, sort_asc, x_title, label_fmt = metric_map[phase_rank_metric]
+
+# -----------------------------
+# Rank + Top N (uses main page dropdown top_n)
+# IMPORTANT: enforce y-order so chart shows correctly
+# -----------------------------
+plot_phase = plot_phase.dropna(subset=[metric_col]).copy()
+plot_phase = plot_phase.sort_values(metric_col, ascending=sort_asc).head(int(top_n)).copy()
+
+if len(plot_phase) == 0:
+    st.warning("No bowlers match this phase + experience bucket + stability gate.")
+else:
+    y_order = plot_phase["bowler"].tolist()
+    plot_phase["rank"] = range(1, len(plot_phase) + 1)
+
+    bars = (
+        alt.Chart(plot_phase)
+        .mark_bar(cornerRadiusEnd=6)
+        .encode(
+            y=alt.Y("bowler:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+            x=alt.X(f"{metric_col}:Q", title=x_title),
+            color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+            tooltip=[
+                "bowler:N",
+                alt.Tooltip("phase:N", title="Phase"),
+                alt.Tooltip("exp_bucket:N", title="Matches bucket"),
+                alt.Tooltip("matches:Q", title="Matches"),
+                alt.Tooltip("overs:Q", title="Overs", format=".1f"),
+                alt.Tooltip("wkts:Q", title="Wkts"),
+                alt.Tooltip("econ:Q", title="ECON", format=".2f"),
+                alt.Tooltip("dot_pct:Q", title="Dot%", format=".1f"),
+            ]
+        )
+        .properties(height=360)
+    )
+
+    labels = (
+        alt.Chart(plot_phase)
+        .mark_text(align="left", dx=6, fontSize=14)
+        .encode(
+            y=alt.Y("bowler:N", sort=y_order),
+            x=alt.X(f"{metric_col}:Q"),
+            text=alt.Text(f"{metric_col}:Q", format=label_fmt),
+        )
+    )
+
+    chart_phase = (bars + labels)
+    chart_phase = chart_phase.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+    st.altair_chart(chart_phase, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        f"""
+### What this section shows
+A single phase leaderboard that highlights **specialists in specific match windows**:
+
+- **Powerplay (Overs 1–6)** → early control + breakthroughs  
+- **Middle (Overs 7–15)** → containment + pressure  
+- **Death (Overs 16–20)** → execution under maximum risk  
+
+### Ranking rules
+✅ **Best Economy ↓** → lower ranks higher  
+✅ **Most Wickets ↑** → higher ranks higher  
+✅ **Dot Ball % ↑** → higher ranks higher  
+
+### Stability gate (LOCKED)
+Minimum **{MIN_PHASE_BALLS} legal balls in the selected phase**.
+        """
+    )
 
 st.divider()
 
 
 # ============================================================
-# SECTION 2: Control & Efficiency (Economy + Strike Rate)
+# SECTION 5: Match-winning Spells (3W / 4W Hauls)
 # ============================================================
 
-html_section("Control & Efficiency (Economy + Strike Rate)")
-html_explain(
-    "This section highlights bowlers who combine control (economy) with wicket-taking speed (strike rate). "
-    "Lower values are better for both, so we provide ranking methods to keep comparisons stable."
+st.markdown("## 🧨 Match-winning Spells")
+st.caption("Bowlers who deliver game-changing wicket bursts (3W/4W hauls). Stability gated.")
+
+# -----------------------------
+# Controls (Rank by + Matches played)
+# -----------------------------
+c1, c2 = st.columns([1.6, 1.3], gap="large")
+
+with c1:
+    s5_metric = st.selectbox(
+        "📌 Rank by",
+        options=[
+            "3W Hauls ↑",
+            "4W Hauls ↑",
+        ],
+        index=0,
+        key="s5_rank_metric"
+    )
+
+with c2:
+    s5_exp_bucket = st.selectbox(
+        "🌀 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="s5_exp_bucket"
+    )
+
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+s5_bucket_clean = bucket_map[s5_exp_bucket]
+
+# -----------------------------
+# Build innings-level wicket bursts from ball-level data
+# (base_f already filtered by Region + Season)
+# -----------------------------
+innings_wkts = (
+    base_f.groupby(["match_id", "innings", "bowler"], as_index=False)
+          .agg(
+              wkts=("is_bowler_wicket", "sum"),
+              legal_balls=("is_legal_ball", "sum"),
+          )
 )
 
-rank_method_ctrl = st.radio(
-    "Ranking Method (applies to both charts)",
-    ["Pure KPI (Metric only)", "Volume-adjusted (Metric × √balls)"],
-    index=1,
-    horizontal=True,
-    key="tab5_sec2_rank_method",
+# Stability: bowler must have enough total legal balls across scope
+bowler_balls = (
+    innings_wkts.groupby("bowler", as_index=False)
+                .agg(total_legal_balls=("legal_balls", "sum"))
 )
 
-left, gap, right = st.columns([1, 0.12, 1])
-with gap:
-    st.markdown("")
+stable_bowlers = set(
+    bowler_balls[bowler_balls["total_legal_balls"] >= MIN_LEGAL_BALLS]["bowler"].tolist()
+)
 
-FIXED_H = 340
-
-# -----------------------------
-# Chart A: Economy (lower better)
-# -----------------------------
-with left:
-    st.markdown("### Economy (Runs per Over)")
-
-    top_n_econ = st.selectbox(
-        "Top Bowlers",
-        [5, 10],
-        index=0,
-        key="tab5_topn_econ",
-    )
-
-    econ_df = stable_scope[
-        ["bowler", "economy", "balls", "innings_bowled", "wickets", "runs_conceded"]
-    ].copy()
-
-    econ_df = econ_df.dropna(subset=["economy"]).copy()
-
-    # lower economy is better -> use negative proxy for ranking
-    econ_df["rank_proxy"] = -econ_df["economy"]
-    econ_df = compute_rank_score(econ_df, "rank_proxy", rank_method_ctrl)
-
-    econ_df = (
-        econ_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_econ))
-        .copy()
-    )
-
-    # Visual order by economy (lowest first)
-    econ_df = econ_df.sort_values("economy", ascending=True).reset_index(drop=True)
-    order_econ = econ_df["bowler"].tolist()
-
-    style_e = chart_style_for_topn(int(top_n_econ))
-
-    econ_base = (
-        alt.Chart(econ_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "bowler:N",
-                sort=order_econ,
-                title="",
-                axis=alt.Axis(labelAngle=-45, labelFontSize=style_e["label_size"]),
-            ),
-            y=alt.Y("economy:Q", title="Economy"),
-            color=alt.value("#4f93c7"),  # blue
-            tooltip=[
-                alt.Tooltip("bowler:N", title="Bowler"),
-                alt.Tooltip("economy:Q", title="Economy", format=".2f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_bowled:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("wickets:Q", title="Wickets", format=",.0f"),
-                alt.Tooltip("rank_score:Q", title="Ranking Score", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
-    )
-
-    econ_labels = (
-        alt.Chart(econ_df)
-        .transform_calculate(y_pos="datum.economy * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_e["text_size"])
-        .encode(
-            x=alt.X("bowler:N", sort=order_econ, axis=alt.Axis(labelAngle=-45)),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("economy:Q", format=".2f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(econ_base + econ_labels), use_container_width=True)
-    st.caption("Lower economy = better run control per over.")
-
+innings_wkts = innings_wkts[innings_wkts["bowler"].isin(stable_bowlers)].copy()
 
 # -----------------------------
-# Chart B: Strike Rate (lower better)
+# Convert to bowler-level haul counts
 # -----------------------------
-with right:
-    st.markdown("### Bowling Strike Rate (Balls per Wicket)")
+s5 = (
+    innings_wkts.groupby("bowler", as_index=False)
+                .agg(
+                    inns=("match_id", "count"),
+                    inns_3w=("wkts", lambda x: int((x >= 3).sum())),
+                    inns_4w=("wkts", lambda x: int((x >= 4).sum())),
+                )
+)
 
-    top_n_sr = st.selectbox(
-        "Top Bowlers",
-        [5, 10],
-        index=0,
-        key="tab5_topn_sr",
+# add matches + exp_bucket using your existing pack (best source)
+s5 = s5.merge(pack[["bowler", "matches", "exp_bucket"]], on="bowler", how="left")
+
+# Apply experience bucket filter
+if s5_bucket_clean != "All":
+    s5 = s5[s5["exp_bucket"] == s5_bucket_clean].copy()
+
+# -----------------------------
+# Metric logic (both are higher = better)
+# -----------------------------
+if s5_metric == "3W Hauls ↑":
+    metric_col = "inns_3w"
+    metric_title = "3W Hauls"
+else:
+    metric_col = "inns_4w"
+    metric_title = "4W Hauls"
+
+s5_sorted = (
+    s5.sort_values([metric_col, "inns"], ascending=[False, False])
+      .head(int(top_n))
+      .copy()
+)
+
+# Force y-order to match sorted df
+y_order = s5_sorted["bowler"].tolist()
+s5_sorted["rank"] = range(1, len(s5_sorted) + 1)
+
+# -----------------------------
+# Chart
+# -----------------------------
+bars = (
+    alt.Chart(s5_sorted)
+    .mark_bar(cornerRadiusEnd=6)
+    .encode(
+        y=alt.Y("bowler:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=240)),
+        x=alt.X(f"{metric_col}:Q", title=f"{metric_title} (Higher is better)"),
+        color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+        tooltip=[
+            alt.Tooltip("bowler:N", title="Bowler"),
+            alt.Tooltip("matches:Q", title="Matches"),
+            alt.Tooltip("exp_bucket:N", title="Matches bucket"),
+            alt.Tooltip("inns:Q", title="Innings bowled"),
+            alt.Tooltip("inns_3w:Q", title="3W inns"),
+            alt.Tooltip("inns_4w:Q", title="4W inns"),
+        ]
     )
+    .properties(height=360)
+)
 
-    sr_df = stable_scope[
-        ["bowler", "bowling_strike_rate", "balls", "innings_bowled", "wickets", "runs_conceded"]
-    ].copy()
-
-    sr_df = sr_df.dropna(subset=["bowling_strike_rate"]).copy()
-
-    # lower strike rate is better -> use negative proxy for ranking
-    sr_df["rank_proxy"] = -sr_df["bowling_strike_rate"]
-    sr_df = compute_rank_score(sr_df, "rank_proxy", rank_method_ctrl)
-
-    sr_df = (
-        sr_df.sort_values("rank_score", ascending=False)
-        .head(int(top_n_sr))
-        .copy()
+labels = (
+    alt.Chart(s5_sorted)
+    .mark_text(align="left", dx=6, fontSize=14, fontWeight=700, color="#111827")
+    .encode(
+        y=alt.Y("bowler:N", sort=y_order),
+        x=alt.X(f"{metric_col}:Q"),
+        text=alt.Text(f"{metric_col}:Q", format=".0f"),
     )
+)
 
-    # Visual order by strike rate (lowest first)
-    sr_df = sr_df.sort_values("bowling_strike_rate", ascending=True).reset_index(drop=True)
-    order_sr = sr_df["bowler"].tolist()
+chart_s5 = (bars + labels)
+chart_s5 = chart_s5.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
 
-    style_s = chart_style_for_topn(int(top_n_sr))
+st.altair_chart(chart_s5, use_container_width=True)
 
-    sr_base = (
-        alt.Chart(sr_df)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "bowler:N",
-                sort=order_sr,
-                title="",
-                axis=alt.Axis(labelAngle=-45, labelFontSize=style_s["label_size"]),
-            ),
-            y=alt.Y("bowling_strike_rate:Q", title="Strike Rate (balls/wicket)"),
-            color=alt.value("#ff9a45"),  # orange
-            tooltip=[
-                alt.Tooltip("bowler:N", title="Bowler"),
-                alt.Tooltip("bowling_strike_rate:Q", title="Strike Rate", format=".2f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("innings_bowled:Q", title="Innings", format=",.0f"),
-                alt.Tooltip("wickets:Q", title="Wickets", format=",.0f"),
-                alt.Tooltip("rank_score:Q", title="Ranking Score", format=",.0f"),
-            ],
-        )
-        .properties(height=FIXED_H)
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        f"""
+### What this section shows
+This leaderboard surfaces bowlers who produce **big wicket bursts** in a single innings.
+
+✅ **3W Haul** = 3+ wickets in an innings  
+✅ **4W Haul** = 4+ wickets in an innings  
+
+### Stability gate (LOCKED)
+A bowler must have at least **{MIN_LEGAL_BALLS} legal balls** in the selected scope.
+        """
     )
-
-    sr_labels = (
-        alt.Chart(sr_df)
-        .transform_calculate(y_pos="datum.bowling_strike_rate * 0.65")
-        .mark_text(color="#1b1b1b", fontSize=style_s["text_size"])
-        .encode(
-            x=alt.X("bowler:N", sort=order_sr, axis=alt.Axis(labelAngle=-45)),
-            y=alt.Y("y_pos:Q"),
-            text=alt.Text("bowling_strike_rate:Q", format=".1f"),
-        )
-    )
-
-    st.altair_chart(apply_altair_theme(sr_base + sr_labels), use_container_width=True)
-    st.caption("Lower strike rate = faster wicket-taking frequency.")
 
 st.divider()
 
-
 # ============================================================
-# SECTION 3: Pressure Building (Dot Ball %)
+# SECTION 11: Pace vs Spin Specialists
 # ============================================================
 
-html_section("Pressure Building (Dot Ball %)")
-html_explain(
-    "Dot balls are the clearest signal of pressure. This section highlights bowlers who consistently win deliveries."
+st.markdown("## 🧭 Pace vs Spin Specialists")
+st.caption("Compare bowling styles using the same KPI-first leaderboard logic (stability gated).")
+
+# -----------------------------
+# Style mapping (MANUAL)
+# Expand later if needed
+# -----------------------------
+BOWLER_STYLE_MAP = {
+    # --- Pace examples ---
+    "JJ Bumrah": "Pace",
+    "SL Malinga": "Pace",
+    "B Kumar": "Pace",
+    "DW Steyn": "Pace",
+    "DJ Bravo": "Pace",
+    "GD McGrath": "Pace",
+    "Sohail Tanvir": "Pace",
+    "SM Pollock": "Pace",
+    "DE Bollinger": "Pace",
+
+    # --- Spin examples ---
+    "Rashid Khan": "Spin",
+    "Harbhajan Singh": "Spin",
+    "SP Narine": "Spin",
+    "R Ashwin": "Spin",
+    "PP Chawla": "Spin",
+    "YS Chahal": "Spin",
+    "RA Jadeja": "Spin",
+    "M Muralitharan": "Spin",
+    "A Kumble": "Spin",
+    "DL Vettori": "Spin",
+}
+
+# -----------------------------
+# Build style dataframe
+# -----------------------------
+style_df = base_f.copy()
+style_df = style_df[style_df["is_legal_ball"] == 1].copy()
+
+style_df["bowling_style"] = style_df["bowler"].map(BOWLER_STYLE_MAP).fillna("Unknown")
+
+# -----------------------------
+# Build style pack (bowler-level)
+# -----------------------------
+style_pack = (
+    style_df.groupby(["bowling_style", "bowler"], as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        legal_balls=("is_legal_ball", "sum"),
+        runs=("bowler_runs_conceded", "sum"),
+        wkts=("is_bowler_wicket", "sum"),
+        dots=("is_dot_ball", "sum"),
+    )
 )
 
-top_n_dot = st.selectbox(
-    "Top Bowlers",
-    [5, 10],
-    index=0,
-    key="tab5_topn_dot",
-)
+style_pack["overs"] = style_pack["legal_balls"] / 6
+style_pack["econ"] = np.where(style_pack["overs"] > 0, style_pack["runs"] / style_pack["overs"], np.nan)
+style_pack["dot_pct"] = np.where(style_pack["legal_balls"] > 0, (style_pack["dots"] / style_pack["legal_balls"]) * 100, np.nan)
+style_pack["sr"] = np.where(style_pack["wkts"] > 0, style_pack["legal_balls"] / style_pack["wkts"], np.nan)
+style_pack["avg"] = np.where(style_pack["wkts"] > 0, style_pack["runs"] / style_pack["wkts"], np.nan)
 
-dot_df = stable_scope[
-    ["bowler", "dot_ball_pct", "dot_balls", "balls", "innings_bowled", "wickets", "economy"]
+# Experience bucket (same as Section 1)
+style_pack["exp_bucket"] = style_pack["matches"].apply(add_exp_bucket)
+
+# -----------------------------
+# Stability gates (LOCKED)
+# -----------------------------
+MIN_STYLE_BALLS = 300
+MIN_STYLE_WKTS = 15
+
+style_gated_econ_dot = style_pack[style_pack["legal_balls"] >= MIN_STYLE_BALLS].copy()
+style_gated_avg_sr = style_pack[
+    (style_pack["legal_balls"] >= MIN_STYLE_BALLS) & (style_pack["wkts"] >= MIN_STYLE_WKTS)
 ].copy()
 
-dot_df = dot_df.dropna(subset=["dot_ball_pct"]).copy()
+# -----------------------------
+# Controls
+# -----------------------------
+h1, h2, h3 = st.columns([2.0, 1.0, 1.2], vertical_alignment="center")
 
-dot_df = dot_df.sort_values("dot_ball_pct", ascending=False).head(int(top_n_dot)).copy()
-order_dot = dot_df["bowler"].tolist()
-
-style_d = chart_style_for_topn(int(top_n_dot))
-chart_h_dot = int(BASE_H + (ROW_H * int(top_n_dot)))
-
-dot_base = (
-    alt.Chart(dot_df)
-    .mark_bar()
-    .encode(
-        y=alt.Y(
-            "bowler:N",
-            sort=order_dot,
-            title="",
-            axis=alt.Axis(labelFontSize=style_d["label_size"]),
-        ),
-        x=alt.X("dot_ball_pct:Q", title="Dot Ball %"),
-        color=alt.value("#55b3a8"),  # teal
-        tooltip=[
-            alt.Tooltip("bowler:N", title="Bowler"),
-            alt.Tooltip("dot_ball_pct:Q", title="Dot Ball %", format=".1f"),
-            alt.Tooltip("dot_balls:Q", title="Dot Balls", format=",.0f"),
-            alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-            alt.Tooltip("innings_bowled:Q", title="Innings", format=",.0f"),
-            alt.Tooltip("economy:Q", title="Economy", format=".2f"),
-            alt.Tooltip("wickets:Q", title="Wickets", format=",.0f"),
+with h1:
+    style_rank_metric = st.selectbox(
+        "📌 Rank by",
+        options=[
+            "Best Economy ↓",
+            "Best Strike Rate ↓",
+            "Best Average ↓",
+            "Dot Ball % ↑",
+            "Most Wickets ↑",
         ],
-    )
-    .properties(height=chart_h_dot)
-)
-
-dot_labels = (
-    alt.Chart(dot_df)
-    .transform_calculate(x_pos="datum.dot_ball_pct * 0.80")
-    .mark_text(color="#1b1b1b", fontSize=style_d["text_size"])
-    .encode(
-        y=alt.Y("bowler:N", sort=order_dot, title=""),
-        x=alt.X("x_pos:Q"),
-    )
-    .transform_calculate(label="round(datum.dot_ball_pct) + '%'")
-    .encode(text="label:N")
-)
-
-st.altair_chart(apply_altair_theme(dot_base + dot_labels), use_container_width=True)
-st.caption("Higher dot ball % = greater ability to build sustained pressure.")
-
-st.divider()
-
-# ============================================================
-# SECTION 4: Match-Winner Signal (3+ Wickets Frequency)
-# ============================================================
-
-html_section("Match-Winner Signal (3+ Wickets Frequency)")
-html_explain(
-    "This section highlights bowlers who frequently deliver big-impact spells (3+ wickets in an innings). "
-    "These are match-turning performances rather than steady accumulation."
-)
-
-required_cols_3p = ["innings_3plus_wkts", "pct_innings_3plus"]
-missing_cols_3p = [c for c in required_cols_3p if c not in stable_scope.columns]
-
-if missing_cols_3p:
-    st.info(
-        "3+ wickets KPI columns not found in this KPI file. "
-        f"Missing columns: {missing_cols_3p}"
-    )
-else:
-    top_n_3p = st.selectbox(
-        "Top Bowlers",
-        [5, 10],
         index=0,
-        key="tab5_topn_3plus",
+        key="s11_rank_by"
     )
 
-    three_df = stable_scope[
-        [
-            "bowler",
-            "pct_innings_3plus",
-            "innings_3plus_wkts",
-            "innings_bowled",
-            "balls",
-            "wickets",
-        ]
-    ].copy()
-
-    # Safety cleanup
-    three_df["innings_bowled"] = pd.to_numeric(three_df["innings_bowled"], errors="coerce").fillna(0)
-    three_df["innings_3plus_wkts"] = pd.to_numeric(three_df["innings_3plus_wkts"], errors="coerce").fillna(0)
-    three_df["pct_innings_3plus"] = pd.to_numeric(three_df["pct_innings_3plus"], errors="coerce").fillna(0)
-
-    # Remove empty sample bowlers (extra safety)
-    three_df = three_df[three_df["innings_bowled"] > 0].copy()
-
-    # Top N by % frequency
-    three_df = (
-        three_df.sort_values("pct_innings_3plus", ascending=False)
-        .head(int(top_n_3p))
-        .copy()
+with h2:
+    style_choice = st.selectbox(
+        "🌀 Bowling style",
+        options=["All styles", "Pace", "Spin", "Unknown"],
+        index=0,
+        key="s11_style"
     )
 
-    order_3p = three_df["bowler"].tolist()
+with h3:
+    style_exp_bucket = st.selectbox(
+        "🎯 Matches played",
+        options=[
+            "All (all experience levels)",
+            "1–25 (small sample)",
+            "26–50 (emerging core)",
+            "51–75 (proven regulars)",
+            "75+ (elite longevity)",
+        ],
+        index=0,
+        key="s11_exp_bucket"
+    )
 
-    style_3 = chart_style_for_topn(int(top_n_3p))
-    chart_h_3p = int(BASE_H + (ROW_H * int(top_n_3p)))
+bucket_map = {
+    "All (all experience levels)": "All",
+    "1–25 (small sample)": "1–25",
+    "26–50 (emerging core)": "26–50",
+    "51–75 (proven regulars)": "51–75",
+    "75+ (elite longevity)": "75+",
+}
+bucket_clean = bucket_map[style_exp_bucket]
 
-    base_3p = (
-        alt.Chart(three_df)
-        .mark_bar()
+# -----------------------------
+# Choose dataset based on KPI
+# -----------------------------
+if style_rank_metric in ["Best Strike Rate ↓", "Best Average ↓"]:
+    df_s11 = style_gated_avg_sr.copy()
+else:
+    df_s11 = style_gated_econ_dot.copy()
+
+# apply style filter
+if style_choice != "All styles":
+    df_s11 = df_s11[df_s11["bowling_style"] == style_choice].copy()
+
+# apply experience filter
+if bucket_clean != "All":
+    df_s11 = df_s11[df_s11["exp_bucket"] == bucket_clean].copy()
+
+# -----------------------------
+# Metric mapping
+# -----------------------------
+metric_map = {
+    "Best Economy ↓": ("econ", True, "Economy (Lower is better)", ".2f"),
+    "Best Strike Rate ↓": ("sr", True, "Strike Rate (Balls per wicket — Lower is better)", ".1f"),
+    "Best Average ↓": ("avg", True, "Average (Runs per wicket — Lower is better)", ".1f"),
+    "Dot Ball % ↑": ("dot_pct", False, "Dot Ball % (Higher is better)", ".1f"),
+    "Most Wickets ↑": ("wkts", False, "Wickets (Higher is better)", ".0f"),
+}
+
+metric_col, sort_asc, x_title, label_fmt = metric_map[style_rank_metric]
+
+df_s11 = df_s11.dropna(subset=[metric_col]).copy()
+df_s11 = df_s11.sort_values(metric_col, ascending=sort_asc).head(int(top_n)).copy()
+
+if len(df_s11) == 0:
+    st.warning("No bowlers match this filter + stability gate. Try All styles or All matches.")
+else:
+    # Force y-order = sorted order
+    y_order = df_s11["bowler"].tolist()
+    df_s11["rank"] = range(1, len(df_s11) + 1)
+
+    bars = (
+        alt.Chart(df_s11)
+        .mark_bar(cornerRadiusEnd=6)
         .encode(
-            y=alt.Y(
+            y=alt.Y("bowler:N", sort=y_order, title=None, axis=alt.Axis(labelLimit=300)),
+            x=alt.X(f"{metric_col}:Q", title=x_title),
+            color=alt.Color("rank:O", scale=alt.Scale(range=LIGHT_RAINBOW), legend=None),
+            tooltip=[
                 "bowler:N",
-                sort=order_3p,
-                title="",
-                axis=alt.Axis(labelFontSize=style_3["label_size"]),
-            ),
-            x=alt.X("pct_innings_3plus:Q", title="3+ Wicket Innings Frequency (%)"),
-            color=alt.value("#e05a5b"),  # ✅ fixed: no TAB5_COLORS dependency
-            tooltip=[
-                alt.Tooltip("bowler:N", title="Bowler"),
-                alt.Tooltip("pct_innings_3plus:Q", title="3+ Innings %", format=".1f"),
-                alt.Tooltip("innings_3plus_wkts:Q", title="3+ Wkt Innings", format=",.0f"),
-                alt.Tooltip("innings_bowled:Q", title="Innings Bowled", format=",.0f"),
-                alt.Tooltip("balls:Q", title="Balls", format=",.0f"),
-                alt.Tooltip("wickets:Q", title="Wickets", format=",.0f"),
-            ],
+                alt.Tooltip("bowling_style:N", title="Style"),
+                alt.Tooltip("exp_bucket:N", title="Matches bucket"),
+                alt.Tooltip("matches:Q", title="Matches"),
+                alt.Tooltip("overs:Q", title="Overs", format=".1f"),
+                alt.Tooltip("wkts:Q", title="Wkts"),
+                alt.Tooltip("econ:Q", title="ECON", format=".2f"),
+                alt.Tooltip("dot_pct:Q", title="Dot%", format=".1f"),
+                alt.Tooltip("avg:Q", title="Avg", format=".1f"),
+                alt.Tooltip("sr:Q", title="SR", format=".1f"),
+            ]
         )
-        .properties(height=chart_h_3p)
+        .properties(height=360)
     )
 
-    labels_3p = (
-        alt.Chart(three_df)
-        .transform_calculate(x_pos="datum.pct_innings_3plus * 0.75")
-        .mark_text(color="#1b1b1b", fontSize=style_3["text_size"])
+    labels = (
+        alt.Chart(df_s11)
+        .mark_text(align="left", dx=6, fontSize=14)
         .encode(
-            y=alt.Y("bowler:N", sort=order_3p, title=""),
-            x=alt.X("x_pos:Q"),
+            y=alt.Y("bowler:N", sort=y_order),
+            x=alt.X(f"{metric_col}:Q"),
+            text=alt.Text(f"{metric_col}:Q", format=label_fmt),
         )
-        .transform_calculate(label="round(datum.pct_innings_3plus) + '%'")
-        .encode(text="label:N")
     )
 
-    st.altair_chart(apply_altair_theme(base_3p + labels_3p), use_container_width=True)
-    st.caption("Higher = more frequent big-impact 3+ wicket spells per innings.")
+    chart_s11 = (bars + labels)
+    chart_s11 = chart_s11.configure_view(strokeOpacity=0).configure_axisY(labelPadding=12)
+
+    st.altair_chart(chart_s11, use_container_width=True)
+
+with st.expander("🧠 How to read this section", expanded=False):
+    st.markdown(
+        f"""
+### What this section shows
+A style-based leaderboard for **Pace vs Spin**, using the same stability rules.
+
+### Important note
+Your dataset doesn’t contain a reliable bowling-style column, so we classify using a **manual lookup**.
+Unmapped bowlers appear as **Unknown**.
+
+### Stability gates (LOCKED)
+- Minimum **{MIN_STYLE_BALLS} legal balls**
+- For **Average / Strike Rate**, also minimum **{MIN_STYLE_WKTS} wickets**
+        """
+    )
 
 st.divider()
 
-
 # ============================================================
-# SECTION 5: Phase Specialists (Powerplay vs Death Wickets)
+# FINAL SECTION A: Bowler Trend — Performance Over Seasons
 # ============================================================
 
-html_section("Phase Specialists (Powerplay vs Death Impact)")
-html_explain(
-    "Some bowlers deliver value in the Powerplay, while others dominate at the Death. "
-    "This section compares wickets and strike rate across phases."
+st.markdown("## 📈 Wickets Trend — Bowler Performance Over Seasons")
+st.caption("Track how a bowler’s wicket output + economy changes across IPL seasons (scope-aware).")
+
+# ✅ Build season-level base from current filtered deliveries
+trend_base = base_f[base_f["is_legal_ball"] == 1].copy()
+
+# --- Season summary per bowler ---
+bowler_season = (
+    trend_base.groupby(["season_id", "bowler"], as_index=False)
+    .agg(
+        matches=("match_id", "nunique"),
+        legal_balls=("is_legal_ball", "sum"),
+        overs=("is_legal_ball", lambda x: x.sum() / 6),
+        runs=("bowler_runs_conceded", "sum"),
+        wkts=("is_bowler_wicket", "sum"),
+        dots=("is_dot_ball", "sum"),
+    )
 )
 
-required_phase_cols = [
-    "wickets_powerplay",
-    "wickets_death",
-    "sr_powerplay",
-    "sr_death",
-    "balls_powerplay",
-    "balls_death",
-]
+bowler_season["econ"] = np.where(bowler_season["overs"] > 0, bowler_season["runs"] / bowler_season["overs"], np.nan)
+bowler_season["dot_pct"] = np.where(
+    bowler_season["legal_balls"] > 0,
+    (bowler_season["dots"] / bowler_season["legal_balls"]) * 100,
+    np.nan
+)
 
-missing_phase_cols = [c for c in required_phase_cols if c not in stable_scope.columns]
+# --- Top 50 bowlers dropdown (based on wickets in current scope) ---
+top50_bowlers = (
+    bowler_season.groupby("bowler", as_index=False)
+    .agg(total_wkts=("wkts", "sum"), total_balls=("legal_balls", "sum"))
+)
 
-if len(missing_phase_cols) > 0:
-    st.info(
-        f"Phase KPI columns not found: {missing_phase_cols}. "
-        "Make sure the master KPI includes phase metrics before enabling this section."
-    )
+# Stability gate for selection list (same logic style)
+top50_bowlers = top50_bowlers[top50_bowlers["total_balls"] >= 300].copy()
+
+top50_bowlers = (
+    top50_bowlers.sort_values(["total_wkts", "total_balls"], ascending=[False, False])
+    .head(50)
+)
+
+bowler_list = top50_bowlers["bowler"].tolist()
+
+if len(bowler_list) == 0:
+    st.warning("⚠️ No bowlers qualify for the trend view in this scope (min 300 legal balls).")
 else:
-    top_n_phase = st.selectbox(
-        "Top Bowlers",
-        [5, 10],
+    pick_bowler = st.selectbox(
+        "🎳 Select bowler (Top 50 by wickets in current scope)",
+        options=bowler_list,
         index=0,
-        key="tab5_topn_phase",
+        key="bowler_trend_select"
     )
 
-    phase_df = stable_scope[
-        [
-            "bowler",
-            "innings_bowled",
-            "balls",
-            "wickets",
-            "wickets_powerplay",
-            "wickets_death",
-            "sr_powerplay",
-            "sr_death",
-            "balls_powerplay",
-            "balls_death",
-        ]
-    ].copy()
+    bowler_trend = bowler_season[bowler_season["bowler"] == pick_bowler].copy()
+    bowler_trend = bowler_trend.sort_values("season_id")
 
-    # Small additional stability for phase charts:
-    # avoid bowlers with almost no phase volume
-    # (keeps the visuals believable)
-    phase_df = phase_df[(phase_df["balls_powerplay"] >= 12) | (phase_df["balls_death"] >= 12)].copy()
-
-    if len(phase_df) == 0:
-        st.warning("No bowlers have enough phase volume for Powerplay/Death comparisons in this scope.")
-        st.stop()
-
-    # "Impact proxy": total wickets in PP + Death
-    phase_df["phase_wkts_total"] = phase_df["wickets_powerplay"] + phase_df["wickets_death"]
-
-    phase_df = (
-        phase_df.sort_values("phase_wkts_total", ascending=False)
-        .head(int(top_n_phase))
-        .copy()
-    )
-
-    # Reshape for grouped bars (wickets)
-    wkts_long = pd.DataFrame(
-        {
-            "bowler": list(phase_df["bowler"]) * 2,
-            "phase": (["Powerplay"] * len(phase_df)) + (["Death"] * len(phase_df)),
-            "wickets": list(phase_df["wickets_powerplay"]) + list(phase_df["wickets_death"]),
-        }
-    )
-
-    order_phase = phase_df["bowler"].tolist()
-
-    phase_w_chart = (
-        alt.Chart(wkts_long)
-        .mark_bar()
+    # --- Chart: Wickets by Season (line) ---
+    line = (
+        alt.Chart(bowler_trend)
+        .mark_line(point=True)
         .encode(
-            y=alt.Y("bowler:N", sort=order_phase, title=""),
-            x=alt.X("wickets:Q", title="Wickets (Phase)"),
-            color=alt.Color(
-                "phase:N",
-                title="",
-                scale=alt.Scale(domain=["Powerplay", "Death"], range=["#4f93c7", "#ff9a45"]),
-            ),
+            x=alt.X("season_id:O", title="Season"),
+            y=alt.Y("wkts:Q", title="Wickets"),
             tooltip=[
-                alt.Tooltip("bowler:N", title="Bowler"),
-                alt.Tooltip("phase:N", title="Phase"),
-                alt.Tooltip("wickets:Q", title="Wickets", format=",.0f"),
-            ],
+                alt.Tooltip("season_id:O", title="Season"),
+                alt.Tooltip("matches:Q", title="Matches"),
+                alt.Tooltip("wkts:Q", title="Wkts"),
+                alt.Tooltip("econ:Q", title="ECON", format=".2f"),
+                alt.Tooltip("dot_pct:Q", title="Dot%", format=".1f"),
+                alt.Tooltip("overs:Q", title="Overs", format=".1f"),
+            ]
         )
-        .properties(height=int(BASE_H + ROW_H * int(top_n_phase)))
+        .properties(height=360)
     )
 
-    st.altair_chart(apply_altair_theme(phase_w_chart), use_container_width=True)
+    line = line.configure_axis(labelFontSize=12, titleFontSize=12).configure_title(fontSize=18)
 
-    st.caption(
-        "Powerplay wickets reflect early breakthroughs. Death wickets reflect end-overs finishing impact. "
-        "Phase strike rates are computed from phase balls ÷ phase wickets."
+    st.altair_chart(line, use_container_width=True)
+
+    with st.expander("🧠 How to read this trend", expanded=False):
+        st.markdown(
+            """
+### What this chart shows
+This is a **season-by-season wickets trend** for the selected bowler in your current filters.
+
+- **Wickets** = direct impact output
+- Tooltip adds context:
+  - **ECON** tells you if the wickets came with control or leakage
+  - **Dot %** indicates pressure-building ability
+  - **Overs** confirms workload / role stability
+
+✅ Tip: Look for bowlers with **consistent wickets** AND **stable economy** across seasons.
+            """
+        )
+
+st.divider()
+
+# ============================================================
+# FINAL SECTION B: Bowler KPI Profile (Top 50 bowlers)
+# ============================================================
+
+st.markdown("## 📌 Bowler KPI Profile")
+st.caption("Career summary + phase-wise control profile for the selected bowler (scope-aware + stability gated).")
+
+# --- Dropdown uses same Top 50 list from trend section ---
+if len(bowler_list) == 0:
+    st.warning("⚠️ No bowlers qualify for KPI profile in this scope (min 300 legal balls).")
+else:
+    prof_bowler = st.selectbox(
+        "🎯 Select bowler (Top 50 by wickets in current scope)",
+        options=bowler_list,
+        index=0,
+        key="bowler_profile_select"
     )
+
+    # --- Career pack for chosen bowler ---
+    prof_df = base_f[base_f["bowler"] == prof_bowler].copy()
+    prof_legal = prof_df[prof_df["is_legal_ball"] == 1].copy()
+
+    matches_played = prof_legal["match_id"].nunique()
+    legal_balls = prof_legal["is_legal_ball"].sum()
+    overs = legal_balls / 6
+    runs = prof_legal["bowler_runs_conceded"].sum()
+    wkts = prof_legal["is_bowler_wicket"].sum()
+    dots = prof_legal["is_dot_ball"].sum()
+    fours = prof_legal["is_four"].sum()
+    sixes = prof_legal["is_six"].sum()
+
+    econ = (runs / overs) if overs > 0 else 0
+    avg = (runs / wkts) if wkts > 0 else 0
+    sr = (legal_balls / wkts) if wkts > 0 else 0
+    dot_pct = (dots / legal_balls) * 100 if legal_balls > 0 else 0
+
+    boundary_balls = fours + sixes
+    boundary_pct = (boundary_balls / legal_balls) * 100 if legal_balls > 0 else 0
+
+    # --- KPI CARDS: 8 like batting ---
+    st.markdown("### 🧾 Career Summary (in current scope)")
+
+    r1, r2, r3, r4 = st.columns(4, gap="large")
+    with r1:
+        kpi_card("Matches", f"{matches_played:,}", "📅", KPI_BLUE, desc="Career matches in this scope")
+    with r2:
+        kpi_card("Wickets", f"{int(wkts):,}", "🎯", KPI_GREEN, desc="Total bowler wickets")
+    with r3:
+        kpi_card("Economy (ECON)", f"{econ:.2f}", "💸", KPI_ORANGE, desc="Runs conceded per over")
+    with r4:
+        kpi_card("Strike Rate (SR)", f"{sr:.1f}", "⚡", KPI_PURPLE, desc="Balls per wicket")
+
+    r5, r6, r7, r8 = st.columns(4, gap="large")
+    with r5:
+        kpi_card("Average (AVG)", f"{avg:.2f}", "🏹", KPI_GREEN, desc="Runs conceded per wicket")
+    with r6:
+        kpi_card("Dot Ball %", f"{dot_pct:.1f}%", "🧱", KPI_RED, desc="Pressure indicator (higher better)")
+    with r7:
+        kpi_card("Boundary % Conceded", f"{boundary_pct:.1f}%", "💥", KPI_ORANGE, desc="Boundaries per 100 legal balls")
+    with r8:
+        kpi_card("Legal Balls", f"{int(legal_balls):,}", "🟡", KPI_DARK, desc="Workload size (stability)")
+
+    st.divider()
+
+    # -----------------------------
+    # Phase Impact (ECON + Dot%)
+    # -----------------------------
+    st.markdown("### ⏱️ Phase Control Profile")
+    st.caption("Economy + Dot% across phases (Powerplay / Middle / Death).")
+
+    phase_legal = prof_legal.copy()
+
+    phase_legal["phase"] = np.select(
+        [
+            phase_legal["over_number"].between(0, 5),
+            phase_legal["over_number"].between(6, 14),
+            phase_legal["over_number"].between(15, 19),
+        ],
+        ["Powerplay", "Middle", "Death"],
+        default="Other"
+    )
+    phase_legal = phase_legal[phase_legal["phase"] != "Other"].copy()
+
+    phase_pack = (
+        phase_legal.groupby("phase", as_index=False)
+        .agg(
+            legal_balls=("is_legal_ball", "sum"),
+            overs=("is_legal_ball", lambda x: x.sum() / 6),
+            runs=("bowler_runs_conceded", "sum"),
+            wkts=("is_bowler_wicket", "sum"),
+            dots=("is_dot_ball", "sum"),
+        )
+    )
+
+    phase_pack["econ"] = np.where(phase_pack["overs"] > 0, phase_pack["runs"] / phase_pack["overs"], np.nan)
+    phase_pack["dot_pct"] = np.where(
+        phase_pack["legal_balls"] > 0,
+        (phase_pack["dots"] / phase_pack["legal_balls"]) * 100,
+        np.nan
+    )
+
+    # Cards: 3 columns (Powerplay, Middle, Death)
+    # If some phase missing (rare), fill safely
+    phase_pack = phase_pack.set_index("phase")
+    def safe_get(p, col, default=0):
+        return float(phase_pack.loc[p, col]) if p in phase_pack.index and pd.notna(phase_pack.loc[p, col]) else default
+
+    p1, p2, p3 = st.columns(3, gap="large")
+
+    with p1:
+        kpi_card(
+            "Powerplay ECON",
+            f"{safe_get('Powerplay','econ'):.2f}",
+            "🌅",
+            KPI_ORANGE,
+            desc=f"Dot%: {safe_get('Powerplay','dot_pct'):.1f}%"
+        )
+
+    with p2:
+        kpi_card(
+            "Middle ECON",
+            f"{safe_get('Middle','econ'):.2f}",
+            "🌀",
+            KPI_BLUE,
+            desc=f"Dot%: {safe_get('Middle','dot_pct'):.1f}%"
+        )
+
+    with p3:
+        kpi_card(
+            "Death ECON",
+            f"{safe_get('Death','econ'):.2f}",
+            "🔥",
+            KPI_RED,
+            desc=f"Dot%: {safe_get('Death','dot_pct'):.1f}%"
+        )
+
+    with st.expander("🧠 How to read this profile", expanded=False):
+        st.markdown(
+            """
+### What this profile card tells you
+This section is a **single bowler scouting view**.
+
+**Core KPIs**
+- **ECON**: control (lower is better)
+- **SR**: wicket frequency (lower is better)
+- **AVG**: wicket quality (lower is better)
+- **Dot %**: pressure (higher is better)
+
+**Phase Control**
+- **Powerplay**: early control + new ball impact
+- **Middle**: containment + wicket pressure
+- **Death**: execution under risk
+
+✅ Best bowlers usually show:
+- Strong **Death ECON**
+- High **Dot % in Middle**
+- Low **Powerplay ECON** with wickets
+            """
+        )
+
+st.divider()
