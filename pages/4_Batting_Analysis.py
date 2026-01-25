@@ -164,7 +164,7 @@ with c2:
     )
 
 with c3:
-    top_choice = st.selectbox("🎯 Show Top", [5, 10], index=1)
+    top_choice = st.selectbox("🎯 Show Top", [5, 10], index=0)
 
 # -----------------------------
 # APPLY FILTERS (match-scoped)
